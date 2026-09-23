@@ -1,8 +1,8 @@
-import { cn } from "@/shared/lib/utils";
+import { cn } from "@/lib/utils";
 import { Geist } from "next/font/google";
 import "./globals.css";
 
-const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 
 export default function RootLayout({

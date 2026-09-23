@@ -1,5 +1,7 @@
-export default function Home() {
+import { DemoLayout } from "./_components/demo-layout";
+
+export default function HomePage() {
     return (
-        <div></div>
+        <DemoLayout />
     );
 };
