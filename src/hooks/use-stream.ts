@@ -10,10 +10,10 @@ type UseStreamOptions = {
     enabled?: boolean;
 };
 
-export const useStream = <T>(
+export function useStream<T>(
     url: string,
     options: UseStreamOptions = {},
-) => {
+) {
     const {
         share = true,
         reconnectAttempts = 10,
