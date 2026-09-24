@@ -1,0 +1,12 @@
+openapi: 3.0.0
+info:
+  title: Candler API
+  description: API schema and WebSocket payload contracts for Candler
+  version: 1.0.0
+
+components:
+  schemas:
+    TickerResponse:
+      $ref: "./models/ticker.yaml#/TickerResponse"
+
+paths: {}

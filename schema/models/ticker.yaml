@@ -1,0 +1,85 @@
+TickerResponse:
+  type: object
+  description: Binance WebSocket 24-hour asset payload ticker
+  required:
+    - e
+    - E
+    - s
+    - p
+    - P
+    - c
+  properties:
+    e:
+      type: string
+      description: Event type
+    E:
+      type: integer
+      format: int64
+      description: Event time in milliseconds
+    s:
+      type: string
+      description: Symbol (trading pair)
+    p:
+      type: string
+      description: Price change in 24h
+    P:
+      type: string
+      description: Price change percent in 24h
+    w:
+      type: string
+      description: Weighted average price
+    x:
+      type: string
+      description: First trade price before the 24h rolling window
+    c:
+      type: string
+      description: Last price
+    Q:
+      type: string
+      description: Last trade quantity
+    b:
+      type: string
+      description: Best bid price
+    B:
+      type: string
+      description: Best bid quantity
+    a:
+      type: string
+      description: Best ask price
+    A:
+      type: string
+      description: Best ask quantity
+    o:
+      type: string
+      description: Open price 24h ago
+    h:
+      type: string
+      description: High price in 24h
+    l:
+      type: string
+      description: Low price in 24h
+    v:
+      type: string
+      description: Total traded base asset volume
+    q:
+      type: string
+      description: Total traded quote asset volume
+    O:
+      type: integer
+      format: int64
+      description: Statistics open time in milliseconds
+    C:
+      type: integer
+      format: int64
+      description: Statistics close time in milliseconds
+    F:
+      type: integer
+      format: int64
+      description: First trade ID
+    L:
+      type: integer
+      format: int64
+      description: Last trade ID
+    n:
+      type: integer
+      description: Total number of trades

@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { TopAssets } from "./top-assets";
-import { TopAssetsItem } from "./top-assets-item";
 
 export function Header() {
     return (
@@ -30,26 +29,7 @@ export function Header() {
                     Demo
                 </Badge>
             </div>
-            <TopAssets>
-                <TopAssetsItem
-                    asset="BTC"
-                    price="$64,320"
-                    change="+2.4%"
-                    isPositive={ true }
-                />
-                <TopAssetsItem
-                    asset="ETH"
-                    price="$3,480"
-                    change="-0.6%"
-                    isPositive={ false }
-                />
-                <TopAssetsItem
-                    asset="SOL"
-                    price="$152"
-                    change="+5.1%"
-                    isPositive={ true }
-                />
-            </TopAssets>
+            <TopAssets />
             <div
                 className="
                     flex w-64 justify-between gap-2

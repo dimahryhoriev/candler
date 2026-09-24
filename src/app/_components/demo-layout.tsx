@@ -7,7 +7,9 @@ export function DemoLayout() {
                 flex h-auto
             "
         >
-            <Header />
+            <Header
+
+            />
         </div>
     );
 };

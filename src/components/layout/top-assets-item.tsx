@@ -1,14 +1,14 @@
 import { cn } from "@/lib/utils";
 
 export type TopAssetsItemProps = {
-    asset: string;
+    symbol: string;
     price: string;
     change: string;
     isPositive: boolean;
 };
 
 export function TopAssetsItem({
-    asset,
+    symbol,
     price,
     change,
     isPositive,
@@ -16,7 +16,7 @@ export function TopAssetsItem({
     return (
         <div className="flex items-center gap-1.5">
             <span className="font-semibold text-muted-foreground">
-                { asset }
+                { symbol }
             </span>
             <span className="font-mono font-medium">
                 { price }
