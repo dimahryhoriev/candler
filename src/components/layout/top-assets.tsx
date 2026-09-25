@@ -1,6 +1,7 @@
 'use client';
 
 import { useAssets } from "@/hooks/use-assets";
+import { formatChange, formatPrice } from "@/lib/format";
 import { TopAssetsItem } from "./top-assets-item";
 
 export function TopAssets() {
@@ -20,19 +21,20 @@ export function TopAssets() {
                                 ? ((closePrice - openPrice) / openPrice) * 100
                                 : 0
                         );
-                        const formattedChange =
-                            `${changePercent > 0 ? '+' : ''}${changePercent.toFixed(2)}%`
+
+                        const formattedPrice = formatPrice(asset.c);
+                        const formattedChange = formatChange(changePercent);
 
                         return (
                             <TopAssetsItem
                                 key={ asset.s }
                                 symbol={ asset.s }
-                                price={ asset.c }
+                                price={ formattedPrice }
                                 change={ formattedChange }
                                 isPositive={ changePercent >= 0 }
                             />
                         );
-                    }
+                    },
                 )
             }
         </div>
