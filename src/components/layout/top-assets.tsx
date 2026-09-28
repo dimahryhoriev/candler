@@ -3,46 +3,43 @@
 import { useAssets } from "@/hooks/use-assets";
 import { formatChange, formatPrice } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { SkeletonGroup } from "../ui/skeleton-group";
 
 export function TopAssets() {
+    const limit = 3;
     const { assets } = useAssets({
-        limit: 3,
+        limit,
     });
 
     return (
-        assets.length !== 0
-            ? (
-                <div className="hidden md:flex items-center gap-6 text-xs">
-                    {
-                        assets.map(
-                            (asset) => {
-                                const openPrice = Number(asset.o);
-                                const closePrice = Number(asset.c);
-                                const changePercent = (
-                                    openPrice > 0
-                                        ? ((closePrice - openPrice) / openPrice) * 100
-                                        : 0
-                                );
+        <div className="hidden md:flex items-center gap-6 text-xs">
+            {
+                assets.map(
+                    (asset, index) => {
+                        const openPrice = Number(asset?.o);
+                        const closePrice = Number(asset?.c);
+                        const changePercent = (
+                            openPrice > 0
+                                ? ((closePrice - openPrice) / openPrice) * 100
+                                : 0
+                        );
 
-                                const formattedPrice = formatPrice(asset.c);
-                                const formattedChange = formatChange(changePercent);
+                        const formattedSymbol = asset?.s ?? '--';
+                        const formattedPrice = formatPrice(asset?.c);
+                        const formattedChange = formatChange(changePercent);
 
-                                return (
-                                    <TopAssetsItem
-                                        key={ asset.s }
-                                        symbol={ asset.s }
-                                        price={ formattedPrice }
-                                        change={ formattedChange }
-                                        isPositive={ changePercent >= 0 }
-                                    />
-                                );
-                            },
-                        )
-                    }
-                </div>
-            )
-            : <SkeletonGroup itemsCount={ 3 } />
+                        return (
+                            <TopAssetsItem
+                                key={ asset?.s ?? index }
+                                symbol={ formattedSymbol }
+                                price={ formattedPrice }
+                                change={ formattedChange }
+                                isPositive={ changePercent >= 0 }
+                            />
+                        );
+                    },
+                )
+            }
+        </div>
     );
 };
 

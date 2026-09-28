@@ -32,7 +32,14 @@ export function useAssets({
     );
 
     const assets = useMemo(() => {
-        if (!Array.isArray(tickers)) return [];
+        if (!Array.isArray(tickers)) return (
+            Array.from(
+                {
+                    length: limit
+                },
+                () => undefined
+            )
+        );
 
         return tickers
             .filter((t) => (

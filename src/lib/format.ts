@@ -16,8 +16,14 @@ function findNonZeroValue(
 };
 
 export function formatPrice(
-    price: string,
+    price: string | undefined,
 ) {
+    if (!price) {
+        return (
+            `${'--'} ${'--'}`
+        );
+    };
+
     const [int, fract = '00'] = price.split('.');
 
     const intNonZeroValue = findNonZeroValue(int);
