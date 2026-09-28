@@ -51,3 +51,16 @@ export function formatChange(
         `${change > 0 ? '+' : ''}${change.toFixed(2)}%`
     );
 };
+
+export function formatSymbol(
+    symbol: string,
+    letterCase: 'upper' | 'lower',
+) {
+    const formattedSymbol = `${symbol.slice(0, -4)}`;
+
+    return (
+        letterCase === 'lower'
+            ? formattedSymbol.toLowerCase()
+            : formattedSymbol.toUpperCase()
+    );
+};
