@@ -1,8 +1,9 @@
+import { Header } from "@/components/layout/header";
 import { cn } from "@/lib/utils";
 import { Geist } from "next/font/google";
 import "./globals.css";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
 
 export default function RootLayout({
@@ -16,6 +17,7 @@ export default function RootLayout({
             <body
                 className="min-h-full flex flex-col"
             >
+                <Header />
                 { children }
             </body>
         </html>

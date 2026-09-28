@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { TopAssets } from "./top-assets";
 
@@ -25,9 +24,6 @@ export function Header() {
                         Candler
                     </span>
                 </Link>
-                <Badge>
-                    Demo
-                </Badge>
             </div>
             <TopAssets />
             <div
