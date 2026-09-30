@@ -1,13 +1,16 @@
 'use client'
 
 import { ApiSchemas } from "@/api";
+import { AssetSortOptions, sortAssets, SortOrder } from "@/lib/assets";
 import { useMemo } from "react";
 import { useStream } from "./use-stream";
 
-type TickerResponse = ApiSchemas['TickerResponse'];
-type UseAssetsOptions = {
-    limit?: number;
+export type Asset = ApiSchemas['TickerResponse'];
+type UseAssetsParams = {
     enabled?: boolean;
+    limit?: number;
+    sortOption?: AssetSortOptions;
+    sortOrder?: SortOrder;
 };
 
 const WS_BASE_URL =
@@ -19,14 +22,16 @@ const TICKERS_WS_URL = `${WS_BASE_URL}/!miniTicker@arr`;
 
 
 export function useAssets({
-    limit = 5,
     enabled = true,
-}: UseAssetsOptions = {}) {
+    limit = 5,
+    sortOption = 'volume',
+    sortOrder = 'desc',
+}: UseAssetsParams = {}) {
     const {
         data: tickers,
         isConnected,
         disconnect,
-    } = useStream<TickerResponse[]>(
+    } = useStream<Asset[]>(
         TICKERS_WS_URL,
         { enabled },
     );
@@ -41,21 +46,18 @@ export function useAssets({
             )
         );
 
-        return tickers
-            .filter((t) => (
-                t.s.endsWith('USDT')
-                &&
-                !t.s.includes('UP')
-                &&
-                !t.s.includes('DOWN')
-            ))
-            .sort((a, b) => (
-                Number(b.q ?? 0)
-                -
-                Number(a.q ?? 0)
-            ))
-            .slice(0, limit)
-    }, [tickers, limit]);
+        return sortAssets({
+            assets: tickers,
+            sortBy: sortOption,
+            sortOrder,
+            limit,
+        });
+    }, [
+        tickers,
+        limit,
+        sortOption,
+        sortOrder,
+    ]);
 
     return {
         assets,

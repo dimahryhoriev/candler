@@ -1,13 +1,21 @@
 import { TopAssets } from "@/components/layout/top-assets";
+import { TopGainers } from "@/components/layout/top-gainers";
+import { TopLosers } from "@/components/layout/top-losers";
 
 export default function HomePage() {
     return (
-        <main
-            className="
-                container mx-auto
-            "
+        <div
+            className="flex flex-col gap-14"
         >
-            <TopAssets />
-        </main>
-    )
+            <TopAssets
+                title="Market Overview"
+            />
+            <TopGainers
+                title="Top Gainers"
+            />
+            <TopLosers
+                title="Top Losers"
+            />
+        </div>
+    );
 };

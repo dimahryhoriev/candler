@@ -2,48 +2,70 @@
 
 import { useAssets } from "@/hooks/use-assets";
 import { formatChange, formatPrice } from "@/lib/format";
+import { calculateChangePercent } from "@/lib/math";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { AssetIcon } from "../ui/asset-icon";
 
-export function TopAssets() {
+export function TopAssets({
+    title,
+}: {
+    title: string;
+}) {
     const { assets } = useAssets({
         limit: 4,
+        sortOption: 'volume',
     });
 
     return (
         <div
-            className="
-                hidden md:flex items-center
-                text-xs p-4 gap-6
-            "
+            className="flex flex-col gap-6"
         >
-            {
-                assets.map(
-                    (asset, index) => {
-                        const openPrice = Number(asset?.o);
-                        const closePrice = Number(asset?.c);
-                        const changePercent = (
-                            openPrice > 0
-                                ? ((closePrice - openPrice) / openPrice) * 100
-                                : 0
-                        );
+            <Link
+                href="markets"
+                className="
+                        text-xl font-medium w-fit
+                        hover:text-blue-600
+                        transition-colors duration-100
+                    "
+            >
+                { `${title} >` }
+            </Link>
+            <div
+                className="
+                    items-center text-xs gap-6
+                    grid grid-rows-4 grid-cols-1
+                    md:grid-cols-2 md:grid-rows-2
+                    lg:grid-cols-4 lg:grid-rows-1
+                "
+            >
+                {
+                    assets.map(
+                        (asset, index) => {
+                            const openPrice = Number(asset?.o);
+                            const closePrice = Number(asset?.c);
+                            const changePercent = calculateChangePercent({
+                                openValue: openPrice,
+                                closeValue: closePrice,
+                            });
 
-                        const formattedSymbol = asset?.s ?? '--';
-                        const formattedPrice = formatPrice(asset?.c);
-                        const formattedChange = formatChange(changePercent);
+                            const formattedSymbol = asset?.s ?? '--';
+                            const formattedPrice = formatPrice(asset?.c);
+                            const formattedChange = formatChange(changePercent);
 
-                        return (
-                            <TopAssetsItem
-                                key={ asset?.s ?? index }
-                                symbol={ formattedSymbol }
-                                price={ formattedPrice }
-                                change={ formattedChange }
-                                isPositive={ changePercent >= 0 }
-                            />
-                        );
-                    },
-                )
-            }
+                            return (
+                                <TopAssetsItem
+                                    key={ asset?.s ?? index }
+                                    symbol={ formattedSymbol }
+                                    price={ formattedPrice }
+                                    change={ formattedChange }
+                                    isPositive={ changePercent >= 0 }
+                                />
+                            );
+                        },
+                    )
+                }
+            </div>
         </div>
     );
 };

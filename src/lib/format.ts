@@ -31,7 +31,8 @@ export function formatPrice(
 
     const formattedInt =
         intNonZeroValue.index !== null
-            ? int.slice(intNonZeroValue.index)
+            ? Number(int.slice(intNonZeroValue.index))
+                .toLocaleString('en-US')
             : '0'
 
     const formattedFract =
@@ -40,7 +41,7 @@ export function formatPrice(
             : '00'
 
     return (
-        `${formattedInt}.${formattedFract}`
+        `$${formattedInt}.${formattedFract}`
     );
 };
 

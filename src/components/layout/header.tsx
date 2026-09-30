@@ -21,12 +21,10 @@ export function Header() {
                     <Link
                         href='/'
                         className="
-                        font-bold text-xl tracking-tight
-                    "
+                            font-bold text-xl tracking-tight
+                        "
                     >
-                        <span>
-                            Candler
-                        </span>
+                        Candler
                     </Link>
                 </div>
                 <div
@@ -38,15 +36,25 @@ export function Header() {
                         size="lg"
                         variant="light-blue"
                         className="flex-1"
+                        asChild
                     >
-                        Log In
+                        <Link
+                            href="login"
+                        >
+                            Log In
+                        </Link>
                     </Button>
                     <Button
                         size="lg"
                         variant="blue"
                         className="flex-1"
+                        asChild
                     >
-                        Sign Up
+                        <Link
+                            href="sign-up"
+                        >
+                            Sign Up
+                        </Link>
                     </Button>
                 </div>
             </div>
