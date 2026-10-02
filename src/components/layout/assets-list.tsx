@@ -4,7 +4,6 @@ import { useAssets } from "@/hooks/use-assets";
 import { AssetSortOptions, SortOrder } from "@/lib/assets";
 import { formatChange, formatNumber } from "@/lib/format";
 import { calculateChangePercent } from "@/lib/math";
-import { Separator } from "../ui/separator";
 import { AssetsListCard } from "./assets-list-card";
 import { AssetsListLayout } from "./assets-list-layout";
 import { AssetsListRow } from "./assets-list-row";
@@ -69,25 +68,18 @@ export function AssetsList({
                                     />
                                 )
                                 : (
-                                    <>
-                                        <AssetsListRow
-                                            key={ asset?.s ?? index }
-                                            symbol={ formattedSymbol }
-                                            price={ formattedPrice }
-                                            change={ formattedChange }
-                                            isPositive={ changePercent >= 0 }
-                                        />
-                                        {
-                                            index < assets.length - 1
-                                            &&
-                                            <Separator />
-                                        }
-                                    </>
+                                    <AssetsListRow
+                                        key={ asset?.s ?? index }
+                                        symbol={ formattedSymbol }
+                                        price={ formattedPrice }
+                                        change={ formattedChange }
+                                        isPositive={ changePercent >= 0 }
+                                    />
                                 )
                         );
                     },
                 )
             }
-        </AssetsListLayout>
+        </AssetsListLayout >
     )
 };

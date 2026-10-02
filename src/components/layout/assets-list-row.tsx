@@ -9,30 +9,32 @@ export function AssetsListRow({
     isPositive,
 }: AssetsListItem) {
     return (
-        <button
-            className="
+        <div
+            className="py-2"
+        >
+            <button
+                className="
                 rounded-lg hover:cursor-pointer
                 transition-colors duration-100 flex
                 bg-background hover:bg-secondary p-3
                 w-full gap-2
             "
-        >
-            <AssetIcon
-                symbol={ symbol }
-                variant='color'
-            />
-            <div
-                className="
-                    flex w-full gap-1 items-start
-                    text-base justify-between
-                "
             >
-                <span className="font-semibold text-muted-foreground">
-                    { symbol }
-                </span>
+                <div
+                    className="flex gap-2 items-center"
+                >
+                    <AssetIcon
+                        symbol={ symbol }
+                        variant='color'
+                    />
+                    <span className="font-semibold text-muted-foreground">
+                        { symbol }
+                    </span>
+                </div>
                 <div
                     className="
-                        flex items-center gap-12
+                        flex w-full gap-1 items-center
+                        text-base gap-12 justify-end
                     "
                 >
                     <span className="font-mono font-medium">
@@ -52,7 +54,7 @@ export function AssetsListRow({
                         { change }
                     </div>
                 </div>
-            </div>
-        </button>
+            </button>
+        </div>
     );
 };

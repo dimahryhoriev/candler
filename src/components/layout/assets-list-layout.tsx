@@ -1,6 +1,7 @@
 'use client';
 
 import Link from "next/link";
+import React from "react";
 import { AssetsListViewMode } from "./assets-list";
 
 export function AssetsListLayout({
@@ -74,7 +75,8 @@ export function AssetsListLayoutRows({
     return (
         <div
             className="
-                flex flex-col w-full gap-1.5
+                flex flex-col w-full
+                divide-border divide-y
             "
         >
             {
