@@ -1,21 +1,38 @@
-import { TopAssets } from "@/components/layout/top-assets";
-import { TopGainers } from "@/components/layout/top-gainers";
-import { TopLosers } from "@/components/layout/top-losers";
+import { AssetsList } from "@/components/layout/assets-list";
 
 export default function HomePage() {
+
     return (
         <div
             className="flex flex-col gap-14"
         >
-            <TopAssets
+            <AssetsList
                 title="Market Overview"
+                mode="cards"
+                sortOption="volume"
+                sortOrder="desc"
+                limit={ 4 }
             />
-            <TopGainers
-                title="Top Gainers"
-            />
-            <TopLosers
-                title="Top Losers"
-            />
+            <div
+                className="
+                    flex justify-start gap-6
+                "
+            >
+                <AssetsList
+                    title="Top Gainers"
+                    mode="rows"
+                    sortOption="change"
+                    sortOrder="desc"
+                    limit={ 6 }
+                />
+                <AssetsList
+                    title="Top Losers"
+                    mode="rows"
+                    sortOption="change"
+                    sortOrder="asc"
+                    limit={ 6 }
+                />
+            </div>
         </div>
     );
 };

@@ -15,16 +15,16 @@ function findNonZeroValue(
     };
 };
 
-export function formatPrice(
-    price: string | undefined,
+export function formatNumber(
+    number: string | undefined,
 ) {
-    if (!price) {
+    if (!number) {
         return (
             `${'--'} ${'--'}`
         );
     };
 
-    const [int, fract = '00'] = price.split('.');
+    const [int, fract = '00'] = number.split('.');
 
     const intNonZeroValue = findNonZeroValue(int);
     const fractNonZeroValue = findNonZeroValue(fract);
@@ -41,7 +41,7 @@ export function formatPrice(
             : '00'
 
     return (
-        `$${formattedInt}.${formattedFract}`
+        `${formattedInt}.${formattedFract}`
     );
 };
 

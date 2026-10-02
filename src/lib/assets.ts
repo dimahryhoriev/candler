@@ -6,14 +6,14 @@ export type SortOrder = 'asc' | 'desc';
 
 type SortAssetsParams = {
     assets: Asset[];
-    sortBy?: AssetSortOptions;
+    sortOption?: AssetSortOptions;
     sortOrder: SortOrder;
     limit: number;
 };
 
 export function sortAssets({
     assets,
-    sortBy = 'volume',
+    sortOption = 'volume',
     sortOrder,
     limit,
 }: SortAssetsParams) {
@@ -22,11 +22,11 @@ export function sortAssets({
             .toSorted((a, b) => {
                 const aValue = getAssetValue({
                     asset: a,
-                    sortBy,
+                    sortOption,
                 });
                 const bValue = getAssetValue({
                     asset: b,
-                    sortBy,
+                    sortOption,
                 });
 
                 return (
@@ -41,12 +41,12 @@ export function sortAssets({
 
 function getAssetValue({
     asset,
-    sortBy
+    sortOption,
 }: {
     asset: Asset;
-    sortBy: AssetSortOptions;
+    sortOption: AssetSortOptions;
 }) {
-    switch (sortBy) {
+    switch (sortOption) {
         case 'volume':
             return Number(asset.q)
         case 'price':

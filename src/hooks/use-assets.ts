@@ -48,7 +48,7 @@ export function useAssets({
 
         return sortAssets({
             assets: tickers,
-            sortBy: sortOption,
+            sortOption: sortOption,
             sortOrder,
             limit,
         });
