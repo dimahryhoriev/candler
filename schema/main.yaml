@@ -6,7 +6,9 @@ info:
 
 components:
   schemas:
-    TickerResponse:
-      $ref: "./models/ticker.yaml#/TickerResponse"
+    WebsocketTickerResponse:
+      $ref: "./models/ticker.yaml#/WebsocketTickerResponse"
+    RestTickerResponse:
+      $ref: "./models/ticker.yaml#/RestTickerResponse"
 
 paths: {}

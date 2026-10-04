@@ -8,20 +8,16 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         /** @description Binance WebSocket 24-hour asset payload ticker */
-        TickerResponse: {
+        WebsocketTickerResponse: {
             /** @description Event type */
-            e: string;
+            e?: string;
             /**
              * Format: int64
              * @description Event time in milliseconds
              */
-            E: number;
+            E?: number;
             /** @description Symbol (trading pair) */
             s: string;
-            /** @description Price change in 24h */
-            p: string;
-            /** @description Price change percent in 24h */
-            P: string;
             /** @description Weighted average price */
             w?: string;
             /** @description First trade price before the 24h rolling window */
@@ -39,7 +35,7 @@ export interface components {
             /** @description Best ask quantity */
             A?: string;
             /** @description Open price 24h ago */
-            o?: string;
+            o: string;
             /** @description High price in 24h */
             h?: string;
             /** @description Low price in 24h */
@@ -47,7 +43,7 @@ export interface components {
             /** @description Total traded base asset volume */
             v?: string;
             /** @description Total traded quote asset volume */
-            q?: string;
+            q: string;
             /**
              * Format: int64
              * @description Statistics open time in milliseconds
@@ -70,6 +66,38 @@ export interface components {
             L?: number;
             /** @description Total number of trades */
             n?: number;
+        };
+        /** @description Binance REST 24-hour asset ticker statistics */
+        RestTickerResponse: {
+            /** @description Trading pair symbol */
+            symbol: string;
+            priceChange?: string;
+            priceChangePercent?: string;
+            weightedAvgPrice?: string;
+            prevClosePrice?: string;
+            /** @description Last trade price */
+            lastPrice: string;
+            lastQty?: string;
+            bidPrice?: string;
+            bidQty?: string;
+            askPrice?: string;
+            askQty?: string;
+            /** @description Open price 24h ago */
+            openPrice: string;
+            highPrice?: string;
+            lowPrice?: string;
+            volume?: string;
+            /** @description Total traded quote volume */
+            quoteVolume: string;
+            /** Format: int64 */
+            openTime?: number;
+            /** Format: int64 */
+            closeTime?: number;
+            /** Format: int64 */
+            firstId?: number;
+            /** Format: int64 */
+            lastId?: number;
+            count?: number;
         };
     };
     responses: never;

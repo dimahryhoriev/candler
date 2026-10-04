@@ -1,13 +1,11 @@
-TickerResponse:
+WebsocketTickerResponse:
   type: object
   description: Binance WebSocket 24-hour asset payload ticker
   required:
-    - e
-    - E
     - s
-    - p
-    - P
     - c
+    - o
+    - q
   properties:
     e:
       type: string
@@ -19,12 +17,6 @@ TickerResponse:
     s:
       type: string
       description: Symbol (trading pair)
-    p:
-      type: string
-      description: Price change in 24h
-    P:
-      type: string
-      description: Price change percent in 24h
     w:
       type: string
       description: Weighted average price
@@ -83,3 +75,63 @@ TickerResponse:
     n:
       type: integer
       description: Total number of trades
+
+RestTickerResponse:
+  type: object
+  description: Binance REST 24-hour asset ticker statistics
+  required:
+    - symbol
+    - lastPrice
+    - openPrice
+    - quoteVolume
+  properties:
+    symbol:
+      type: string
+      description: Trading pair symbol
+    priceChange:
+      type: string
+    priceChangePercent:
+      type: string
+    weightedAvgPrice:
+      type: string
+    prevClosePrice:
+      type: string
+    lastPrice:
+      type: string
+      description: Last trade price
+    lastQty:
+      type: string
+    bidPrice:
+      type: string
+    bidQty:
+      type: string
+    askPrice:
+      type: string
+    askQty:
+      type: string
+    openPrice:
+      type: string
+      description: Open price 24h ago
+    highPrice:
+      type: string
+    lowPrice:
+      type: string
+    volume:
+      type: string
+    quoteVolume:
+      type: string
+      description: Total traded quote volume
+    openTime:
+      type: integer
+      format: int64
+    closeTime:
+      type: integer
+      format: int64
+    firstId:
+      type: integer
+      format: int64
+    lastId:
+      type: integer
+      format: int64
+    count:
+      type: integer
