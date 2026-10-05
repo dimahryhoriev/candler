@@ -57,32 +57,27 @@ export function useAssets({
     );
 
     useEffect(() => {
+        console.log(isLoadedRef)
         if (!isLoadedRef.current) {
+            console.log(isLoadedRef)
             isLoadedRef.current = true;
             lastRunTimeRef.current = Date.now();
-            let isSubscribed = true;
 
             fetchTickers()
                 .then((tickers) => {
-                    if (isSubscribed) {
-                        setInitialTickers(tickers)
-                        setPairs(
-                            sortAssets({
-                                assets: tickers,
-                                sortOption,
-                                sortOrder,
-                                limit
-                            }).map(a => a.s)
-                        )
-                    }
+                    setInitialTickers(tickers);
+                    setPairs(
+                        sortAssets({
+                            assets: tickers,
+                            sortOption,
+                            sortOrder,
+                            limit
+                        }).map(a => a.s)
+                    );
                 })
                 .catch((error) => {
                     console.error("Failed to load initial tickers: ", error);
                 })
-
-            return () => {
-                isSubscribed = false;
-            };
         }
     }, [
         setInitialTickers,
