@@ -1,7 +1,6 @@
 import { AssetsList } from "@/components/layout/assets-list";
 
 export default function HomePage() {
-
     return (
         <div
             className="flex flex-col gap-14"

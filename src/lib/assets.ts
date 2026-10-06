@@ -17,8 +17,12 @@ export function sortAssets({
     sortOrder,
     limit,
 }: SortAssetsParams) {
+    const activeAssets = assets.filter(
+        a => Number(a.q) > 0
+    );
+
     return (
-        filterAssetsByPair(assets)
+        filterAssetsByPair(activeAssets)
             .toSorted((a, b) => {
                 const aValue = getAssetValue({
                     asset: a,
