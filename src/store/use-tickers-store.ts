@@ -25,7 +25,7 @@ const WS_BASE_URL =
     ??
     'wss://stream.binance.com:9443/ws'
 
-const TICKERS_REST_URL = `${REST_BASE_URL}/ticker/24hr?type=MINI`;
+const TICKERS_REST_URL = `${REST_BASE_URL}/ticker/24hr`;
 const TICKERS_WS_URL = `${WS_BASE_URL}/!miniTicker@arr`;
 
 const tickersStream = createStream<Asset[]>({
@@ -97,15 +97,29 @@ async function fetchTickers() {
 
     const data: ApiSchemas['RestTickerResponse'][]
         = await res.json();
+    const now = Date.now();
+    const maxInactivityTime = 10 * 60 * 1000;
 
-    return data.map(
-        (item) => ({
-            s: item.symbol,
-            c: item.lastPrice,
-            o: item.openPrice,
-            q: item.quoteVolume,
-        } as Asset)
-    );
+    return data
+        .filter(
+            (item) => {
+                const hasVolume = Number(item.quoteVolume) > 0;
+                const isActive = item.closeTime
+                    ? (now - item.closeTime) < maxInactivityTime
+                    : false
+
+                return isActive && hasVolume;
+            },
+        )
+        .map(
+            (item) => ({
+                s: item.symbol,
+                c: item.lastPrice,
+                o: item.openPrice,
+                q: item.quoteVolume,
+                C: item.closeTime,
+            } as Asset)
+        );
 };
 
 const toTickersRecord = (
