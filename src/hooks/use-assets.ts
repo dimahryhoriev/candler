@@ -6,6 +6,7 @@ import { useTickersStore } from "@/store/use-tickers-store";
 import { useEffect, useMemo } from "react";
 
 export type Asset = ApiSchemas['WebsocketTickerResponse'];
+
 type UseAssetsParams = {
     limit?: number;
     sortOption?: AssetSortOptions;

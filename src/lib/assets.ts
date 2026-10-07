@@ -1,24 +1,52 @@
 import { Asset } from "@/hooks/use-assets";
+import { formatSymbol } from "./format";
 import { calculateChangePercent } from "./math";
 
 export type AssetSortOptions = 'volume' | 'price' | 'change';
 export type SortOrder = 'asc' | 'desc';
 
+export type AssetsTypeOptions = {
+    stables?: boolean;
+    majors?: boolean;
+    altcoins?: boolean;
+};
+
+const majors = ['BTC', 'ETH'];
+const stables = [
+    'USDC', 'FDUSD', 'TUSD', 'USDP',
+    'USDD', 'DAI', 'FRAX', 'PYUSD',
+    'USDE', 'BUSD', 'EUR', 'AEUR',
+    'EURI', 'TRY', 'BRL', 'GBP',
+    'ARS', 'UAH', 'BIDR', 'ZAR',
+];
+
 type SortAssetsParams = {
     assets: Asset[];
     sortOption?: AssetSortOptions;
-    sortOrder: SortOrder;
+    sortOrder?: SortOrder;
+    typeOptions?: AssetsTypeOptions;
     limit: number;
 };
 
 export function sortAssets({
     assets,
     sortOption = 'volume',
-    sortOrder,
+    sortOrder = 'asc',
+    typeOptions = {
+        stables: false,
+        majors: true,
+        altcoins: true,
+    },
     limit,
 }: SortAssetsParams) {
+    const filteredPairs = filterAssetsByPair(assets);
+    const filteredTypes = filterAssetsByType(
+        filteredPairs,
+        typeOptions,
+    );
+
     return (
-        filterAssetsByPair(assets)
+        filteredTypes
             .toSorted((a, b) => {
                 const aValue = getAssetValue({
                     asset: a,
@@ -79,5 +107,45 @@ function filterAssetsByPair(
             &&
             !a.s.includes('DOWN')
         ))
+    );
+};
+
+function filterAssetsByType(
+    assets: Asset[],
+    type: AssetsTypeOptions,
+) {
+    if (!Array.isArray(assets)) return [];
+
+    return (
+        assets.filter((a) => {
+            const symbol = formatSymbol(
+                a.s,
+                'upper',
+            );
+
+            if (
+                type.stables === false
+                &&
+                stables.includes(symbol)
+            ) return false;
+
+            if (
+                type.majors === false
+                &&
+                majors.includes(symbol)
+            ) return false;
+
+            if (
+                type.altcoins === false
+                &&
+                (
+                    !stables.includes(symbol)
+                    &&
+                    !majors.includes(symbol)
+                )
+            ) return false;
+
+            return true;
+        })
     );
 };
