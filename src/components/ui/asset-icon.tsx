@@ -1,11 +1,12 @@
 import { formatSymbol } from "@/lib/format";
+import { cn } from "@/lib/utils";
 import { CircleDollarSign } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
 const ICON_BASE_URL = process.env.NEXT_PUBLIC_CRYPTO_ICONS_BASE_URL;
 
-type AssetIconVariant = 'color' | 'white' | 'black' | 'icon';
+type AssetIconVariant = 'color' | 'mono';
 
 export function AssetIcon({
     symbol,
@@ -16,7 +17,7 @@ export function AssetIcon({
 }) {
     const formattedSymbol = formatSymbol(
         symbol,
-        'lower'
+        'upper'
     );
     const [hasError, setHasError] = useState<boolean>(
         false
@@ -28,14 +29,19 @@ export function AssetIcon({
         );
     };
 
-    const ICON_URL = `${ICON_BASE_URL}/${variant}/${formattedSymbol}.svg`;
+    const ICON_URL = `${ICON_BASE_URL}${formattedSymbol}.svg`;
 
     return (
         <div
-            className="
-                w-8 h-8 relative shrink-0
-                overflow-hidden rounded-full
-            "
+            className={
+                cn(
+                    'w-8 h-8 relative shrink-0',
+                    'overflow-hidden rounded-full',
+                    variant === 'mono'
+                    &&
+                    'grayscale contrast-125 opacity-80'
+                )
+            }
         >
             <Image
                 fill
