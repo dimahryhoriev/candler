@@ -1,7 +1,7 @@
 'use client'
 
 import { ApiSchemas } from "@/api";
-import { AssetSortOptions, sortAssets, SortOrder } from "@/lib/assets";
+import { AssetSortOptions, AssetsTypeOptions, sortAssets, SortOrder } from "@/lib/assets";
 import { useTickersStore } from "@/store/use-tickers-store";
 import { useEffect, useMemo } from "react";
 
@@ -11,12 +11,18 @@ type UseAssetsParams = {
     limit?: number;
     sortOption?: AssetSortOptions;
     sortOrder?: SortOrder;
+    typeOptions?: AssetsTypeOptions;
 };
 
 export function useAssets({
     limit = 5,
     sortOption = 'volume',
     sortOrder = 'desc',
+    typeOptions = {
+        stables: false,
+        majors: true,
+        altcoins: true,
+    },
 }: UseAssetsParams = {}) {
     const isInitialized = useTickersStore(s => s.isInitialized);
     const initTickers = useTickersStore(s => s.init);
@@ -47,12 +53,14 @@ export function useAssets({
             assets: tickersList,
             sortOption,
             sortOrder,
+            typeOptions,
             limit,
         });
     }, [
         tickers,
         sortOption,
         sortOrder,
+        typeOptions,
         limit,
     ]);
 
