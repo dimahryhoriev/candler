@@ -5,7 +5,7 @@ const REST_BASE_URL =
 
 const KLINES_REST_URL = `${REST_BASE_URL}/klines`;
 
-export type Interval =
+export type IntervalKey =
     | '1m' | '3m' | '5m'
     | '15m' | '30m' | '1h'
     | '2h' | '4h' | '6h'
@@ -19,14 +19,14 @@ type KlineItem = {
     closePrice: number;
 }
 
-type AssetKlines = {
+export type AssetKlines = {
     symbol: string;
     klines: KlineItem[];
 };
 
 type UseKlinesParams = {
     symbols: string[];
-    interval: Interval;
+    interval: IntervalKey;
     limit: number;
 };
 

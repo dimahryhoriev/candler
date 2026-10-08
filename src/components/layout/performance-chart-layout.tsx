@@ -1,11 +1,16 @@
-import { Timeframe } from "./performance-chart";
+import { AssetKlines } from "@/lib/fetch-klines";
+import { TimeframeKey } from "./performance-chart";
 
 export function PerformanceChartLayout({
     title,
-    timeframe = '1D',
+    klines,
+    timeframeKey = '1D',
+    isLoading = false,
 }: {
     title: string;
-    timeframe?: Timeframe;
+    klines: AssetKlines[];
+    timeframeKey?: TimeframeKey;
+    isLoading: boolean;
 }) {
     return (
         <div
