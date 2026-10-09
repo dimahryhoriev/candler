@@ -22,10 +22,10 @@ export function AssetsListLayout({
             <Link
                 href="markets"
                 className="
-                        text-xl font-medium w-fit
-                        hover:text-blue-600
-                        transition-colors duration-100
-                    "
+                    text-xl font-medium w-fit
+                    hover:text-blue-600
+                    transition-colors duration-100
+                "
             >
                 { `${title} >` }
             </Link>

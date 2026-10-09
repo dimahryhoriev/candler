@@ -11,3 +11,25 @@ export function calculateChangePercent({
             : 0
     );
 };
+
+export function calculateChangeSteps({
+    limit,
+    minChange,
+    maxChange,
+}: {
+    limit: number;
+    minChange: number;
+    maxChange: number;
+}) {
+    const step = (maxChange - minChange) / limit;
+    return Array.from(
+        {
+            length: limit + 1,
+        },
+        (_, index) => {
+            return (
+                minChange + (index * step)
+            );
+        },
+    );
+};

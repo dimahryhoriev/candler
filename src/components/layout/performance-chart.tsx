@@ -1,3 +1,5 @@
+'use client'
+
 import { useAssets } from "@/hooks/use-assets";
 import { fetchKlines, IntervalKey } from "@/lib/fetch-klines";
 import { useQuery } from "@tanstack/react-query";
@@ -9,9 +11,22 @@ export type TimeframeKey =
     | '3M' | '6M' | '1Y'
     | '5Y' | 'ALL';
 
-const timeframeToIntervalMap: Record<TimeframeKey, IntervalKey> = {
-    '1D': '5m', '1W': '30m', '1M': '2h', '3M': '8h',
-    '6M': '12h', '1Y': '1d', '5Y': '1w', 'ALL': '1M',
+type TimeframeValues = {
+    interval: IntervalKey;
+    limit: number;
+};
+
+type TimeframeMap = Record<TimeframeKey, TimeframeValues>;
+
+const timeframeToIntervalMap: TimeframeMap = {
+    '1D': { interval: '5m', limit: 288 },
+    '1W': { interval: '30m', limit: 336 },
+    '1M': { interval: '2h', limit: 360 },
+    '3M': { interval: '8h', limit: 270 },
+    '6M': { interval: '12h', limit: 360 },
+    '1Y': { interval: '1d', limit: 365 },
+    '5Y': { interval: '1w', limit: 260 },
+    'ALL': { interval: '1M', limit: 1000 },
 };
 
 export function PerformanceChart({
@@ -21,8 +36,10 @@ export function PerformanceChart({
     assetsType: 'majors' | 'altcoins';
     timeframeKey?: TimeframeKey;
 }) {
-    const limit = 200;
-    const interval = timeframeToIntervalMap[timeframeKey];
+    const {
+        interval,
+        limit,
+    } = timeframeToIntervalMap[timeframeKey];
 
     const { assets } = useAssets({
         limit: assetsType === 'majors' ? 2 : 6,

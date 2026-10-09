@@ -1,4 +1,5 @@
 import { AssetsList } from "@/components/layout/assets-list";
+import { PerformanceChart } from "@/components/layout/performance-chart";
 
 export default function HomePage() {
     return (
@@ -30,6 +31,15 @@ export default function HomePage() {
                     sortOption="change"
                     sortOrder="asc"
                     limit={ 6 }
+                />
+            </div>
+            <div
+                className="
+                    flex justify-start gap-6
+                "
+            >
+                <PerformanceChart
+                    assetsType="majors"
                 />
             </div>
         </div>
