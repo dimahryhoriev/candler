@@ -3,7 +3,7 @@
 import { useAssets } from "@/hooks/use-assets";
 import { AssetSortOptions, SortOrder } from "@/lib/assets";
 import { formatChange, formatNumber } from "@/lib/format";
-import { calculateChangePercent } from "@/lib/math";
+import { calculateChangePercent } from "@/lib/math/change";
 import { AssetsListCard } from "./assets-list-card";
 import { AssetsListLayout } from "./assets-list-layout";
 import { AssetsListRow } from "./assets-list-row";

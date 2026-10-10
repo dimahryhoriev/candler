@@ -1,6 +1,6 @@
 import { Asset } from "@/hooks/use-assets";
 import { formatSymbol } from "./format";
-import { calculateChangePercent } from "./math";
+import { calculateChangePercent } from "./math/change";
 
 export type AssetSortOptions = 'volume' | 'price' | 'change';
 export type SortOrder = 'asc' | 'desc';

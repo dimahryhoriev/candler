@@ -42,6 +42,10 @@ export default function HomePage() {
                     assetsType="majors"
                     timeframeKey="1Y"
                 />
+                <PerformanceChart
+                    assetsType="altcoins"
+                    timeframeKey="1Y"
+                />
             </div>
         </div>
     );
