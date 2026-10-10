@@ -14,22 +14,50 @@ export function calculateChangePercent({
 
 export function calculateChangeSteps({
     limit,
+    stepMultiple = 5,
     minChange,
     maxChange,
 }: {
     limit: number;
+    stepMultiple?: number;
     minChange: number;
     maxChange: number;
 }) {
-    const step = (maxChange - minChange) / limit;
-    return Array.from(
-        {
-            length: limit + 1,
-        },
-        (_, index) => {
-            return (
-                minChange + (index * step)
-            );
-        },
+    const step = (maxChange - minChange) / (limit);
+
+    const negativeSteps = minChange < 0
+        ? (
+            Array.from(
+                {
+                    length: Math.abs(minChange / step),
+                },
+                (_, index) => {
+                    return -(index + 1) * step;
+                },
+            )
+        ).reverse()
+        : [];
+
+    const positiveSteps = maxChange > 0
+        ? (
+            Array.from(
+                {
+                    length: Math.abs(maxChange / step),
+                },
+                (_, index) => {
+                    return step + (index * step);
+                },
+            )
+        )
+        : [];
+
+    return (
+        [...negativeSteps, 0, ...positiveSteps].map(
+            step => (
+                Math.round(step / stepMultiple)
+                *
+                stepMultiple
+            )
+        )
     );
 };

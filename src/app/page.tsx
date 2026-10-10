@@ -40,6 +40,7 @@ export default function HomePage() {
             >
                 <PerformanceChart
                     assetsType="majors"
+                    timeframeKey="1Y"
                 />
             </div>
         </div>

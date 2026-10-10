@@ -7,7 +7,7 @@ import { PerformanceChartViewport } from "./performance-chart-viewport";
 export function PerformanceChartLayout({
     title,
     klines,
-    timeframeKey = '1D',
+    timeframeKey,
     isLoading = false,
 }: {
     title: string;
@@ -15,7 +15,6 @@ export function PerformanceChartLayout({
     timeframeKey?: TimeframeKey;
     isLoading: boolean;
 }) {
-    console.log(klines)
     return (
         <div
             className="

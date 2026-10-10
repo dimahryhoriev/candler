@@ -34,12 +34,13 @@ export function PerformanceChartViewport({
         },
     );
 
-    const maxAbs = Math.max(...changes.map(Math.abs));
+    const minChange = Math.min(...changes);
+    const maxChange = Math.max(...changes);
 
     const changeSteps = calculateChangeSteps({
         limit: 8,
-        minChange: -maxAbs,
-        maxChange: maxAbs,
+        minChange,
+        maxChange,
     }).map(
         (change) => formatChange(change),
     );
