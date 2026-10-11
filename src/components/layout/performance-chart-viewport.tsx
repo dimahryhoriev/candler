@@ -1,9 +1,7 @@
 import { useCanvasRect } from "@/hooks/use-canvas-rect";
 import { AssetKlines } from "@/lib/fetch-klines";
 import { formatChange } from "@/lib/format";
-import { calculateChangeSteps } from "@/lib/math/change";
-import { diffPoints, Point } from "@/lib/math/point";
-import { useLayoutEffect, useRef, useState } from "react";
+import { calculateChangeSteps, getChangeLimits, scaleChangeToPoint } from "@/lib/math/change";
 import { TimeframeKey } from "./performance-chart";
 
 export function PerformanceChartViewport({
@@ -16,26 +14,79 @@ export function PerformanceChartViewport({
     isLoading: boolean;
 }) {
     const { canvasRef, canvasRect } = useCanvasRect();
-    const startLabelRef = useRef<HTMLSpanElement | null>(null);
 
-    const [startPoint, setStartPoint] = useState<Point>();
+    const assetChanges = klines.map(
+        (asset) => {
+            const openPrice = asset.klines[0]?.openPrice;
+            if (!openPrice) return {
+                symbol: asset.symbol,
+                changes: [],
+            };
 
-    useLayoutEffect(() => {
-        if (startLabelRef.current && canvasRect) {
-            setStartPoint(
-                diffPoints(
-                    {
-                        x: canvasRect.x,
-                        y: canvasRect.y,
-                    },
-                    {
-                        x: startLabelRef.current.getBoundingClientRect().x,
-                        y: startLabelRef.current.getBoundingClientRect().y,
-                    }
-                )
-            )
-        }
-    }, [canvasRect]);
+            return {
+                symbol: asset.symbol,
+                changes:
+                    asset.klines.map(
+                        (k) => ({
+                            openTime: k.openTime,
+                            closeTime: k.closeTime,
+                            change: (
+                                ((k.closePrice - openPrice) / openPrice)
+                                *
+                                100
+                            )
+                        })
+                    )
+            }
+        },
+    );
+
+    const changeValues = assetChanges.flatMap(a => a.changes);
+
+    const {
+        minTime,
+        maxTime,
+        minChange,
+        maxChange,
+    } = getChangeLimits(changeValues);
+
+    const lines = (canvasRect && changeValues.length)
+        ? (
+            assetChanges.map((asset) => {
+                const points = (
+                    asset.changes.map((c, index) => (
+                        scaleChangeToPoint({
+                            changeBounds: {
+                                time: { min: minTime, max: maxTime },
+                                change: { min: minChange, max: maxChange },
+                                size: { width: canvasRect.width, height: canvasRect.height }
+                            },
+                            currChange: c.change,
+                            currTime: index === 0
+                                ? c.openTime
+                                : c.closeTime,
+                        })
+                    ))
+                );
+
+                const line = points.reduce(
+                    (acc, point, index) => (
+                        index === 0
+                            ? `M ${point.x} ${point.y}`
+                            : `${acc} L ${point.x} ${point.y}`
+                    ),
+                    ''
+                );
+
+                return {
+                    symbol: asset.symbol,
+                    line,
+                };
+            })
+        )
+        : [];
+
+    console.log(lines);
 
     if (
         isLoading
@@ -44,40 +95,6 @@ export function PerformanceChartViewport({
     ) {
         return <div></div>
     }
-
-    const minPoint: Point | undefined = canvasRect ?
-        {
-            x: canvasRect.x + canvasRect.width,
-            y: canvasRect.y + canvasRect.height,
-        }
-        :
-        undefined;
-
-    const maxPoint: Point | undefined = canvasRect ?
-        {
-            x: canvasRect.x,
-            y: canvasRect.y,
-        }
-        : undefined;
-
-    console.log(minPoint, maxPoint, startPoint);
-
-    const changes = klines.flatMap(
-        (asset) => {
-            const openPrice = asset.klines[0]?.openPrice;
-            if (!openPrice) return [];
-
-            return asset.klines.map(
-                (k) =>
-                    ((k.closePrice - openPrice) / openPrice)
-                    *
-                    100
-            );
-        },
-    );
-
-    const minChange = Math.min(...changes);
-    const maxChange = Math.max(...changes);
 
     const changeSteps = calculateChangeSteps({
         limit: 8,
@@ -92,11 +109,21 @@ export function PerformanceChartViewport({
             "
             ref={ canvasRef }
         >
-            <div
+            <svg
                 className="w-full h-full"
             >
-
-            </div>
+                {
+                    lines.map((item) => (
+                        <path
+                            key={ item.symbol }
+                            d={ item.line }
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={ 2 }
+                        />
+                    ))
+                }
+            </svg>
             <div
                 className="
                     flex flex-col gap-8
@@ -107,11 +134,6 @@ export function PerformanceChartViewport({
                     changeSteps.map(
                         (change, index) => (
                             <span
-                                ref={
-                                    change === 0
-                                        ? startLabelRef
-                                        : null
-                                }
                                 className="text-xs"
                                 key={ `${index}` }
                             >
