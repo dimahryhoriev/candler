@@ -90,7 +90,7 @@ export function PerformanceChartViewport({
                     const fill = (
                         line
                         + `L ${canvasRect.width} ${canvasRect.height}`
-                        + `L 0 ${canvasRect.height}`
+                        + `L ${points[0].x} ${canvasRect.height}`
                         + `L ${points[0].x} ${points[0].y}`
                     )
 
