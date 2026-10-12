@@ -6,7 +6,6 @@ import { TimeframeKey } from "./performance-chart";
 
 export function PerformanceChartViewport({
     klines,
-    timeframeKey,
     colorsMap,
     isLoading,
 }: {
@@ -60,41 +59,47 @@ export function PerformanceChartViewport({
 
     const curves = (canvasRect && changeValues.length)
         ? (
-            assetChanges.map((asset) => {
-                const points = (
-                    asset.changes.map((c, index) => (
-                        scaleChangeToPoint({
-                            changeBounds,
-                            currChange: c.change,
-                            currTime: index === 0
-                                ? c.openTime
-                                : c.closeTime,
-                        })
-                    ))
-                );
+            assetChanges
+                .sort((a, b) => {
+                    const maxA = Math.max(...a.changes.map(c => c.change));
+                    const maxB = Math.max(...b.changes.map(c => c.change));
+                    return maxB - maxA;
+                })
+                .map((asset) => {
+                    const points = (
+                        asset.changes.map((c, index) => (
+                            scaleChangeToPoint({
+                                changeBounds,
+                                currChange: c.change,
+                                currTime: index === 0
+                                    ? c.openTime
+                                    : c.closeTime,
+                            })
+                        ))
+                    );
 
-                const line = points.reduce(
-                    (acc, point, index) => (
-                        index === 0
-                            ? `M ${point.x} ${point.y}`
-                            : `${acc} L ${point.x} ${point.y}`
-                    ),
-                    ''
-                );
+                    const line = points.reduce(
+                        (acc, point, index) => (
+                            index === 0
+                                ? `M ${point.x} ${point.y}`
+                                : `${acc} L ${point.x} ${point.y}`
+                        ),
+                        ''
+                    );
 
-                const fill = (
-                    line
-                    + `L ${canvasRect.width} ${canvasRect.height}`
-                    + `L 0 ${canvasRect.height}`
-                    + `L ${points[0].x} ${points[0].y}`
-                )
+                    const fill = (
+                        line
+                        + `L ${canvasRect.width} ${canvasRect.height}`
+                        + `L 0 ${canvasRect.height}`
+                        + `L ${points[0].x} ${points[0].y}`
+                    )
 
-                return {
-                    symbol: asset.symbol,
-                    line,
-                    fill,
-                };
-            })
+                    return {
+                        symbol: asset.symbol,
+                        line,
+                        fill,
+                    };
+                })
         )
         : [];
 
@@ -115,7 +120,7 @@ export function PerformanceChartViewport({
     return (
         <div
             className="
-                flex w-full h-auto gap-4
+                flex w-full h-auto gap-3
             "
         >
             <svg

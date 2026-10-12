@@ -26,7 +26,7 @@ export function calculateChangePercent({
 
 export function calculateChangeSteps({
     limit,
-    stepMultiple = 5,
+    stepMultiple = 1,
     minChange,
     maxChange,
 }: {

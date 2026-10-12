@@ -35,16 +35,14 @@ export default function HomePage() {
             </div>
             <div
                 className="
-                    flex justify-start gap-6
+                    flex justify-start gap-14
                 "
             >
                 <PerformanceChart
                     assetsType="majors"
-                    timeframeKey="1M"
                 />
                 <PerformanceChart
                     assetsType="altcoins"
-                    timeframeKey="1M"
                 />
             </div>
         </div>

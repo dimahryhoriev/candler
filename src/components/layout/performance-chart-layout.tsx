@@ -3,18 +3,21 @@
 import { AssetKlines } from "@/lib/fetch-klines";
 import { formatSymbol } from "@/lib/format";
 import { TimeframeKey } from "./performance-chart";
+import { PerformanceChartActions } from "./performance-chart-actions";
 import { PerformanceChartViewport } from "./performance-chart-viewport";
 
 export function PerformanceChartLayout({
     title,
     klines,
     timeframeKey,
+    onTimeframeChange,
     colorsMap,
     isLoading = false,
 }: {
     title: string;
     klines: AssetKlines[];
     timeframeKey?: TimeframeKey;
+    onTimeframeChange: (value: TimeframeKey) => void;
     colorsMap: Map<string, string>;
     isLoading: boolean;
 }) {
@@ -22,7 +25,6 @@ export function PerformanceChartLayout({
         <div
             className="
                 flex flex-col gap-6 w-full
-                pr-10
             "
         >
             <span
@@ -75,6 +77,10 @@ export function PerformanceChartLayout({
                     )
                 }
             </ul>
+            <PerformanceChartActions
+                timeframeKey={ timeframeKey }
+                onChange={ onTimeframeChange }
+            />
         </div>
     );
 };

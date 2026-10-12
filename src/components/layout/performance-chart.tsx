@@ -4,7 +4,7 @@ import { useAssets } from "@/hooks/use-assets";
 import { createColorsMap } from "@/lib/colors";
 import { fetchKlines, IntervalKey } from "@/lib/fetch-klines";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { PerformanceChartLayout } from "./performance-chart-layout";
 
 export type TimeframeKey =
@@ -17,9 +17,9 @@ type TimeframeValues = {
     limit: number;
 };
 
-type TimeframeMap = Record<TimeframeKey, TimeframeValues>;
+export type TimeframesMap = Record<TimeframeKey, TimeframeValues>;
 
-const timeframeToIntervalMap: TimeframeMap = {
+export const timeframesMap: TimeframesMap = {
     '1D': { interval: '5m', limit: 288 },
     '1W': { interval: '30m', limit: 336 },
     '1M': { interval: '2h', limit: 360 },
@@ -32,15 +32,15 @@ const timeframeToIntervalMap: TimeframeMap = {
 
 export function PerformanceChart({
     assetsType,
-    timeframeKey = '1D',
 }: {
     assetsType: 'majors' | 'altcoins';
-    timeframeKey?: TimeframeKey;
 }) {
+    const [timeframeKey, setTimeframeKey] = useState<TimeframeKey>('1M');
+
     const {
         interval,
         limit,
-    } = timeframeToIntervalMap[timeframeKey];
+    } = timeframesMap[timeframeKey];
 
     const { assets } = useAssets({
         limit: assetsType === 'majors' ? 2 : 6,
@@ -95,6 +95,7 @@ export function PerformanceChart({
             }
             klines={ klines }
             timeframeKey={ timeframeKey }
+            onTimeframeChange={ setTimeframeKey }
             colorsMap={ colorsMap }
             isLoading={ isLoading }
         />
