@@ -40,11 +40,11 @@ export default function HomePage() {
             >
                 <PerformanceChart
                     assetsType="majors"
-                    timeframeKey="1Y"
+                    timeframeKey="1M"
                 />
                 <PerformanceChart
                     assetsType="altcoins"
-                    timeframeKey="1Y"
+                    timeframeKey="1M"
                 />
             </div>
         </div>

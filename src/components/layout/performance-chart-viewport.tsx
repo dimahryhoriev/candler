@@ -7,10 +7,12 @@ import { TimeframeKey } from "./performance-chart";
 export function PerformanceChartViewport({
     klines,
     timeframeKey,
+    colorsMap,
     isLoading,
 }: {
     klines: AssetKlines[];
     timeframeKey?: TimeframeKey;
+    colorsMap: Map<string, string>;
     isLoading: boolean;
 }) {
     const { canvasRef, canvasRect } = useCanvasRect();
@@ -50,17 +52,19 @@ export function PerformanceChartViewport({
         maxChange,
     } = getChangeLimits(changeValues);
 
-    const lines = (canvasRect && changeValues.length)
+    const changeBounds = {
+        time: { min: minTime, max: maxTime },
+        change: { min: minChange, max: maxChange },
+        size: { width: canvasRect?.width ?? 0, height: canvasRect?.height ?? 0 },
+    }
+
+    const curves = (canvasRect && changeValues.length)
         ? (
             assetChanges.map((asset) => {
                 const points = (
                     asset.changes.map((c, index) => (
                         scaleChangeToPoint({
-                            changeBounds: {
-                                time: { min: minTime, max: maxTime },
-                                change: { min: minChange, max: maxChange },
-                                size: { width: canvasRect.width, height: canvasRect.height }
-                            },
+                            changeBounds,
                             currChange: c.change,
                             currTime: index === 0
                                 ? c.openTime
@@ -78,15 +82,21 @@ export function PerformanceChartViewport({
                     ''
                 );
 
+                const fill = (
+                    line
+                    + `L ${canvasRect.width} ${canvasRect.height}`
+                    + `L 0 ${canvasRect.height}`
+                    + `L ${points[0].x} ${points[0].y}`
+                )
+
                 return {
                     symbol: asset.symbol,
                     line,
+                    fill,
                 };
             })
         )
         : [];
-
-    console.log(lines);
 
     if (
         isLoading
@@ -105,29 +115,36 @@ export function PerformanceChartViewport({
     return (
         <div
             className="
-                flex w-full h-auto
+                flex w-full h-auto gap-4
             "
-            ref={ canvasRef }
         >
             <svg
                 className="w-full h-full"
+                ref={ canvasRef }
             >
                 {
-                    lines.map((item) => (
-                        <path
-                            key={ item.symbol }
-                            d={ item.line }
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth={ 2 }
-                        />
+                    curves.map((curve) => (
+                        [
+                            <path
+                                key={ `l-${curve.symbol}` }
+                                d={ curve.line }
+                                fill="none"
+                                stroke={ `var(${colorsMap.get(curve.symbol)})` }
+                                strokeWidth={ 3.5 }
+                            />,
+                            <path
+                                key={ `f-${curve.symbol}` }
+                                d={ curve.fill }
+                                fill={ `var(${colorsMap.get(curve.symbol)}-secondary)` }
+                            />
+                        ]
                     ))
                 }
             </svg>
             <div
                 className="
                     flex flex-col gap-8
-                    h-full w-fit pr-12
+                    h-full w-fit
                 "
             >
                 {

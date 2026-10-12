@@ -10,7 +10,7 @@ export type CanvasRect = {
 export function useCanvasRect() {
     const [canvasRect, setCanvasRect] = useState<CanvasRect>();
 
-    const canvasRef: RefCallback<HTMLDivElement> =
+    const canvasRef: RefCallback<SVGElement> =
         useCallback(
             (el) => {
                 const observer = new ResizeObserver(

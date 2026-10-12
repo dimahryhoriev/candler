@@ -1,6 +1,7 @@
 'use client'
 
 import { useAssets } from "@/hooks/use-assets";
+import { createColorsMap } from "@/lib/colors";
 import { fetchKlines, IntervalKey } from "@/lib/fetch-klines";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
@@ -62,6 +63,14 @@ export function PerformanceChart({
         );
     }, [assets]);
 
+    const colorsMap = createColorsMap(
+        symbols,
+        [
+            '--chart-1', '--chart-2', '--chart-3',
+            '--chart-4', '--chart-5', '--chart-6',
+        ],
+    );
+
     const {
         data: klines = [],
         isLoading,
@@ -86,6 +95,7 @@ export function PerformanceChart({
             }
             klines={ klines }
             timeframeKey={ timeframeKey }
+            colorsMap={ colorsMap }
             isLoading={ isLoading }
         />
     );

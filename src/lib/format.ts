@@ -55,13 +55,23 @@ export function formatChange(
 
 export function formatSymbol(
     symbol: string,
-    letterCase: 'upper' | 'lower',
+    letterCase: 'upper' | 'lower' | 'capitalize',
 ) {
     const formattedSymbol = `${symbol.slice(0, -4)}`;
 
-    return (
-        letterCase === 'lower'
-            ? formattedSymbol.toLowerCase()
-            : formattedSymbol.toUpperCase()
-    );
+    switch (letterCase) {
+        case 'upper': return formattedSymbol.toUpperCase()
+        case 'lower': return formattedSymbol.toLowerCase()
+        case 'capitalize': return (
+            (
+                formattedSymbol.charAt(0)
+                    .toUpperCase()
+            )
+            +
+            (
+                formattedSymbol.slice(1)
+                    .toLowerCase()
+            )
+        );
+    };
 };

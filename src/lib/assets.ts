@@ -18,6 +18,7 @@ const stables = [
     'USDE', 'BUSD', 'EUR', 'AEUR',
     'EURI', 'TRY', 'BRL', 'GBP',
     'ARS', 'UAH', 'BIDR', 'ZAR',
+    'USD1'
 ];
 
 type SortAssetsParams = {
