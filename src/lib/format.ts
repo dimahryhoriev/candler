@@ -20,7 +20,7 @@ export function formatNumber(
 ) {
     if (!number) {
         return (
-            `${'--'} ${'--'}`
+            '-- --'
         );
     };
 

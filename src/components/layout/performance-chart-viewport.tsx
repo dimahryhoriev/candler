@@ -1,6 +1,6 @@
 import { useCanvasRect } from "@/hooks/use-canvas-rect";
 import { AssetKlines } from "@/lib/fetch-klines";
-import { formatChange } from "@/lib/format";
+import { formatChange, formatNumber } from "@/lib/format";
 import { calculateChangeSteps, getChangeLimits, scaleChangeToPoint } from "@/lib/math/change";
 import { TimeframeKey } from "./performance-chart";
 
@@ -10,7 +10,6 @@ export function PerformanceChartViewport({
     isLoading,
 }: {
     klines: AssetKlines[];
-    timeframeKey?: TimeframeKey;
     colorsMap: Map<string, string>;
     isLoading: boolean;
 }) {
@@ -103,14 +102,6 @@ export function PerformanceChartViewport({
         )
         : [];
 
-    if (
-        isLoading
-        ||
-        !klines?.length
-    ) {
-        return <div></div>
-    }
-
     const changeSteps = calculateChangeSteps({
         limit: 8,
         minChange,
@@ -128,22 +119,38 @@ export function PerformanceChartViewport({
                 ref={ canvasRef }
             >
                 {
-                    curves.map((curve) => (
-                        [
+                    !(isLoading || !klines?.length)
+                        ? (
+                            curves.map((curve) => (
+                                [
+                                    <path
+                                        key={ `l-${curve.symbol}` }
+                                        d={ curve.line }
+                                        fill="none"
+                                        stroke={ `var(${colorsMap.get(curve.symbol)})` }
+                                        strokeWidth={ 3.5 }
+                                    />,
+                                    <path
+                                        key={ `f-${curve.symbol}` }
+                                        d={ curve.fill }
+                                        fill={ `var(${colorsMap.get(curve.symbol)}-secondary)` }
+                                    />
+                                ]
+                            ))
+                        )
+                        : (
                             <path
-                                key={ `l-${curve.symbol}` }
-                                d={ curve.line }
+                                key="startline"
+                                d={
+                                    canvasRect
+                                        ? `M 0 ${canvasRect.height} L ${canvasRect.width} ${canvasRect.height}`
+                                        : ``
+                                }
                                 fill="none"
-                                stroke={ `var(${colorsMap.get(curve.symbol)})` }
+                                stroke={ `var(--muted)` }
                                 strokeWidth={ 3.5 }
-                            />,
-                            <path
-                                key={ `f-${curve.symbol}` }
-                                d={ curve.fill }
-                                fill={ `var(${colorsMap.get(curve.symbol)}-secondary)` }
                             />
-                        ]
-                    ))
+                        )
                 }
             </svg>
             <div
@@ -153,16 +160,34 @@ export function PerformanceChartViewport({
                 "
             >
                 {
-                    changeSteps.map(
-                        (change, index) => (
-                            <span
-                                className="text-xs"
-                                key={ `${index}` }
-                            >
-                                { formatChange(change) }
-                            </span>
+                    !(isLoading || !klines?.length)
+                        ? (
+                            changeSteps.map(
+                                (change, index) => (
+                                    <span
+                                        className="text-xs"
+                                        key={ `${index}` }
+                                    >
+                                        {
+                                            formatChange(change)
+                                        }
+                                    </span>
+                                )
+                            )
                         )
-                    ).reverse()
+                        : Array.from(
+                            { length: 8 },
+                            (_, index) => (
+                                <span
+                                    className="text-xs"
+                                    key={ `${index}` }
+                                >
+                                    {
+                                        formatChange(Number(formatNumber('0')))
+                                    }
+                                </span>
+                            )
+                        )
                 }
             </div>
         </div>

@@ -9,6 +9,7 @@ import { PerformanceChartViewport } from "./performance-chart-viewport";
 export function PerformanceChartLayout({
     title,
     klines,
+    limit,
     timeframeKey,
     onTimeframeChange,
     colorsMap,
@@ -16,6 +17,7 @@ export function PerformanceChartLayout({
 }: {
     title: string;
     klines: AssetKlines[];
+    limit: number;
     timeframeKey?: TimeframeKey;
     onTimeframeChange: (value: TimeframeKey) => void;
     colorsMap: Map<string, string>;
@@ -36,7 +38,6 @@ export function PerformanceChartLayout({
             </span>
             <PerformanceChartViewport
                 klines={ klines }
-                timeframeKey={ timeframeKey }
                 colorsMap={ colorsMap }
                 isLoading={ isLoading }
             />
@@ -47,34 +48,58 @@ export function PerformanceChartLayout({
                 "
             >
                 {
-                    klines.map(
-                        (k) => {
-                            const symbol = formatSymbol(
-                                k.symbol,
-                                'capitalize'
-                            );
-                            const color = colorsMap.get(k.symbol);
+                    klines.length
+                        ? (
+                            klines.map(
+                                (k) => {
+                                    const symbol = formatSymbol(
+                                        k.symbol,
+                                        'capitalize'
+                                    );
+                                    const color = colorsMap.get(k.symbol);
 
-                            return (
+                                    return (
+                                        <li
+                                            className="
+                                                flex items-center gap-1
+                                            "
+                                            key={ symbol }
+                                        >
+                                            <div
+                                                className='w-2 h-2 rounded-full'
+                                                style={ {
+                                                    backgroundColor: `var(${color})`,
+                                                } }
+                                            />
+                                            <span>
+                                                { symbol }
+                                            </span>
+                                        </li>
+                                    )
+                                }
+                            )
+                        )
+                        : Array.from(
+                            { length: limit },
+                            (_, index) => (
                                 <li
                                     className="
-                                        flex items-center gap-1
-                                    "
-                                    key={ symbol }
+                                                flex items-center gap-1
+                                            "
+                                    key={ index }
                                 >
                                     <div
                                         className='w-2 h-2 rounded-full'
                                         style={ {
-                                            backgroundColor: `var(${color})`
+                                            backgroundColor: `var(--muted)`,
                                         } }
                                     />
                                     <span>
-                                        { symbol }
+                                        --
                                     </span>
                                 </li>
                             )
-                        }
-                    )
+                        )
                 }
             </ul>
             <PerformanceChartActions

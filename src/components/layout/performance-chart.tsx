@@ -39,11 +39,13 @@ export function PerformanceChart({
 
     const {
         interval,
-        limit,
+        limit: timeframesLimit,
     } = timeframesMap[timeframeKey];
 
+    const assetsLimit = assetsType === 'majors' ? 2 : 6;
+
     const { assets } = useAssets({
-        limit: assetsType === 'majors' ? 2 : 6,
+        limit: assetsLimit,
         typeOptions: {
             stables: false,
             majors: assetsType === 'majors',
@@ -75,12 +77,12 @@ export function PerformanceChart({
         data: klines = [],
         isLoading,
     } = useQuery({
-        queryKey: ['klines', symbols, interval, limit],
+        queryKey: ['klines', symbols, interval, timeframesLimit],
         queryFn: () => (
             fetchKlines({
                 symbols,
                 interval,
-                limit,
+                limit: timeframesLimit,
             })
         ),
         enabled: symbols.length > 0,
@@ -94,6 +96,7 @@ export function PerformanceChart({
                     : 'Altcoins Performance'
             }
             klines={ klines }
+            limit={ assetsLimit }
             timeframeKey={ timeframeKey }
             onTimeframeChange={ setTimeframeKey }
             colorsMap={ colorsMap }

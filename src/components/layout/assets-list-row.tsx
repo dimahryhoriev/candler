@@ -27,7 +27,12 @@ export function AssetsListRow({
                         symbol={ symbol }
                         variant='color'
                     />
-                    <span className="font-semibold text-muted-foreground">
+                    <span
+                        className="
+                            font-semibold text-muted-foreground
+                            whitespace-nowrap shrink-0
+                        "
+                    >
                         { symbol }
                     </span>
                 </div>

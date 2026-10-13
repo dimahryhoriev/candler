@@ -26,51 +26,23 @@ export function calculateChangePercent({
 
 export function calculateChangeSteps({
     limit,
-    stepMultiple = 1,
     minChange,
     maxChange,
 }: {
     limit: number;
-    stepMultiple?: number;
     minChange: number;
     maxChange: number;
 }) {
-    const step = (maxChange - minChange) / (limit);
+    if (limit <= 0) return [];
+    if (limit === 1) return [0];
 
-    const negativeSteps = minChange < 0
-        ? (
-            Array.from(
-                {
-                    length: Math.abs(minChange / step),
-                },
-                (_, index) => {
-                    return -(index + 1) * step;
-                },
-            )
-        ).reverse()
-        : [];
+    const step = (maxChange - minChange) / (limit - 1);
 
-    const positiveSteps = maxChange > 0
-        ? (
-            Array.from(
-                {
-                    length: Math.abs(maxChange / step),
-                },
-                (_, index) => {
-                    return step + (index * step);
-                },
-            )
-        )
-        : [];
-
-    return (
-        [...negativeSteps, 0, ...positiveSteps].map(
-            step => (
-                Math.round(step / stepMultiple)
-                *
-                stepMultiple
-            )
-        )
+    return Array.from(
+        { length: limit },
+        (_, i) => {
+            return maxChange - (i * step);
+        },
     );
 };
 
