@@ -2,20 +2,33 @@ import { useCanvasRect } from "@/hooks/use-canvas-rect";
 import { AssetKlines } from "@/lib/fetch-klines";
 import { formatChange, formatNumber } from "@/lib/format";
 import { calculateChangeSteps, getChangeLimits, scaleChangeToPoint } from "@/lib/math/change";
-import { TimeframeKey } from "./performance-chart";
+import { getTimeframeTicks, TimeframeKey } from "@/lib/timeframes";
 
 export function PerformanceChartViewport({
-    klines,
+    assetKlines,
     colorsMap,
+    timeframeKey,
     isLoading,
 }: {
-    klines: AssetKlines[];
+    assetKlines: AssetKlines[];
     colorsMap: Map<string, string>;
+    timeframeKey: TimeframeKey;
     isLoading: boolean;
 }) {
     const { canvasRef, canvasRect } = useCanvasRect();
 
-    const assetChanges = klines.map(
+    const firstKlines = assetKlines[0]?.klines;
+    const hasData = !isLoading && Boolean(assetKlines?.length);
+
+    const timeframeOpenTime = hasData
+        ? firstKlines[0].openTime
+        : 0
+
+    const timeframeCloseTime = hasData
+        ? firstKlines[firstKlines.length - 1].closeTime
+        : 0
+
+    const assetChanges = assetKlines.map(
         (asset) => {
             const openPrice = asset.klines[0]?.openPrice;
             if (!openPrice) return {
@@ -102,6 +115,17 @@ export function PerformanceChartViewport({
         )
         : [];
 
+    const timeframeTicks = hasData
+        ? getTimeframeTicks({
+            timeframeKey,
+            timeRange: {
+                openTime: timeframeOpenTime,
+                closeTime: timeframeCloseTime,
+            },
+            count: 6,
+        })
+        : [];
+
     const changeSteps = calculateChangeSteps({
         limit: 8,
         minChange,
@@ -111,82 +135,115 @@ export function PerformanceChartViewport({
     return (
         <div
             className="
-                flex w-full h-auto gap-3
+                flex flex-col gap-3
             "
         >
-            <svg
-                className="w-full h-full"
-                ref={ canvasRef }
-            >
-                {
-                    !(isLoading || !klines?.length)
-                        ? (
-                            curves.map((curve) => (
-                                [
-                                    <path
-                                        key={ `l-${curve.symbol}` }
-                                        d={ curve.line }
-                                        fill="none"
-                                        stroke={ `var(${colorsMap.get(curve.symbol)})` }
-                                        strokeWidth={ 3.5 }
-                                    />,
-                                    <path
-                                        key={ `f-${curve.symbol}` }
-                                        d={ curve.fill }
-                                        fill={ `var(${colorsMap.get(curve.symbol)}-secondary)` }
-                                    />
-                                ]
-                            ))
-                        )
-                        : (
-                            <path
-                                key="startline"
-                                d={
-                                    canvasRect
-                                        ? `M 0 ${canvasRect.height} L ${canvasRect.width} ${canvasRect.height}`
-                                        : ``
-                                }
-                                fill="none"
-                                stroke={ `var(--muted)` }
-                                strokeWidth={ 3.5 }
-                            />
-                        )
-                }
-            </svg>
             <div
                 className="
+                flex w-full h-auto gap-3
+            "
+            >
+                <svg
+                    className="w-full h-full"
+                    ref={ canvasRef }
+                >
+                    {
+                        !(isLoading || !assetKlines?.length)
+                            ? (
+                                curves.map((curve) => (
+                                    [
+                                        <path
+                                            key={ `l-${curve.symbol}` }
+                                            d={ curve.line }
+                                            fill="none"
+                                            stroke={ `var(${colorsMap.get(curve.symbol)})` }
+                                            strokeWidth={ 3.5 }
+                                        />,
+                                        <path
+                                            key={ `f-${curve.symbol}` }
+                                            d={ curve.fill }
+                                            fill={ `var(${colorsMap.get(curve.symbol)}-secondary)` }
+                                        />
+                                    ]
+                                ))
+                            )
+                            : (
+                                <path
+                                    key="startline"
+                                    d={
+                                        canvasRect
+                                            ? `M 0 ${canvasRect.height} L ${canvasRect.width} ${canvasRect.height}`
+                                            : ``
+                                    }
+                                    fill="none"
+                                    stroke={ `var(--muted)` }
+                                    strokeWidth={ 3.5 }
+                                />
+                            )
+                    }
+                </svg>
+                <div
+                    className="
                     flex flex-col gap-8
                     h-full w-fit
                 "
-            >
-                {
-                    !(isLoading || !klines?.length)
-                        ? (
-                            changeSteps.map(
-                                (change, index) => (
+                >
+                    {
+                        !(isLoading || !assetKlines?.length)
+                            ? (
+                                changeSteps.map(
+                                    (change, index) => (
+                                        <span
+                                            className="text-xs"
+                                            key={ `${index}` }
+                                        >
+                                            {
+                                                formatChange(change)
+                                            }
+                                        </span>
+                                    )
+                                )
+                            )
+                            : Array.from(
+                                { length: 8 },
+                                (_, index) => (
                                     <span
                                         className="text-xs"
                                         key={ `${index}` }
                                     >
                                         {
-                                            formatChange(change)
+                                            formatChange(Number(formatNumber('0')))
+                                        }
+                                    </span>
+                                )
+                            )
+                    }
+                </div>
+            </div>
+            <div
+                className="
+                    flex justify-between w-full
+                "
+            >
+                {
+                    !(isLoading || !assetKlines?.length)
+                        ? (
+                            timeframeTicks.map(
+                                (tick, index) => (
+                                    <span
+                                        className="text-xs"
+                                        key={ `${index}` }
+                                    >
+                                        {
+                                            tick
                                         }
                                     </span>
                                 )
                             )
                         )
                         : Array.from(
-                            { length: 8 },
-                            (_, index) => (
-                                <span
-                                    className="text-xs"
-                                    key={ `${index}` }
-                                >
-                                    {
-                                        formatChange(Number(formatNumber('0')))
-                                    }
-                                </span>
-                            )
+                            { length: 6 },
+                            () => undefined
                         )
                 }
             </div>

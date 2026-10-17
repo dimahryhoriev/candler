@@ -1,13 +1,13 @@
 'use client'
 
+import { TimeframeKey, timeframesMap } from "@/lib/timeframes";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
-import { TimeframeKey, timeframesMap } from "./performance-chart";
 
 export function PerformanceChartActions({
-    timeframeKey = '1M',
+    timeframeKey,
     onChange,
 }: {
-    timeframeKey?: TimeframeKey;
+    timeframeKey: TimeframeKey;
     onChange: (value: TimeframeKey) => void;
 }) {
     return (

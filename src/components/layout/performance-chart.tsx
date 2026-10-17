@@ -2,33 +2,11 @@
 
 import { useAssets } from "@/hooks/use-assets";
 import { createColorsMap } from "@/lib/colors";
-import { fetchKlines, IntervalKey } from "@/lib/fetch-klines";
+import { fetchKlines } from "@/lib/fetch-klines";
+import { TimeframeKey, timeframesMap } from "@/lib/timeframes";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { PerformanceChartLayout } from "./performance-chart-layout";
-
-export type TimeframeKey =
-    | '1D' | '1W' | '1M'
-    | '3M' | '6M' | '1Y'
-    | '5Y' | 'ALL';
-
-type TimeframeValues = {
-    interval: IntervalKey;
-    limit: number;
-};
-
-export type TimeframesMap = Record<TimeframeKey, TimeframeValues>;
-
-export const timeframesMap: TimeframesMap = {
-    '1D': { interval: '5m', limit: 288 },
-    '1W': { interval: '30m', limit: 336 },
-    '1M': { interval: '2h', limit: 360 },
-    '3M': { interval: '8h', limit: 270 },
-    '6M': { interval: '12h', limit: 360 },
-    '1Y': { interval: '1d', limit: 365 },
-    '5Y': { interval: '1w', limit: 260 },
-    'ALL': { interval: '1M', limit: 1000 },
-};
 
 export function PerformanceChart({
     assetsType,
@@ -95,7 +73,7 @@ export function PerformanceChart({
                     ? 'Majors Performance'
                     : 'Altcoins Performance'
             }
-            klines={ klines }
+            assetKlines={ klines }
             limit={ assetsLimit }
             timeframeKey={ timeframeKey }
             onTimeframeChange={ setTimeframeKey }
