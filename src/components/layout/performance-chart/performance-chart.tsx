@@ -43,13 +43,15 @@ export function PerformanceChart({
         );
     }, [assets]);
 
-    const colorsMap = createColorsMap(
-        symbols,
-        [
-            '--chart-1', '--chart-2', '--chart-3',
-            '--chart-4', '--chart-5', '--chart-6',
-        ],
-    );
+    const colorsMap = useMemo(() => {
+        return createColorsMap(
+            symbols,
+            [
+                '--chart-1', '--chart-2', '--chart-3',
+                '--chart-4', '--chart-5', '--chart-6',
+            ],
+        )
+    }, [symbols]);
 
     const {
         data: klines = [],

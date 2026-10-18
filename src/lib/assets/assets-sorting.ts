@@ -1,25 +1,10 @@
 import { Asset } from "@/hooks/use-assets";
-import { formatSymbol } from "../format";
 import { calculateChangePercent } from "../math/change";
+import { filterAssetsByPair, filterAssetsByType } from "./assets-filters";
+import { AssetsTypeOptions } from "./assets-types";
 
 export type AssetSortOptions = 'volume' | 'price' | 'change';
 export type SortOrder = 'asc' | 'desc';
-
-export type AssetsTypeOptions = {
-    stables?: boolean;
-    majors?: boolean;
-    altcoins?: boolean;
-};
-
-const majors = ['BTC', 'ETH'];
-const stables = [
-    'USDC', 'FDUSD', 'TUSD', 'USDP',
-    'USDD', 'DAI', 'FRAX', 'PYUSD',
-    'USDE', 'BUSD', 'EUR', 'AEUR',
-    'EURI', 'TRY', 'BRL', 'GBP',
-    'ARS', 'UAH', 'BIDR', 'ZAR',
-    'USD1'
-];
 
 type SortAssetsParams = {
     assets: Asset[];
@@ -91,62 +76,3 @@ function getAssetValue({
             return Number(asset.q)
     };
 }
-
-function filterAssetsByPair(
-    assets: Asset[],
-    quoteAsset: string = 'USDT',
-) {
-    if (!Array.isArray(assets)) return [];
-
-    return (
-        assets.filter((a) => (
-            !!a
-            &&
-            a.s.endsWith(quoteAsset)
-            &&
-            !a.s.includes('UP')
-            &&
-            !a.s.includes('DOWN')
-        ))
-    );
-};
-
-function filterAssetsByType(
-    assets: Asset[],
-    type: AssetsTypeOptions,
-) {
-    if (!Array.isArray(assets)) return [];
-
-    return (
-        assets.filter((a) => {
-            const symbol = formatSymbol(
-                a.s,
-                'upper',
-            );
-
-            if (
-                type.stables === false
-                &&
-                stables.includes(symbol)
-            ) return false;
-
-            if (
-                type.majors === false
-                &&
-                majors.includes(symbol)
-            ) return false;
-
-            if (
-                type.altcoins === false
-                &&
-                (
-                    !stables.includes(symbol)
-                    &&
-                    !majors.includes(symbol)
-                )
-            ) return false;
-
-            return true;
-        })
-    );
-};

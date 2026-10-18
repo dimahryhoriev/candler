@@ -1,7 +1,8 @@
 'use client'
 
 import { ApiSchemas } from "@/api";
-import { AssetSortOptions, AssetsTypeOptions, sortAssets, SortOrder } from "@/lib/charts/assets";
+import { AssetSortOptions, sortAssets, SortOrder } from "@/lib/assets/assets-sorting";
+import { AssetsTypeOptions } from "@/lib/assets/assets-types";
 import { useTickersStore } from "@/store/use-tickers-store";
 import { useEffect, useMemo } from "react";
 

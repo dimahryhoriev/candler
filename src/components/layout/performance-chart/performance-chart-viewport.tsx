@@ -1,8 +1,10 @@
 import { useCanvasRect } from "@/hooks/use-canvas-rect";
 import { AssetKlines } from "@/lib/api/fetch-klines";
+import { calculateAssetsChanges } from "@/lib/assets/assets-calculations";
+import { buildAssetsCurves } from "@/lib/charts/curves";
 import { getTimeframeTicks, getTimeframeTicksCount, TimeframeKey } from "@/lib/charts/timeframes";
 import { formatChange, formatNumber } from "@/lib/format";
-import { calculateChangeSteps, getChangeLimits, scaleChangeToPoint } from "@/lib/math/change";
+import { calculateChangeSteps, getChangeLimits } from "@/lib/math/change";
 
 export function PerformanceChartViewport({
     assetKlines,
@@ -28,40 +30,15 @@ export function PerformanceChartViewport({
         ? firstKlines[firstKlines.length - 1].closeTime
         : 0
 
-    const assetChanges = assetKlines.map(
-        (asset) => {
-            const openPrice = asset.klines[0]?.openPrice;
-            if (!openPrice) return {
-                symbol: asset.symbol,
-                changes: [],
-            };
-
-            return {
-                symbol: asset.symbol,
-                changes:
-                    asset.klines.map(
-                        (k) => ({
-                            openTime: k.openTime,
-                            closeTime: k.closeTime,
-                            change: (
-                                ((k.closePrice - openPrice) / openPrice)
-                                *
-                                100
-                            )
-                        })
-                    )
-            }
-        },
-    );
-
-    const changeValues = assetChanges.flatMap(a => a.changes);
+    const assetsChanges = calculateAssetsChanges(assetKlines);
+    const changesValues = assetsChanges.flatMap(a => a.changes);
 
     const {
         minTime,
         maxTime,
         minChange,
         maxChange,
-    } = getChangeLimits(changeValues);
+    } = getChangeLimits(changesValues);
 
     const changeBounds = {
         time: { min: minTime, max: maxTime },
@@ -69,50 +46,12 @@ export function PerformanceChartViewport({
         size: { width: canvasRect?.width ?? 0, height: canvasRect?.height ?? 0 },
     }
 
-    const curves = (canvasRect && changeValues.length)
-        ? (
-            assetChanges
-                .sort((a, b) => {
-                    const maxA = Math.max(...a.changes.map(c => c.change));
-                    const maxB = Math.max(...b.changes.map(c => c.change));
-                    return maxB - maxA;
-                })
-                .map((asset) => {
-                    const points = (
-                        asset.changes.map((c, index) => (
-                            scaleChangeToPoint({
-                                changeBounds,
-                                currChange: c.change,
-                                currTime: index === 0
-                                    ? c.openTime
-                                    : c.closeTime,
-                            })
-                        ))
-                    );
-
-                    const line = points.reduce(
-                        (acc, point, index) => (
-                            index === 0
-                                ? `M ${point.x} ${point.y}`
-                                : `${acc} L ${point.x} ${point.y}`
-                        ),
-                        ''
-                    );
-
-                    const fill = (
-                        line
-                        + `L ${canvasRect.width} ${canvasRect.height}`
-                        + `L ${points[0].x} ${canvasRect.height}`
-                        + `L ${points[0].x} ${points[0].y}`
-                    )
-
-                    return {
-                        symbol: asset.symbol,
-                        line,
-                        fill,
-                    };
-                })
-        )
+    const curves = (canvasRect && changesValues.length)
+        ? buildAssetsCurves({
+            assetsChanges,
+            changeBounds,
+            canvasRect,
+        })
         : [];
 
     const timeframeTicks = hasData && canvasRect
@@ -224,7 +163,7 @@ export function PerformanceChartViewport({
             </div>
             <div
                 className="
-                    flex justify-between items-center h-5
+                    flex justify-between items-center h-4
                     overflow-hidden
                 "
                 style={ {

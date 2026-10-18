@@ -1,7 +1,7 @@
 'use client'
 
 import { useAssets } from "@/hooks/use-assets";
-import { AssetSortOptions, SortOrder } from "@/lib/charts/assets";
+import { AssetSortOptions, SortOrder } from "@/lib/assets/assets-sorting";
 import { formatChange, formatNumber } from "@/lib/format";
 import { calculateChangePercent } from "@/lib/math/change";
 import { AssetsListCard } from "./assets-list-card";
