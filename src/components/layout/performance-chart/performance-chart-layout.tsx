@@ -1,8 +1,8 @@
 'use client'
 
-import { AssetKlines } from "@/lib/fetch-klines";
+import { AssetKlines } from "@/lib/api/fetch-klines";
+import { TimeframeKey } from "@/lib/charts/timeframes";
 import { formatSymbol } from "@/lib/format";
-import { TimeframeKey } from "@/lib/timeframes";
 import { PerformanceChartActions } from "./performance-chart-actions";
 import { PerformanceChartViewport } from "./performance-chart-viewport";
 

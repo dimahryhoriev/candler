@@ -1,9 +1,9 @@
 'use client'
 
 import { useAssets } from "@/hooks/use-assets";
-import { createColorsMap } from "@/lib/colors";
-import { fetchKlines } from "@/lib/fetch-klines";
-import { TimeframeKey, timeframesMap } from "@/lib/timeframes";
+import { fetchKlines } from "@/lib/api/fetch-klines";
+import { createColorsMap } from "@/lib/charts/colors";
+import { TimeframeKey, timeframesMap } from "@/lib/charts/timeframes";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { PerformanceChartLayout } from "./performance-chart-layout";

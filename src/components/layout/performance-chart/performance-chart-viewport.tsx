@@ -1,8 +1,8 @@
 import { useCanvasRect } from "@/hooks/use-canvas-rect";
-import { AssetKlines } from "@/lib/fetch-klines";
+import { AssetKlines } from "@/lib/api/fetch-klines";
+import { getTimeframeTicks, getTimeframeTicksCount, TimeframeKey } from "@/lib/charts/timeframes";
 import { formatChange, formatNumber } from "@/lib/format";
 import { calculateChangeSteps, getChangeLimits, scaleChangeToPoint } from "@/lib/math/change";
-import { getTimeframeTicks, getTimeframeTicksCount, TimeframeKey } from "@/lib/timeframes";
 
 export function PerformanceChartViewport({
     assetKlines,

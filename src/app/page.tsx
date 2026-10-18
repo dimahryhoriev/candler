@@ -1,5 +1,5 @@
-import { AssetsList } from "@/components/layout/assets-list";
-import { PerformanceChart } from "@/components/layout/performance-chart";
+import { AssetsList } from "@/components/layout/assets-list/assets-list";
+import { PerformanceChart } from "@/components/layout/performance-chart/performance-chart";
 
 export default function HomePage() {
     return (

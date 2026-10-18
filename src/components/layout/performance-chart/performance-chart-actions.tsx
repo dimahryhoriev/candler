@@ -1,7 +1,7 @@
 'use client'
 
-import { TimeframeKey, timeframesMap } from "@/lib/timeframes";
-import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
+import { TimeframeKey, timeframesMap } from "@/lib/charts/timeframes";
+import { ToggleGroup, ToggleGroupItem } from "../../ui/toggle-group";
 
 export function PerformanceChartActions({
     timeframeKey,

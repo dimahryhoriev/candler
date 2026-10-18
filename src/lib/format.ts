@@ -1,4 +1,4 @@
-import { TimeframeTickFormat } from "./timeframes";
+import { TimeframeTickFormat } from "./charts/timeframes";
 
 export const dateTimeFormatters: Record<TimeframeTickFormat, Intl.DateTimeFormat> = {
     H: new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit', hour12: false }),

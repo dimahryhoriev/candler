@@ -1,5 +1,6 @@
-import { IntervalKey } from "./fetch-klines";
-import { formatDate } from "./format";
+import { IntervalKey } from "../api/fetch-klines";
+import { formatDate } from "../format";
+import { roundToStep } from "../math/round";
 
 type TimeRange = {
     openTime: number;
@@ -54,12 +55,20 @@ export function getTimeframeTicks({
     return (
         Array.from(
             { length: count },
-            (_, i) => (
-                formatDate({
-                    dateMs: openTime + (i * step),
-                    formatKey,
-                })
-            )
+            (_, i) => {
+                const hourMs = 60 * 60 * 1000;
+
+                return (
+                    formatDate({
+                        dateMs: roundToStep(
+                            openTime + (i * step),
+                            hourMs,
+                            'floor',
+                        ),
+                        formatKey,
+                    })
+                );
+            }
         )
     );
 };

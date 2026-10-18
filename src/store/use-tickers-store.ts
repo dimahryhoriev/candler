@@ -1,6 +1,6 @@
 import { ApiSchemas } from "@/api";
 import { Asset } from "@/hooks/use-assets";
-import { createStream } from "@/lib/create-stream";
+import { createStream } from "@/lib/api/create-stream";
 import { create } from "zustand";
 
 type TickersRecord = Record<string, Asset>;
