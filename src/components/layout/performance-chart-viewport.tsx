@@ -2,7 +2,7 @@ import { useCanvasRect } from "@/hooks/use-canvas-rect";
 import { AssetKlines } from "@/lib/fetch-klines";
 import { formatChange, formatNumber } from "@/lib/format";
 import { calculateChangeSteps, getChangeLimits, scaleChangeToPoint } from "@/lib/math/change";
-import { getTimeframeTicks, TimeframeKey } from "@/lib/timeframes";
+import { getTimeframeTicks, getTimeframeTicksCount, TimeframeKey } from "@/lib/timeframes";
 
 export function PerformanceChartViewport({
     assetKlines,
@@ -115,14 +115,16 @@ export function PerformanceChartViewport({
         )
         : [];
 
-    const timeframeTicks = hasData
+    const timeframeTicks = hasData && canvasRect
         ? getTimeframeTicks({
             timeframeKey,
             timeRange: {
                 openTime: timeframeOpenTime,
                 closeTime: timeframeCloseTime,
             },
-            count: 6,
+            count: getTimeframeTicksCount(
+                canvasRect.width
+            ),
         })
         : [];
 
@@ -148,7 +150,7 @@ export function PerformanceChartViewport({
                     ref={ canvasRef }
                 >
                     {
-                        !(isLoading || !assetKlines?.length)
+                        hasData
                             ? (
                                 curves.map((curve) => (
                                     [
@@ -189,7 +191,7 @@ export function PerformanceChartViewport({
                 "
                 >
                     {
-                        !(isLoading || !assetKlines?.length)
+                        hasData
                             ? (
                                 changeSteps.map(
                                     (change, index) => (
@@ -222,11 +224,15 @@ export function PerformanceChartViewport({
             </div>
             <div
                 className="
-                    flex justify-between w-full
+                    flex justify-between items-center h-5
+                    overflow-hidden
                 "
+                style={ {
+                    width: canvasRect?.width ?? 0
+                } }
             >
                 {
-                    !(isLoading || !assetKlines?.length)
+                    hasData
                         ? (
                             timeframeTicks.map(
                                 (tick, index) => (
@@ -242,8 +248,17 @@ export function PerformanceChartViewport({
                             )
                         )
                         : Array.from(
-                            { length: 6 },
-                            () => undefined
+                            {
+                                length: 3
+                            },
+                            (_, index) => (
+                                <span
+                                    className="text-xs"
+                                    key={ `${index}` }
+                                >
+                                    --
+                                </span>
+                            )
                         )
                 }
             </div>

@@ -29,6 +29,7 @@ export function PerformanceChartActions({
                             <ToggleGroupItem
                                 key={ timeframe }
                                 value={ timeframe }
+                                className="cursor-pointer"
                             >
                                 { timeframe }
                             </ToggleGroupItem>

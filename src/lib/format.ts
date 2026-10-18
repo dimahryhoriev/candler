@@ -2,7 +2,7 @@ import { TimeframeTickFormat } from "./timeframes";
 
 export const dateTimeFormatters: Record<TimeframeTickFormat, Intl.DateTimeFormat> = {
     H: new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit', hour12: false }),
-    D: new Intl.DateTimeFormat(undefined, { day: 'numeric' }),
+    D: new Intl.DateTimeFormat(undefined, { weekday: 'short' }),
     W: new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'short' }),
     M: new Intl.DateTimeFormat(undefined, { month: 'short' }),
     Y: new Intl.DateTimeFormat(undefined, { year: 'numeric' }),
@@ -93,7 +93,6 @@ export function formatDate({
     dateMs: number;
     formatKey: TimeframeTickFormat;
 }) {
-    console.log(dateMs)
     return (
         dateTimeFormatters[formatKey].format(
             dateMs

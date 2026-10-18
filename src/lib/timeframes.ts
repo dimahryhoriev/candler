@@ -63,3 +63,16 @@ export function getTimeframeTicks({
         )
     );
 };
+
+export function getTimeframeTicksCount(
+    axisWidth?: number,
+) {
+    if (!axisWidth) return 0;
+
+    switch (true) {
+        case axisWidth < 1024: return 4;
+        case axisWidth < 1280: return 4;
+        case axisWidth < 1536: return 5;
+        default: return 6;
+    };
+};
