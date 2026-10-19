@@ -1,10 +1,14 @@
 import { useCanvasRect } from "@/hooks/use-canvas-rect";
 import { AssetKlines } from "@/lib/api/fetch-klines";
-import { calculateAssetsChanges } from "@/lib/assets/assets-calculations";
+import { calculateAssetsChanges, scaleAssetsChangesToPoints } from "@/lib/assets/assets-calculations";
+import { ColorsMap } from "@/lib/charts/colors";
 import { buildAssetsCurves } from "@/lib/charts/curves";
+import { findClosestTimeStepIndex } from "@/lib/charts/snapping";
 import { getTimeframeTicks, getTimeframeTicksCount, TimeframeKey } from "@/lib/charts/timeframes";
 import { formatChange, formatNumber } from "@/lib/format";
 import { calculateChangeSteps, getChangeLimits } from "@/lib/math/change";
+import { useChartCrosshair } from "./hooks/use-chart-crosshair";
+import { PerformanceChartGuideline } from "./performance-chart-crosshair";
 
 export function PerformanceChartViewport({
     assetKlines,
@@ -13,11 +17,17 @@ export function PerformanceChartViewport({
     isLoading,
 }: {
     assetKlines: AssetKlines[];
-    colorsMap: Map<string, string>;
+    colorsMap: ColorsMap;
     timeframeKey: TimeframeKey;
     isLoading: boolean;
 }) {
     const { canvasRef, canvasRect } = useCanvasRect();
+
+    const {
+        point: crosshairPoint,
+        onPointerMove,
+        onPointerLeave,
+    } = useChartCrosshair(canvasRect);
 
     const firstKlines = assetKlines[0]?.klines;
     const hasData = !isLoading && Boolean(assetKlines?.length);
@@ -46,10 +56,34 @@ export function PerformanceChartViewport({
         size: { width: canvasRect?.width ?? 0, height: canvasRect?.height ?? 0 },
     }
 
+    const assetsPoints = scaleAssetsChangesToPoints(
+        assetsChanges,
+        changeBounds,
+    );
+
+    const basePoints = assetsPoints[0].points;
+    const snappedCrosshair = crosshairPoint && basePoints?.length
+        ? (() => {
+            const closestIndex = findClosestTimeStepIndex(
+                basePoints,
+                crosshairPoint.x,
+            );
+
+            return {
+                positionX: basePoints[closestIndex]?.x ?? crosshairPoint.x,
+                anchors: assetsPoints.map(
+                    (a) => ({
+                        symbol: a.symbol,
+                        positionY: a.points[closestIndex].y,
+                    })
+                ),
+            };
+        })()
+        : null;
+
     const curves = (canvasRect && changesValues.length)
         ? buildAssetsCurves({
-            assetsChanges,
-            changeBounds,
+            assetsPoints,
             canvasRect,
         })
         : [];
@@ -87,6 +121,8 @@ export function PerformanceChartViewport({
                 <svg
                     className="w-full h-full"
                     ref={ canvasRef }
+                    onPointerMove={ onPointerMove }
+                    onPointerLeave={ onPointerLeave }
                 >
                     {
                         hasData
@@ -121,6 +157,18 @@ export function PerformanceChartViewport({
                                     strokeWidth={ 3.5 }
                                 />
                             )
+                    }
+                    {
+                        snappedCrosshair && canvasRect
+                            ? (
+                                <PerformanceChartGuideline
+                                    linePositionX={ snappedCrosshair?.positionX }
+                                    canvasHeight={ canvasRect.height }
+                                    colorsMap={ colorsMap }
+                                    anchors={ snappedCrosshair?.anchors }
+                                />
+                            )
+                            : null
                     }
                 </svg>
                 <div

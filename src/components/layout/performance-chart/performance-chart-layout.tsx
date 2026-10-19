@@ -5,6 +5,7 @@ import { TimeframeKey } from "@/lib/charts/timeframes";
 import { formatSymbol } from "@/lib/format";
 import { PerformanceChartActions } from "./performance-chart-actions";
 import { PerformanceChartViewport } from "./performance-chart-viewport";
+import { ColorsMap } from "@/lib/charts/colors";
 
 export function PerformanceChartLayout({
     title,
@@ -20,7 +21,7 @@ export function PerformanceChartLayout({
     limit: number;
     timeframeKey: TimeframeKey;
     onTimeframeChange: (value: TimeframeKey) => void;
-    colorsMap: Map<string, string>;
+    colorsMap: ColorsMap;
     isLoading: boolean;
 }) {
     return (

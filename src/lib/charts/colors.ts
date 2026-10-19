@@ -1,8 +1,10 @@
+export type ColorsMap = Map<string, string>;
+
 export function createColorsMap(
     keys: string[],
     colors: string[],
-): Map<string, string> {
-    const map = new Map<string, string>();
+): ColorsMap {
+    const map: ColorsMap = new Map<string, string>();
 
     if (!colors.length) return map;
 

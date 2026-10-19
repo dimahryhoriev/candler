@@ -2,7 +2,7 @@
 
 import { useAssets } from "@/hooks/use-assets";
 import { fetchKlines } from "@/lib/api/fetch-klines";
-import { createColorsMap } from "@/lib/charts/colors";
+import { ColorsMap, createColorsMap } from "@/lib/charts/colors";
 import { TimeframeKey, timeframesMap } from "@/lib/charts/timeframes";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -43,7 +43,7 @@ export function PerformanceChart({
         );
     }, [assets]);
 
-    const colorsMap = useMemo(() => {
+    const colorsMap: ColorsMap = useMemo(() => {
         return createColorsMap(
             symbols,
             [

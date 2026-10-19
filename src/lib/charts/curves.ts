@@ -1,36 +1,17 @@
 import { CanvasRect } from "@/hooks/use-canvas-rect";
-import { AssetChanges } from "../assets/assets-calculations";
-import { ChangeBounds, scaleChangeToPoint } from "../math/change";
+import { AssetPoints } from "../assets/assets-calculations";
 
 export function buildAssetsCurves({
-    assetsChanges,
-    changeBounds,
+    assetsPoints,
     canvasRect,
 }: {
-    assetsChanges: AssetChanges[];
-    changeBounds: ChangeBounds;
+    assetsPoints: AssetPoints[];
     canvasRect: CanvasRect;
 }) {
     return (
-        assetsChanges
-            .sort((a, b) => {
-                const maxA = Math.max(...a.changes.map(c => c.change));
-                const maxB = Math.max(...b.changes.map(c => c.change));
-                return maxB - maxA;
-            })
-            .map((asset) => {
-                const points = (
-                    asset.changes.map((c, index) => (
-                        scaleChangeToPoint({
-                            changeBounds,
-                            currChange: c.change,
-                            currTime: index === 0
-                                ? c.openTime
-                                : c.closeTime,
-                        })
-                    ))
-                );
-
+        assetsPoints.map(
+            (a) => {
+                const points = a.points;
                 const line = points.reduce(
                     (acc, point, index) => (
                         index === 0
@@ -48,10 +29,11 @@ export function buildAssetsCurves({
                 )
 
                 return {
-                    symbol: asset.symbol,
+                    symbol: a.symbol,
                     line,
                     fill,
                 };
-            })
+            }
+        )
     );
 }
