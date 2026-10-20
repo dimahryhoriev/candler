@@ -1,3 +1,4 @@
+import { AssetPoints } from "../assets/assets-calculations";
 import { Point } from "../math/point";
 
 export function findClosestTimeStepIndex(
@@ -22,3 +23,24 @@ export function findClosestTimeStepIndex(
 
     return closestIndex;
 };
+
+export function snapChartCrosshair(
+    assetsPoints: AssetPoints[],
+    crosshairPoint: Point,
+) {
+    const basePoints = assetsPoints[0]?.points;
+    const closestIndex = findClosestTimeStepIndex(
+        basePoints,
+        crosshairPoint.x,
+    );
+
+    return {
+        positionX: basePoints[closestIndex]?.x ?? crosshairPoint.x,
+        anchors: assetsPoints.map(
+            (a) => ({
+                symbol: a.symbol,
+                positionY: a.points[closestIndex].y,
+            })
+        ),
+    };
+}

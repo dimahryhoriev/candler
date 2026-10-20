@@ -12,7 +12,7 @@ export type IntervalKey =
     | '8h' | '12h' | '1d'
     | '3d' | '1w' | '1M'
 
-type KlineItem = {
+export type KlineItem = {
     openTime: number;
     closeTime: number;
     openPrice: number;

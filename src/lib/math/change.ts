@@ -1,7 +1,16 @@
+import { CanvasRect } from "@/hooks/use-canvas-rect";
+
 export type Change = {
     openTime: number;
     closeTime: number;
     change: number;
+};
+
+export type ChangeLimits = {
+    minTime: number;
+    maxTime: number;
+    minChange: number;
+    maxChange: number;
 };
 
 export type ChangeBounds = {
@@ -70,7 +79,7 @@ export function scaleChangeToPoint({
 
 export function getChangeLimits(
     changes: Change[],
-) {
+): ChangeLimits {
     let minTime = Infinity;
     let maxTime = -Infinity;
     let minChange = Infinity;
@@ -90,3 +99,21 @@ export function getChangeLimits(
         maxChange,
     };
 };
+
+export function getChangeBounds(
+    changes: Change[],
+    canvasRect?: CanvasRect,
+) {
+    const {
+        minTime,
+        maxTime,
+        minChange,
+        maxChange,
+    } = getChangeLimits(changes);
+
+    return {
+        time: { min: minTime, max: maxTime },
+        change: { min: minChange, max: maxChange },
+        size: { width: canvasRect?.width ?? 0, height: canvasRect?.height ?? 0 },
+    }
+}

@@ -1,15 +1,15 @@
 'use client'
 
 import { AssetKlines } from "@/lib/api/fetch-klines";
+import { ColorsMap } from "@/lib/charts/colors";
 import { TimeframeKey } from "@/lib/charts/timeframes";
 import { formatSymbol } from "@/lib/format";
 import { PerformanceChartActions } from "./performance-chart-actions";
 import { PerformanceChartViewport } from "./performance-chart-viewport";
-import { ColorsMap } from "@/lib/charts/colors";
 
 export function PerformanceChartLayout({
     title,
-    assetKlines,
+    assetsKlines,
     limit,
     timeframeKey,
     onTimeframeChange,
@@ -17,7 +17,7 @@ export function PerformanceChartLayout({
     isLoading = false,
 }: {
     title: string;
-    assetKlines: AssetKlines[];
+    assetsKlines: AssetKlines[];
     limit: number;
     timeframeKey: TimeframeKey;
     onTimeframeChange: (value: TimeframeKey) => void;
@@ -38,7 +38,7 @@ export function PerformanceChartLayout({
                 { title }
             </span>
             <PerformanceChartViewport
-                assetKlines={ assetKlines }
+                assetsKlines={ assetsKlines }
                 colorsMap={ colorsMap }
                 timeframeKey={ timeframeKey }
                 isLoading={ isLoading }
@@ -50,9 +50,9 @@ export function PerformanceChartLayout({
                 "
             >
                 {
-                    assetKlines.length
+                    assetsKlines.length
                         ? (
-                            assetKlines.map(
+                            assetsKlines.map(
                                 (k) => {
                                     const symbol = formatSymbol(
                                         k.symbol,

@@ -3,7 +3,7 @@ import { Point } from "@/lib/math/point";
 import { useCallback, useState } from "react";
 
 export function useChartCrosshair(
-    canvasRect: CanvasRect | undefined,
+    canvasRect?: CanvasRect,
 ) {
     const [point, setPoint] = useState<Point | null>(null);
 

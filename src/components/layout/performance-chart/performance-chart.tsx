@@ -75,7 +75,7 @@ export function PerformanceChart({
                     ? 'Majors Performance'
                     : 'Altcoins Performance'
             }
-            assetKlines={ klines }
+            assetsKlines={ klines }
             limit={ assetsLimit }
             timeframeKey={ timeframeKey }
             onTimeframeChange={ setTimeframeKey }
