@@ -7,7 +7,7 @@ import { snapChartCrosshair } from "@/lib/charts/snapping";
 import { TimeframeKey } from "@/lib/charts/timeframes";
 import { calculateChangeSteps, getChangeBounds } from "@/lib/math/change";
 import { ChangeStepsList } from "../change-steps-list";
-import { CurveArea } from "../curve-area";
+import { CurveArea } from "../curve-area/curve-area";
 import { TimeframeTicks } from "../timeframe-ticks";
 import { useChartCrosshair } from "./hooks/use-chart-crosshair";
 import { PerformanceChartGuideline } from "./performance-chart-crosshair";
@@ -25,6 +25,7 @@ export function PerformanceChartViewport({
     isLoading: boolean;
 }) {
     const { canvasRef, canvasRect } = useCanvasRect();
+
     const hasData = !isLoading && Boolean(assetsKlines?.length);
 
     const {
@@ -84,6 +85,8 @@ export function PerformanceChartViewport({
                                 <CurveArea
                                     curves={ curves }
                                     colorsMap={ colorsMap }
+                                    cursorPosition={ crosshairPoint }
+                                    assetsPoints={ assetsPoints }
                                 />
                             )
                             : (
