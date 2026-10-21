@@ -1,9 +1,5 @@
 import { ColorsMap } from "@/lib/charts/colors";
-
-type GuidelineAnchor = {
-    symbol: string;
-    positionY: number;
-};
+import { ChartAnchor } from "@/lib/charts/snapping";
 
 export function PerformanceChartGuideline({
     linePositionX,
@@ -13,7 +9,7 @@ export function PerformanceChartGuideline({
 }: {
     linePositionX: number;
     canvasHeight: number;
-    anchors: GuidelineAnchor[];
+    anchors: (ChartAnchor | null)[];
     colorsMap: ColorsMap;
 }) {
     return (
@@ -28,17 +24,19 @@ export function PerformanceChartGuideline({
                 opacity={ 0.3 }
             />
             {
-                anchors.map(
-                    (a) => (
-                        <circle
-                            key={ a.symbol }
-                            cx={ linePositionX }
-                            cy={ a.positionY }
-                            r={ 4 }
-                            fill={ `var(${colorsMap.get(a.symbol)})` }
-                        />
+                anchors
+                    .filter(a => a !== null)
+                    .map(
+                        (a) => (
+                            <circle
+                                key={ a.symbol }
+                                cx={ linePositionX }
+                                cy={ a.positionY }
+                                r={ 4 }
+                                fill={ `var(${colorsMap.get(a.symbol)})` }
+                            />
+                        )
                     )
-                )
             }
         </g>
     )

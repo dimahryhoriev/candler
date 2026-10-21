@@ -16,6 +16,8 @@ export type AssetPoints = {
     points: Point[];
 };
 
+export type AssetArea = Record<string, number>;
+
 export function calculateAssetsChanges(
     assetKlines: AssetKlines[],
 ): AssetChanges[] {
@@ -50,11 +52,16 @@ export function scaleAssetsChangesToPoints(
     assetsChanges: AssetChanges[],
     changeBounds: ChangeBounds,
 ): AssetPoints[] {
+    const areas = scaleAssetsChangesToArea(
+        assetsChanges,
+        changeBounds,
+    );
+
     return (
         assetsChanges
             .sort((a, b) => {
-                const maxA = Math.max(...a.changes.map(c => c.change));
-                const maxB = Math.max(...b.changes.map(c => c.change));
+                const maxA = areas[a.symbol];
+                const maxB = areas[b.symbol];
                 return maxB - maxA;
             })
             .map((asset) => {
@@ -73,5 +80,30 @@ export function scaleAssetsChangesToPoints(
                     points,
                 };
             })
+    );
+};
+
+export function scaleAssetsChangesToArea(
+    assetsChanges: AssetChanges[],
+    changeBounds: ChangeBounds,
+): AssetArea {
+    const min = changeBounds.change.min;
+
+    return (
+        Object.fromEntries(
+            assetsChanges.map(
+                (asset) => {
+                    const area = asset.changes.reduce(
+                        (acc, curr) => acc + (curr.change - min),
+                        0,
+                    );
+
+                    return [
+                        asset.symbol,
+                        area,
+                    ];
+                },
+            )
+        )
     );
 };

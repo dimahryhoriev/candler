@@ -1,46 +1,47 @@
 import { AssetPoints } from "../assets/assets-calculations";
-import { Point } from "../math/point";
+import { findClosestPoint, Point } from "../math/point";
 
-export function findClosestTimeStepIndex(
-    points: Point[],
-    cursorX: number,
-): number {
-    let closestIndex = 0;
-    let minDiff = Infinity;
-
-    for (let i = 0; i < points.length; i++) {
-        const diff = Math.abs(
-            points[i].x - cursorX
-        );
-
-        if (diff < minDiff) {
-            minDiff = diff;
-            closestIndex = i;
-        } else {
-            break;
-        };
-    };
-
-    return closestIndex;
-};
+export type ChartAnchor = {
+    symbol: string;
+    positionY: number;
+}
 
 export function snapChartCrosshair(
     assetsPoints: AssetPoints[],
     crosshairPoint: Point,
 ) {
     const basePoints = assetsPoints[0]?.points;
-    const closestIndex = findClosestTimeStepIndex(
-        basePoints,
-        crosshairPoint.x,
-    );
+    const basePoint = findClosestPoint({
+        points: basePoints,
+        targetPoint: crosshairPoint,
+        findBy: 'x',
+    });
+
+    const positionX = basePoint?.x ?? crosshairPoint.x;
 
     return {
-        positionX: basePoints[closestIndex]?.x ?? crosshairPoint.x,
-        anchors: assetsPoints.map(
-            (a) => ({
-                symbol: a.symbol,
-                positionY: a.points[closestIndex].y,
-            })
-        ),
+        positionX: basePoint?.x ?? crosshairPoint.x,
+        anchors: assetsPoints
+            .map(
+                (a) => {
+                    const point = findClosestPoint({
+                        points: a.points,
+                        targetPoint: { x: positionX, y: crosshairPoint.y },
+                        findBy: 'x',
+                    });
+
+                    if (!point) return null;
+
+                    return {
+                        symbol: a.symbol,
+                        positionY: point.y,
+                    }
+                }
+            )
+            .filter(
+                (anchor): anchor is ChartAnchor => (
+                    anchor !== null
+                )
+            )
     };
 }
