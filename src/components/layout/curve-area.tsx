@@ -19,14 +19,15 @@ export function CurveArea({
                 key={ curve.symbol }
             >
                 <path
+                    d={ curve.fill }
+                    fill={ `var(${colorsMap.get(curve.symbol)}-secondary)` }
+                    opacity={ 0.85 }
+                />
+                <path
                     d={ curve.line }
                     fill="none"
                     stroke={ `var(${colorsMap.get(curve.symbol)})` }
-                    strokeWidth={ 3.5 }
-                />
-                <path
-                    d={ curve.fill }
-                    fill={ `var(${colorsMap.get(curve.symbol)}-secondary)` }
+                    strokeWidth={ 1.8 }
                 />
             </g>
         ))
