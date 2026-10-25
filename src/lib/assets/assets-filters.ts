@@ -1,6 +1,5 @@
 import { Asset } from "@/hooks/use-assets";
-import { formatSymbol } from "../format";
-import { AssetsTypeOptions, majors, stables } from "./assets-types";
+import { AssetsTypeOptions, getAssetType } from "./assets-types";
 
 export function filterAssetsByPair(
     assets: Asset[],
@@ -29,31 +28,24 @@ export function filterAssetsByType(
 
     return (
         assets.filter((a) => {
-            const symbol = formatSymbol(
-                a.s,
-                'upper',
-            );
+            const assetType = getAssetType(a);
 
             if (
                 type.stables === false
                 &&
-                stables.includes(symbol)
+                assetType === 'stable'
             ) return false;
 
             if (
                 type.majors === false
                 &&
-                majors.includes(symbol)
+                assetType === 'major'
             ) return false;
 
             if (
                 type.altcoins === false
                 &&
-                (
-                    !stables.includes(symbol)
-                    &&
-                    !majors.includes(symbol)
-                )
+                assetType === 'altcoin'
             ) return false;
 
             return true;
