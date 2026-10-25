@@ -15,8 +15,8 @@ export function buildAssetsCurves({
                 const line = points.reduce(
                     (acc, point, index) => (
                         index === 0
-                            ? `M ${point.x} ${point.y}`
-                            : `${acc} L ${point.x} ${point.y}`
+                            ? `M ${point.position.x} ${point.position.y}`
+                            : `${acc} L ${point.position.x} ${point.position.y}`
                     ),
                     ''
                 );
@@ -24,8 +24,8 @@ export function buildAssetsCurves({
                 const fill = (
                     line
                     + `L ${canvasRect.width} ${canvasRect.height}`
-                    + `L ${points[0].x} ${canvasRect.height}`
-                    + `L ${points[0].x} ${points[0].y}`
+                    + `L ${points[0].position.x} ${canvasRect.height}`
+                    + `L ${points[0].position.x} ${points[0].position.y}`
                 )
 
                 return {

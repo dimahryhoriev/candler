@@ -10,7 +10,7 @@ import { ChangeStepsList } from "../change-steps-list";
 import { CurveArea } from "../curve-area/curve-area";
 import { TimeframeTicks } from "../timeframe-ticks";
 import { useChartCrosshair } from "./hooks/use-chart-crosshair";
-import { PerformanceChartGuideline } from "./performance-chart-crosshair";
+import { PerformanceChartGuideline, PerformanceChartTooltip } from "./performance-chart-crosshair";
 import { PerformanceChartStartline } from "./performance-chart-startline";
 
 export function PerformanceChartViewport({
@@ -65,7 +65,7 @@ export function PerformanceChartViewport({
     return (
         <div
             className="
-                flex flex-col gap-3
+                flex flex-col gap-3 relative
             "
         >
             <div
@@ -121,6 +121,22 @@ export function PerformanceChartViewport({
                 canvasRect={ canvasRect }
                 isLoading={ !hasData }
             />
+            {
+                snappedCrosshair && crosshairPoint
+                    ? (
+                        <PerformanceChartTooltip
+                            anchors={ snappedCrosshair?.anchors }
+                            colorsMap={ colorsMap }
+                            crosshairPosition={
+                                {
+                                    x: snappedCrosshair?.positionX,
+                                    y: crosshairPoint?.y,
+                                }
+                            }
+                        />
+                    )
+                    : null
+            }
         </div>
     )
 };

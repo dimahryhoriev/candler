@@ -17,7 +17,7 @@ export function useCurveHover(
 
         for (const asset of assetsPoints) {
             const closestPoint = findClosestPoint({
-                points: asset.points,
+                points: asset.points.map(p => p.position),
                 targetPoint: cursorPosition,
                 findBy: 'xy',
                 maxDistance,

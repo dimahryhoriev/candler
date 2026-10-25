@@ -1,5 +1,5 @@
 import { AssetKlines } from "../api/fetch-klines";
-import { ChangeBounds, scaleChangeToPoint } from "../math/change";
+import { Change, ChangeBounds, scaleChangeToPoint } from "../math/change";
 import { Point } from "../math/point";
 
 export type AssetChanges = {
@@ -11,9 +11,14 @@ export type AssetChanges = {
     }[];
 };
 
+export type AssetPoint = {
+    position: Point;
+    changeValues: Change;
+}
+
 export type AssetPoints = {
     symbol: string;
-    points: Point[];
+    points: AssetPoint[];
 };
 
 export type AssetArea = Record<string, number>;
@@ -65,15 +70,20 @@ export function scaleAssetsChangesToPoints(
                 return maxB - maxA;
             })
             .map((asset) => {
-                const points = asset.changes.map((c, index) => (
-                    scaleChangeToPoint({
+                const points = asset.changes.map((c, index) => {
+                    const position = scaleChangeToPoint({
                         changeBounds,
                         currChange: c.change,
                         currTime: index === 0
                             ? c.openTime
                             : c.closeTime,
-                    })
-                ))
+                    });
+
+                    return {
+                        position,
+                        changeValues: c,
+                    }
+                });
 
                 return {
                     symbol: asset.symbol,
