@@ -38,14 +38,16 @@ export function calculateAssetsChanges(
                 symbol: asset.symbol,
                 changes:
                     asset.klines.map(
-                        (k) => ({
+                        (k, index) => ({
                             openTime: k.openTime,
                             closeTime: k.closeTime,
-                            change: (
-                                ((k.closePrice - openPrice) / openPrice)
-                                *
-                                100
-                            )
+                            change: index === 0
+                                ? 0
+                                : (
+                                    ((k.closePrice - openPrice) / openPrice)
+                                    *
+                                    100
+                                )
                         })
                     )
             };
