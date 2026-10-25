@@ -28,6 +28,7 @@ export function calculateAssetsChanges(
 ): AssetChanges[] {
     return assetKlines.map(
         (asset) => {
+            const length = asset.klines.length;
             const openPrice = asset.klines[0]?.openPrice;
             if (!openPrice) return {
                 symbol: asset.symbol,
@@ -40,7 +41,9 @@ export function calculateAssetsChanges(
                     asset.klines.map(
                         (k, index) => ({
                             openTime: k.openTime,
-                            closeTime: k.closeTime,
+                            closeTime: index === length - 1
+                                ? k.openTime
+                                : k.closeTime + 1,
                             change: index === 0
                                 ? 0
                                 : (

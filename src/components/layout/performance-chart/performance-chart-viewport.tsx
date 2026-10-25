@@ -34,7 +34,6 @@ export function PerformanceChartViewport({
         onPointerLeave,
     } = useChartCrosshair(canvasRect);
 
-
     const assetsChanges = calculateAssetsChanges(assetsKlines);
     const changesValues = assetsChanges.flatMap(a => a.changes);
     const changeBounds = getChangeBounds(changesValues, canvasRect);

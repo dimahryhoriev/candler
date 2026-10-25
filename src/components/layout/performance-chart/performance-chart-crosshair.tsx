@@ -53,7 +53,9 @@ export function PerformanceChartTooltip({
     crosshairPosition: Point;
     colorsMap: ColorsMap;
 }) {
-    const anchorTimeMs = anchors[0].point.changeValues.closeTime;
+    const anchorTimeMs = crosshairPosition.x === 0
+        ? anchors[0].point.changeValues.openTime
+        : anchors[0].point.changeValues.closeTime
     const date = dateTimeFormatters.DMY.format(anchorTimeMs);
     const hours = dateTimeFormatters.H.format(anchorTimeMs);
 
