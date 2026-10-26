@@ -1,6 +1,7 @@
 import { CanvasRect } from "@/hooks/use-canvas-rect";
 import { AssetKlines } from "@/lib/api/fetch-klines";
-import { getTimeframeTicks, getTimeframeTicksCount, TimeframeKey } from "@/lib/charts/timeframes";
+import { getTimeframeTicks, TimeframeKey } from "@/lib/charts/timeframes";
+import { useLayoutEffect, useMemo, useRef } from "react";
 
 export function TimeframeTicks({
     assetsKlines,
@@ -13,6 +14,7 @@ export function TimeframeTicks({
     canvasRect?: CanvasRect;
     isLoading: boolean;
 }) {
+    const timeframeTicksRef = useRef<(HTMLSpanElement | null)[]>([]);
     const firstKlines = assetsKlines[0]?.klines;
 
     const timeframeOpenTime = !isLoading
@@ -22,40 +24,72 @@ export function TimeframeTicks({
         ? firstKlines[firstKlines.length - 1].closeTime
         : 0
 
-    const timeframeTicks = !isLoading && canvasRect
-        ? getTimeframeTicks({
+    const timeframeTicks = useMemo(() => {
+        if (isLoading || !canvasRect) return [];
+
+        return getTimeframeTicks({
             timeframeKey,
             timeRange: {
                 openTime: timeframeOpenTime,
                 closeTime: timeframeCloseTime,
             },
-            count: getTimeframeTicksCount(
-                canvasRect.width
-            ),
+            canvasRect,
         })
-        : [];
+    }, [
+        canvasRect,
+        isLoading,
+        timeframeCloseTime,
+        timeframeKey,
+        timeframeOpenTime,
+    ]);
+
+    useLayoutEffect(() => {
+        if (!canvasRect) return;
+
+        timeframeTicksRef.current.forEach(
+            (el, index) => {
+                if (!el) return;
+
+                const tick = timeframeTicks[index];
+                if (!tick) return;
+
+                const textWidth = el.getBoundingClientRect().width;
+                const halfWidth = textWidth / 2;
+
+                const isVisible = (
+                    (tick.x - halfWidth >= 0)
+                    &&
+                    (tick.x + halfWidth <= canvasRect.width)
+                );
+
+                el.style.visibility = isVisible ? 'visible' : 'hidden';
+            }
+        )
+    }, [timeframeTicks, canvasRect]);
 
     return (
         <div
             className="
                     flex justify-between items-center h-4
-                    overflow-hidden
+                    overflow-hidden text-xs font-bold
                 "
             style={ {
                 width: canvasRect?.width ?? 0
             } }
         >
             {
-                !isLoading
+                !isLoading && canvasRect
                     ? (
                         timeframeTicks.map(
                             (tick, index) => (
                                 <span
-                                    className="text-xs"
+                                    className="absolute -translate-x-1/2 whitespace-nowrap"
                                     key={ `${index}` }
+                                    ref={ (el) => { timeframeTicksRef.current[index] = el } }
+                                    style={ { left: `${tick.x}px` } }
                                 >
                                     {
-                                        tick
+                                        tick.label
                                     }
                                 </span>
                             )
@@ -67,7 +101,6 @@ export function TimeframeTicks({
                         },
                         (_, index) => (
                             <span
-                                className="text-xs"
                                 key={ `${index}` }
                             >
                                 --

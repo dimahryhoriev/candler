@@ -63,7 +63,7 @@ export function PerformanceChartTooltip({
         <div
             className="
                 flex flex-col w-fit h-fit gap-2 p-2
-                bg-zinc-800 rounded-sm relative
+                bg-zinc-800 rounded-sm relative z-[9999]
             "
             style={ {
                 position: 'absolute',

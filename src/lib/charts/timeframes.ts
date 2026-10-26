@@ -1,6 +1,6 @@
+import { CanvasRect } from "@/hooks/use-canvas-rect";
 import { IntervalKey } from "../api/fetch-klines";
 import { formatDate } from "../format";
-import { roundToStep } from "../math/round";
 
 type TimeRange = {
     openTime: number;
@@ -8,6 +8,11 @@ type TimeRange = {
 };
 
 export type TimeframeTickFormat = 'H' | 'D' | 'W' | 'M' | 'Y';
+
+export type TimeframeTick = {
+    label: string;
+    x: number;
+};
 
 export type TimeframeKey =
     | '1D' | '1W' | '1M'
@@ -18,70 +23,117 @@ type TimeframeValues = {
     interval: IntervalKey;
     limit: number;
     tickFormat: TimeframeTickFormat;
+    stepAmount: number;
 };
 
 export type TimeframesMap = Record<TimeframeKey, TimeframeValues>;
 
 export const timeframesMap: TimeframesMap = {
-    '1D': { interval: '5m', limit: 288, tickFormat: 'H' },
-    '1W': { interval: '30m', limit: 336, tickFormat: 'D' },
-    '1M': { interval: '2h', limit: 360, tickFormat: 'W' },
-    '3M': { interval: '8h', limit: 270, tickFormat: 'W' },
-    '6M': { interval: '12h', limit: 360, tickFormat: 'M' },
-    '1Y': { interval: '1d', limit: 365, tickFormat: 'M' },
-    '5Y': { interval: '1w', limit: 260, tickFormat: 'Y' },
-    'ALL': { interval: '1M', limit: 1000, tickFormat: 'Y' },
+    '1D': { interval: '5m', limit: 288, tickFormat: 'H', stepAmount: 1 },
+    '1W': { interval: '30m', limit: 336, tickFormat: 'D', stepAmount: 1 },
+    '1M': { interval: '2h', limit: 360, tickFormat: 'W', stepAmount: 1 },
+    '3M': { interval: '8h', limit: 270, tickFormat: 'W', stepAmount: 3 },
+    '6M': { interval: '12h', limit: 360, tickFormat: 'M', stepAmount: 1 },
+    '1Y': { interval: '1d', limit: 365, tickFormat: 'M', stepAmount: 3 },
+    '5Y': { interval: '1w', limit: 260, tickFormat: 'Y', stepAmount: 1 },
+    'ALL': { interval: '1M', limit: 1000, tickFormat: 'Y', stepAmount: 2 },
 };
 
 export function getTimeframeTicks({
     timeframeKey,
     timeRange,
-    count,
+    canvasRect,
 }: {
-    timeframeKey: TimeframeKey,
-    timeRange: TimeRange,
-    count: number,
-}) {
-    const formatKey = timeframesMap[timeframeKey].tickFormat;
+    timeframeKey: TimeframeKey;
+    timeRange: TimeRange;
+    canvasRect: CanvasRect;
+}): TimeframeTick[] {
+    const { tickFormat, stepAmount } = timeframesMap[timeframeKey];
+    const width = canvasRect.width;
+    const { openTime, closeTime } = timeRange;
 
-    const openTime = timeRange.openTime;
-    const closeTime = timeRange.closeTime;
     const timeRangeDiff = closeTime - openTime;
+    if (timeRangeDiff <= 0 || width <= 0) return [];
 
-    const step = count > 1
-        ? timeRangeDiff / (count - 1)
-        : 0;
+    const ticks: TimeframeTick[] = [];
 
-    return (
-        Array.from(
-            { length: count },
-            (_, i) => {
-                const hourMs = 60 * 60 * 1000;
+    const timeAnchor = new Date(roundTimeframeTickTime(openTime, tickFormat));
 
-                return (
-                    formatDate({
-                        dateMs: roundToStep(
-                            openTime + (i * step),
-                            hourMs,
-                            'floor',
-                        ),
-                        formatKey,
-                    })
-                );
-            }
-        )
-    );
+    if (timeAnchor.getTime() < openTime) {
+        addCalendarStep(timeAnchor, tickFormat, stepAmount);
+    };
+
+    while (timeAnchor.getTime() <= closeTime) {
+        const time = timeAnchor.getTime();
+        const x = ((time - openTime) / timeRangeDiff) * width;
+
+        ticks.push({
+            label: formatDate({
+                dateMs: time,
+                formatKey: tickFormat,
+            }),
+            x,
+        });
+
+        addCalendarStep(timeAnchor, tickFormat, stepAmount);
+    };
+
+    return ticks;
 };
 
-export function getTimeframeTicksCount(
-    axisWidth?: number,
+function roundTimeframeTickTime(
+    timeMs: number,
+    tickFormat: TimeframeTickFormat,
 ) {
-    if (!axisWidth) return 0;
+    const date = new Date(timeMs);
 
-    switch (true) {
-        case axisWidth < 1024: return 4;
-        case axisWidth < 1280: return 4;
-        case axisWidth < 1536: return 5;
-        default: return 6;
+    switch (tickFormat) {
+        case 'H':
+            date.setHours((Math.floor(date.getHours() / 2) * 2), 0, 0, 0)
+            return date.getTime();
+        case 'D':
+            date.setHours(0, 0, 0, 0);
+            return date.getTime();
+        case 'W':
+            date.setHours(0, 0, 0, 0);
+            const day = date.getDay();
+            const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+            date.setDate(diff);
+            return date.getTime();
+        case 'M':
+            date.setDate(1);
+            date.setHours(0, 0, 0, 0);
+            return date.getTime();
+        case 'Y':
+            date.setMonth(0, 1);
+            date.setHours(0, 0, 0, 0);
+            return date.getTime();
+        default:
+            return timeMs;
+    };
+};
+
+function addCalendarStep(
+    date: Date,
+    tickFormat: TimeframeTickFormat,
+    stepAmount: number = 1,
+) {
+    switch (tickFormat) {
+        case 'H':
+            date.setHours(date.getHours() + (stepAmount * 4));
+            break;
+        case 'D':
+            date.setDate(date.getDate() + stepAmount);
+            break;
+        case 'W':
+            date.setDate(date.getDate() + (stepAmount * 7));
+            break;
+        case 'M':
+            date.setDate(1);
+            date.setMonth(date.getMonth() + stepAmount);
+            break;
+        case 'Y':
+            date.setFullYear(date.getFullYear() + stepAmount);
+            break;
     };
 };

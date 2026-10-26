@@ -86,7 +86,7 @@ export function getChangeLimits(
     let maxChange = -Infinity;
 
     for (const c of changes) {
-        if (c.openTime < minTime) minTime = c.openTime;
+        if (c.closeTime < minTime) minTime = c.closeTime;
         if (c.closeTime > maxTime) maxTime = c.closeTime;
         if (c.change < minChange) minChange = c.change;
         if (c.change > maxChange) maxChange = c.change;
