@@ -15,13 +15,17 @@ export function TimeframeTicks({
     isLoading: boolean;
 }) {
     const timeframeTicksRef = useRef<(HTMLSpanElement | null)[]>([]);
-    const firstKlines = assetsKlines[0]?.klines;
 
     const timeframeOpenTime = !isLoading
-        ? firstKlines[0].openTime
+        ? Math.min(...assetsKlines.map(a => a.klines[0]?.openTime ?? Infinity))
         : 0
+
     const timeframeCloseTime = !isLoading
-        ? firstKlines[firstKlines.length - 1].closeTime
+        ? Math.max(
+            ...assetsKlines.map(
+                a => a.klines[a.klines.length - 1]?.closeTime ?? -Infinity
+            )
+        )
         : 0
 
     const timeframeTicks = useMemo(() => {
