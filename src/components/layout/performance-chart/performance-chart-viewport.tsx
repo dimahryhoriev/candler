@@ -115,7 +115,7 @@ export function PerformanceChartViewport({
                 }
             </div>
             <TimeframeTicks
-                assetsKlines={ assetsKlines }
+                assetsPoints={ assetsPoints }
                 timeframeKey={ timeframeKey }
                 canvasRect={ canvasRect }
                 isLoading={ !hasData }

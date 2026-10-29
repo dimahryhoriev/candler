@@ -1,4 +1,5 @@
 import { AssetPoint, AssetPoints } from "../assets/assets-calculations";
+import { getOldestAsset } from "../assets/assets-filters";
 import { findClosestPoint, Point } from "../math/point";
 
 export type ChartAnchor = {
@@ -16,15 +17,7 @@ export function snapChartCrosshair(
     assetsPoints: AssetPoints[],
     crosshairPoint: Point,
 ): Crosshair {
-    const oldestAsset = assetsPoints.reduce(
-        (acc, curr) => {
-            const oldestTime = acc?.points[0]?.changeValues.openTime ?? Infinity;
-            const currTime = curr?.points[0]?.changeValues.openTime ?? Infinity;
-            return currTime < oldestTime ? curr : acc;
-        },
-        assetsPoints[0]
-    );
-
+    const oldestAsset = getOldestAsset(assetsPoints);
     const basePoints = oldestAsset?.points ?? [];
     const basePoint = findClosestPoint({
         points: basePoints.map(p => p.position),
@@ -39,7 +32,7 @@ export function snapChartCrosshair(
         timeMs:
             oldestAsset?.points.find(
                 p => p.position.x === positionX
-            )?.changeValues.closeTime
+            )?.changeValues.openTime
             ??
             0,
         anchors:

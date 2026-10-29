@@ -1,37 +1,36 @@
 import { CanvasRect } from "@/hooks/use-canvas-rect";
-import { AssetKlines } from "@/lib/api/fetch-klines";
+import { AssetPoints } from "@/lib/assets/assets-calculations";
+import { getOldestAsset } from "@/lib/assets/assets-filters";
 import { getTimeframeTicks, TimeframeKey } from "@/lib/charts/timeframes";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
 export function TimeframeTicks({
-    assetsKlines,
+    assetsPoints,
     timeframeKey,
     canvasRect,
     isLoading,
 }: {
-    assetsKlines: AssetKlines[];
+    assetsPoints: AssetPoints[];
     timeframeKey: TimeframeKey;
     canvasRect?: CanvasRect;
     isLoading: boolean;
 }) {
     const timeframeTicksRef = useRef<(HTMLSpanElement | null)[]>([]);
+    const oldestAsset = getOldestAsset(assetsPoints);
 
     const timeframeOpenTime = !isLoading
-        ? Math.min(...assetsKlines.map(a => a.klines[0]?.openTime ?? Infinity))
+        ? oldestAsset.points[0].changeValues.openTime
         : 0
 
     const timeframeCloseTime = !isLoading
-        ? Math.max(
-            ...assetsKlines.map(
-                a => a.klines[a.klines.length - 1]?.closeTime ?? -Infinity
-            )
-        )
+        ? oldestAsset.points[oldestAsset.points.length - 1].changeValues.openTime
         : 0
 
     const timeframeTicks = useMemo(() => {
         if (isLoading || !canvasRect) return [];
 
         return getTimeframeTicks({
+            oldestAsset,
             timeframeKey,
             timeRange: {
                 openTime: timeframeOpenTime,
@@ -43,8 +42,9 @@ export function TimeframeTicks({
         canvasRect,
         isLoading,
         timeframeCloseTime,
-        timeframeKey,
         timeframeOpenTime,
+        timeframeKey,
+        oldestAsset,
     ]);
 
     useLayoutEffect(() => {
@@ -74,7 +74,7 @@ export function TimeframeTicks({
     return (
         <div
             className="
-                    flex justify-between items-center h-4
+                    relative flex justify-between items-center h-4
                     overflow-hidden text-xs font-bold
                 "
             style={ {

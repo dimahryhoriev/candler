@@ -1,6 +1,8 @@
 import { CanvasRect } from "@/hooks/use-canvas-rect";
 import { IntervalKey } from "../api/fetch-klines";
+import { AssetPoints } from "../assets/assets-calculations";
 import { formatDate } from "../format";
+import { findClosestPoint } from "../math/point";
 
 type TimeRange = {
     openTime: number;
@@ -40,17 +42,19 @@ export const timeframesMap: TimeframesMap = {
 };
 
 export function getTimeframeTicks({
+    oldestAsset,
     timeframeKey,
     timeRange,
     canvasRect,
 }: {
+    oldestAsset: AssetPoints;
     timeframeKey: TimeframeKey;
     timeRange: TimeRange;
     canvasRect: CanvasRect;
 }): TimeframeTick[] {
     const { tickFormat, tickStep } = timeframesMap[timeframeKey];
-    const width = canvasRect.width;
     const { openTime, closeTime } = timeRange;
+    const width = canvasRect.width;
 
     const timeRangeDiff = closeTime - openTime;
     if (timeRangeDiff <= 0 || width <= 0) return [];
@@ -65,14 +69,22 @@ export function getTimeframeTicks({
 
     while (timeAnchor.getTime() <= closeTime) {
         const time = timeAnchor.getTime();
-        const x = ((time - openTime) / timeRangeDiff) * width;
+        const rawX = ((time - openTime) / timeRangeDiff) * width;
+        const snappedX = findClosestPoint({
+            points: oldestAsset.points.flatMap(p => p.position),
+            targetPoint: {
+                x: ((time - openTime) / timeRangeDiff) * width,
+                y: 0,
+            },
+            findBy: 'x',
+        })?.x;
 
         ticks.push({
             label: formatDate({
                 dateMs: time,
                 formatKey: tickFormat,
             }),
-            x,
+            x: snappedX ?? rawX,
         });
 
         addCalendarStep(timeAnchor, timeframeKey, tickStep);
@@ -89,24 +101,25 @@ function roundTimeframeTickTime(
 
     switch (tickFormat) {
         case 'H':
-            date.setHours((Math.floor(date.getHours() / 6) * 6), 0, 0, 0)
+            date.setUTCHours((Math.floor(date.getUTCHours() / 6) * 6), 0, 0, 0)
             return date.getTime();
         case 'D':
-            date.setHours(0, 0, 0, 0);
+            date.setUTCHours(0, 0, 0, 0);
             return date.getTime();
         case 'W':
-            date.setHours(0, 0, 0, 0);
-            const day = date.getDay();
-            const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-            date.setDate(diff);
+            date.setUTCHours(0, 0, 0, 0);
+            const day = date.getUTCDay();
+            const diff = date.getUTCDate() - day + (day === 0 ? -6 : 1);
+            date.setUTCDate(diff);
             return date.getTime();
         case 'M':
-            date.setDate(1);
-            date.setHours(0, 0, 0, 0);
+            date.setUTCDate(1);
+            date.setUTCHours(0, 0, 0, 0);
             return date.getTime();
         case 'Y':
-            date.setMonth(0, 1);
-            date.setHours(0, 0, 0, 0);
+            date.setUTCDate(1);
+            date.setUTCMonth(0, 1);
+            date.setUTCHours(0, 0, 0, 0);
             return date.getTime();
         default:
             return timeMs;
@@ -120,27 +133,27 @@ function addCalendarStep(
 ) {
     switch (timeframeKey) {
         case '1D':
-            date.setHours(date.getHours() + tickStep);
+            date.setUTCHours(date.getUTCHours() + tickStep);
             break;
 
         case '1W':
-            date.setDate(date.getDate() + tickStep);
+            date.setUTCDate(date.getUTCDate() + tickStep);
             break;
 
         case '1M':
         case '3M':
-            date.setDate(date.getDate() + (tickStep * 7));
+            date.setUTCDate(date.getUTCDate() + (tickStep * 7));
             break;
 
         case '6M':
         case '1Y':
-            date.setDate(1);
-            date.setMonth(date.getMonth() + tickStep);
+            date.setUTCDate(1);
+            date.setUTCMonth(date.getUTCMonth() + tickStep);
             break;
 
         case '5Y':
         case 'ALL':
-            date.setFullYear(date.getFullYear() + tickStep);
+            date.setUTCFullYear(date.getUTCFullYear() + tickStep);
             break;
     };
 };

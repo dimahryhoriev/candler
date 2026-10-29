@@ -1,4 +1,5 @@
 import { Asset } from "@/hooks/use-assets";
+import { AssetPoints } from "./assets-calculations";
 import { AssetsTypeOptions, getAssetType } from "./assets-types";
 
 export function filterAssetsByPair(
@@ -50,5 +51,18 @@ export function filterAssetsByType(
 
             return true;
         })
+    );
+};
+
+export function getOldestAsset(
+    assetsPoints: AssetPoints[],
+) {
+    return assetsPoints.reduce(
+        (acc, curr) => {
+            const oldestTime = acc?.points[0]?.changeValues.openTime ?? Infinity;
+            const currTime = curr?.points[0]?.changeValues.openTime ?? Infinity;
+            return currTime < oldestTime ? curr : acc;
+        },
+        assetsPoints[0]
     );
 };
