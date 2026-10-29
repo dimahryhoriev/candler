@@ -1,0 +1,38 @@
+FngItem:
+  type: object
+  required:
+    - value
+    - value_classification
+    - timestamp
+  properties:
+    value:
+      type: string
+    value_classification:
+      type: string
+      enum:
+        - "Extreme Fear"
+        - "Fear"
+        - "Neutral"
+        - "Greed"
+        - "Extreme Greed"
+    timestamp:
+      type: string
+
+RestFngResponse:
+  type: object
+  required:
+    - name
+    - data
+  properties:
+    name:
+      type: string
+    data:
+      type: array
+      items:
+        $ref: "#/FngItem"
+    metadata:
+      type: object
+      properties:
+        error:
+          type: string
+          nullable: true

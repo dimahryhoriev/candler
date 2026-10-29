@@ -1,5 +1,7 @@
 import { AssetsList } from "@/components/layout/assets-list/assets-list";
-import { PerformanceChart } from "@/components/layout/performance-chart/performance-chart";
+import { FngCards } from "@/components/layout/fng-cards/fng-cards";
+import { HomeChartsSection } from "./_components/home-charts-section";
+import { HomeListsSection } from "./_components/home-lists-section";
 
 export default function HomePage() {
     return (
@@ -13,38 +15,9 @@ export default function HomePage() {
                 sortOrder="desc"
                 limit={ 4 }
             />
-            <div
-                className="
-                    flex justify-start gap-6
-                "
-            >
-                <AssetsList
-                    title="Top Gainers"
-                    mode="rows"
-                    sortOption="change"
-                    sortOrder="desc"
-                    limit={ 6 }
-                />
-                <AssetsList
-                    title="Top Losers"
-                    mode="rows"
-                    sortOption="change"
-                    sortOrder="asc"
-                    limit={ 6 }
-                />
-            </div>
-            <div
-                className="
-                    flex justify-start gap-14
-                "
-            >
-                <PerformanceChart
-                    assetsType="majors"
-                />
-                <PerformanceChart
-                    assetsType="altcoins"
-                />
-            </div>
+            <HomeChartsSection />
+            <HomeListsSection />
+            <FngCards />
         </div>
     );
 };

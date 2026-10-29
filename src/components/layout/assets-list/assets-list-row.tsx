@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { AssetIcon } from "../../ui/asset-icon";
-import { AssetsListItem } from "../assets-list";
+import { AssetsListItem } from "./assets-list";
 
 export function AssetsListRow({
     symbol,

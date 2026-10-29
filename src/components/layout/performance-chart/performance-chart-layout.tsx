@@ -27,7 +27,7 @@ export function PerformanceChartLayout({
     return (
         <div
             className="
-                flex flex-col gap-6 w-full
+                flex flex-col gap-5 w-full
             "
         >
             <span

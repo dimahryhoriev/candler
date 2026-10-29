@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React from "react";
-import { AssetsListViewMode } from "../assets-list";
+import { AssetsListViewMode } from "./assets-list";
 
 export function AssetsListLayout({
     title,

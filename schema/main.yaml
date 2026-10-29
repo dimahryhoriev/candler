@@ -10,5 +10,7 @@ components:
       $ref: "./models/ticker.yaml#/WebsocketTickerResponse"
     RestTickerResponse:
       $ref: "./models/ticker.yaml#/RestTickerResponse"
+    RestFngResponse:
+      $ref: "./models/fng.yaml#/RestFngResponse"
 
 paths: {}

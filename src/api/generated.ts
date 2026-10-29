@@ -99,6 +99,19 @@ export interface components {
             lastId?: number;
             count?: number;
         };
+        RestFngResponse: {
+            name: string;
+            data: components["schemas"]["FngItem"][];
+            metadata?: {
+                error?: string | null;
+            };
+        };
+        FngItem: {
+            value: string;
+            /** @enum {string} */
+            value_classification: "Extreme Fear" | "Fear" | "Neutral" | "Greed" | "Extreme Greed";
+            timestamp: string;
+        };
     };
     responses: never;
     parameters: never;
