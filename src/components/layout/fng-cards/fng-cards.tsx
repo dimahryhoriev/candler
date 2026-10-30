@@ -1,5 +1,9 @@
 import { fetchFng, FngItemsList } from "@/lib/api/fetch-fng";
-import { FngGaugeCard } from "./fng-gauge-card";
+import { FngHistoricalValuesCard } from "./fng-historical-values-card";
+import { FngIndicatorCard } from "./fng-indicator-card";
+import { FngYearlyExtremesCard } from "./fng-yearly-extremes-card";
+
+export type FngLines = string[];
 
 export async function FngCards({
     title = 'Crypto Fear and Greed Index',
@@ -7,6 +11,13 @@ export async function FngCards({
     title?: string;
 }) {
     const fngTicks: FngItemsList = await fetchFng();
+    const lines: FngLines = [
+        '--status-extreme-fear',
+        '--status-fear',
+        '--status-neutral',
+        '--status-greed',
+        '--status-extreme-greed'
+    ];
 
     return (
         <div
@@ -25,16 +36,18 @@ export async function FngCards({
             </span>
             <div
                 className="
-                    flex items-center text-xs gap-6
+                    grid grid-cols-1 md:grid-cols-3
+                    items-stretch gap-6
                 "
             >
-                <FngGaugeCard
+                <FngIndicatorCard
+                    fngTicks={ fngTicks }
+                    lines={ lines }
+                />
+                <FngHistoricalValuesCard
                     fngTicks={ fngTicks }
                 />
-                <FngGaugeCard
-                    fngTicks={ fngTicks }
-                />
-                <FngGaugeCard
+                <FngYearlyExtremesCard
                     fngTicks={ fngTicks }
                 />
             </div>

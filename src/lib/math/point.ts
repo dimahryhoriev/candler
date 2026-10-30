@@ -21,17 +21,41 @@ export function findHypotenuse(
     return Math.sqrt((diff.x ** 2) + (diff.y ** 2));
 };
 
+export type Circle = {
+    center: Point;
+    r: number;
+};
+
+type ScaleAngleToPointParams = {
+    circle: Circle;
+    angle: number;
+};
+
+export function scaleAngleToPoint({
+    circle,
+    angle,
+}: ScaleAngleToPointParams): Point {
+    const rad = (angle * Math.PI) / 180;
+
+    return {
+        x: circle.center.x + circle.r * Math.cos(rad),
+        y: circle.center.y + circle.r * Math.sin(rad),
+    };
+};
+
+type FindClosestPointParams = {
+    points: Point[];
+    targetPoint: Point;
+    findBy: 'xy' | 'x' | 'y';
+    maxDistance?: number;
+};
+
 export function findClosestPoint({
     points,
     targetPoint,
     findBy,
     maxDistance = 15,
-}: {
-    points: Point[],
-    targetPoint: Point,
-    findBy: 'xy' | 'x' | 'y',
-    maxDistance?: number,
-}) {
+}: FindClosestPointParams) {
     if (!points.length) return null;
 
     let closestPoint = points[0];

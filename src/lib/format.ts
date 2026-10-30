@@ -73,19 +73,9 @@ export function formatSymbol(
     const formattedSymbol = `${symbol.slice(0, -4)}`;
 
     switch (letterCase) {
-        case 'upper': return formattedSymbol.toUpperCase()
-        case 'lower': return formattedSymbol.toLowerCase()
-        case 'capitalize': return (
-            (
-                formattedSymbol.charAt(0)
-                    .toUpperCase()
-            )
-            +
-            (
-                formattedSymbol.slice(1)
-                    .toLowerCase()
-            )
-        );
+        case 'upper': return formattedSymbol.toUpperCase();
+        case 'lower': return formattedSymbol.toLowerCase();
+        case 'capitalize': return capitalizeString(formattedSymbol);
     };
 };
 
@@ -99,6 +89,20 @@ export function formatDate({
     return (
         dateTimeFormatters[formatKey].format(
             dateMs
+        )
+    );
+};
+
+export function capitalizeString(
+    string: string,
+) {
+    return (
+        (
+            string.charAt(0).toUpperCase()
+        )
+        +
+        (
+            string.slice(1).toLowerCase()
         )
     );
 };
