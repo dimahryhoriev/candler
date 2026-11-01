@@ -1,4 +1,7 @@
+'use cache'
+
 import { ApiSchemas } from "@/api";
+import { cacheLife } from "next/cache";
 
 export type FngItemsList = ApiSchemas['FngItem'][];
 
@@ -12,15 +15,14 @@ export async function fetchFng({
 }: {
     limit?: number;
 } = {}): Promise<FngItemsList> {
+    cacheLife({
+        stale: 3600,
+        revalidate: 3600,
+        expire: 86400,
+    });
+
     const url = `${FNG_REST_BASE_URL}?limit=${limit}`;
-    const res = await fetch(
-        url,
-        {
-            next: {
-                revalidate: 3600,
-            },
-        },
-    );
+    const res = await fetch(url);
 
     if (!res.ok) {
         throw new Error(`Failed to fetch ${limit} fear & greed items: ${res.statusText}`);

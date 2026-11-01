@@ -9,22 +9,23 @@ export function FngHistoricalValuesCard({
     title?: string;
     fngTicks: FngItemsList;
 }) {
-    const makeItem = (tick: FngItemsList[number], label: string) => {
-        const color = getFngStatus(Number(tick.value));
+    const makeItem = (label: string, tick?: FngItemsList[number]) => {
+        const value = tick?.value;
+        const color = value ? getFngStatus(Number(value)) : null;
         const status = color?.split("-").map(capitalizeString).join(" ");
 
         return {
-            status,
+            status: status ?? '--',
             label,
             color,
-            value: tick.value,
+            value: value ?? '--',
         };
     };
 
     const values = [
-        makeItem(fngTicks[1], 'Yesterday'),
-        makeItem(fngTicks[7], 'Last Week'),
-        makeItem(fngTicks[30], 'Last Month'),
+        makeItem('Yesterday', fngTicks[1]),
+        makeItem('Last Week', fngTicks[7]),
+        makeItem('Last Month', fngTicks[30]),
     ];
 
     return (
@@ -66,7 +67,9 @@ export function FngHistoricalValuesCard({
                                         px-3 py-1 rounded-full text-zinc-500 font-bold
                                     "
                                     style={ {
-                                        background: `color-mix(in srgb, var(--status-${v.color}) 25%, transparent)`
+                                        background: v.color
+                                            ? `color-mix(in srgb, var(--status-${v.color}) 25%, transparent)`
+                                            : 'var(--muted-foreground)'
                                     } }
                                 >
                                     {

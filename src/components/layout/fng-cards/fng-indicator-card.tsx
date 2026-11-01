@@ -1,6 +1,5 @@
 'use client'
 
-import { useCanvasRect } from "@/hooks/use-canvas-rect";
 import { FngItemsList } from "@/lib/api/fetch-fng";
 import { capitalizeString } from "@/lib/format";
 import { scaleAngleToPoint } from "@/lib/math/point";
@@ -36,12 +35,18 @@ export function FngIndicatorCard({
                     title
                 }
             </span>
-            <FngIndicator
-                fngIndex={ Number(lastTick.value) }
-                lines={ lines }
-            />
+            {
+                lastTick
+                    ? (
+                        <FngIndicator
+                            fngIndex={ Number(lastTick.value) }
+                            lines={ lines }
+                        />
+                    )
+                    : null
+            }
         </div>
-    )
+    );
 };
 
 function FngIndicator({
@@ -51,18 +56,17 @@ function FngIndicator({
     fngIndex: number;
     lines: string[];
 }) {
-    const { canvasRef, canvasRect } = useCanvasRect();
-
+    const size = { width: 160, height: 80 };
     const fngStatus = getFngStatus(fngIndex) ?? 'Unknown';
     const lineWidth = 10;
     const dotWidth = 8;
 
     const circle = {
         center: {
-            x: (canvasRect?.width ?? 0) / 2,
-            y: canvasRect?.height ?? 0,
+            x: (size.width) / 2,
+            y: size.height,
         },
-        r: ((canvasRect?.width ?? 0) / 2) - lineWidth,
+        r: ((size.width) / 2) - lineWidth,
     };
 
     const linesCount = lines.length;
@@ -74,7 +78,7 @@ function FngIndicator({
     const dotPosition = scaleAngleToPoint({ circle, angle: dotAngle });
 
     const formattedFngStatus = fngStatus.split('-')
-        .map(s => capitalizeString(s));
+        .map(s => capitalizeString(s)).join(' ');
 
     return (
         <div
@@ -84,10 +88,10 @@ function FngIndicator({
             "
         >
             <svg
-                ref={ canvasRef }
-                className="
-                    w-40 aspect-[2/1] overflow-hidden
-                "
+                className='overflow-hidden'
+                viewBox={ `0 0 ${size.width} ${size.height}` }
+                width={ size.width }
+                height={ size.height }
             >
                 <defs>
                     <mask id="indicator-mask">
