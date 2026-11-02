@@ -8,7 +8,6 @@ const inter = Inter({
     variable: '--font-sans'
 });
 
-
 export default function RootLayout({
     children
 }: LayoutProps<"/">) {

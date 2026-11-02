@@ -2,7 +2,9 @@ import { Header } from "@/components/layout/header";
 
 export default function MainLayout({
     children
-}: LayoutProps<"/">) {
+}: {
+    children: React.ReactNode;
+}) {
     return (
         <>
             <Header />
