@@ -1,4 +1,3 @@
-import { Header } from "@/components/layout/header";
 import { cn } from "@/lib/utils";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -22,16 +21,9 @@ export default function RootLayout({
                 className="min-h-full flex flex-col"
             >
                 <Providers>
-                    <Header />
-                    <main
-                        className="
-                        container mx-auto px-4 py-12
-                    "
-                    >
-                        {
-                            children
-                        }
-                    </main>
+                    {
+                        children
+                    }
                 </Providers>
             </body>
         </html>
