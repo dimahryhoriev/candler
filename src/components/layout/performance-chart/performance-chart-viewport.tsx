@@ -32,7 +32,7 @@ export function PerformanceChartViewport({
         point: crosshairPoint,
         onPointerMove,
         onPointerLeave,
-    } = useChartCrosshair(canvasRect);
+    } = useChartCrosshair();
 
     const assetsChanges = calculateAssetsChanges(assetsKlines);
     const changesValues = assetsChanges.flatMap(a => a.changes);

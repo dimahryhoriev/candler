@@ -57,7 +57,7 @@ function FngIndicator({
     lines: string[];
 }) {
     const size = { width: 160, height: 80 };
-    const fngStatus = getFngStatus(fngIndex) ?? 'Unknown';
+    const fngStatus = getFngStatus(fngIndex) ?? 'Loading...';
     const lineWidth = 10;
     const dotWidth = 8;
 
