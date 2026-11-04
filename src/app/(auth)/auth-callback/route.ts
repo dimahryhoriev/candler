@@ -18,6 +18,6 @@ export async function GET(
     };
 
     return NextResponse.redirect(
-        `${origin}/login?error=auth-code-error`
+        `${origin}/login?error=auth-error`
     );
 };

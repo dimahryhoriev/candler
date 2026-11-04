@@ -6,7 +6,8 @@ export default function AuthLayout({
     return (
         <main
             className="
-                container mx-auto px-4 py-12
+                flex flex-col container mx-auto
+                items-center px-4 py-12 gap-30
             "
         >
             { children }

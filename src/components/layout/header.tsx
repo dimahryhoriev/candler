@@ -29,8 +29,8 @@ export function Header() {
                 </div>
                 <div
                     className="
-                    flex w-64 justify-between gap-2
-                "
+                        flex w-64 justify-between gap-2
+                    "
                 >
                     <Button
                         size="lg"

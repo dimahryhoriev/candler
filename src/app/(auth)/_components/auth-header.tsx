@@ -14,12 +14,12 @@ export function AuthHeader({
             "
         >
             <div
-                className="flex flex-col items-center gap-1"
+                className="flex flex-col items-center"
             >
                 <Link
                     href='/'
                     className="
-                        font-bold text-2xl tracking-tight
+                        font-bold text-xl tracking-tight
                     "
                 >
                     Candler
