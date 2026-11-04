@@ -1,9 +1,11 @@
+import Link from "next/link";
 import { AuthDivider } from "./auth-divider";
 import { AuthEmailButton } from "./auth-email-button";
+import { AuthFooter } from "./auth-footer";
 import { AuthGoogleButton } from "./auth-google-button";
 import { AuthHeader } from "./auth-header";
 
-type AuthMode = 'login' | 'sign-up';
+export type AuthMode = 'login' | 'sign-up';
 
 export function AuthTemplate({
     mode,
@@ -12,6 +14,7 @@ export function AuthTemplate({
 }) {
     const CTA = mode === 'login' ? 'Log In' : 'Sign Up';
     const alternativeCTA = mode === 'login' ? 'Sign Up' : 'Log In';
+    const alternativeHref = mode === 'login' ? '/sign-up' : '/login';
 
     return (
         <>
@@ -21,6 +24,7 @@ export function AuthTemplate({
             <div
                 className="
                     flex flex-col gap-8 items-center
+                    relative -top-10
                 "
             >
                 <span
@@ -40,6 +44,19 @@ export function AuthTemplate({
                     <AuthEmailButton />
                 </div>
             </div>
+            <AuthFooter
+                mode={ mode }
+                link={
+                    <Link
+                        href={ alternativeHref }
+                        className="
+                            font-semibold tracking-tight
+                        "
+                    >
+                        { alternativeCTA }
+                    </Link>
+                }
+            />
         </>
     );
 };
