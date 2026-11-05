@@ -1,5 +1,5 @@
-'use client'
-
+import { Skeleton } from "@/components/ui/skeleton";
+import { Suspense } from "react";
 import { HeaderActions } from "./header-actions";
 import { HeaderHomeLink } from "./header-home-link";
 
@@ -18,7 +18,15 @@ export function Header() {
                 "
             >
                 <HeaderHomeLink />
-                <HeaderActions />
+                <Suspense
+                    fallback={
+                        <Skeleton
+                            className="w-32 h-9"
+                        />
+                    }
+                >
+                    <HeaderActions />
+                </Suspense>
             </div>
         </header>
     );

@@ -1,17 +1,25 @@
+'use client'
+
 import Link from "next/link";
-import { AuthDivider } from "./auth-divider";
-import { AuthEmailButton } from "./auth-email-button";
+import { Dispatch, SetStateAction, useState } from "react";
 import { AuthFooter } from "./auth-footer";
-import { AuthGoogleButton } from "./auth-google-button";
 import { AuthHeader } from "./auth-header";
+import { AuthMethodSelector } from "./auth-method-selector";
 
 export type AuthMode = 'login' | 'sign-up';
 
+export type AuthStep = 'method' | 'form';
+export type AuthStepSetter = Dispatch<SetStateAction<AuthStep>>;
+
 export function AuthTemplate({
     mode,
+    form,
 }: {
     mode: AuthMode;
+    form: React.ReactNode;
 }) {
+    const [authStep, setAuthStep] = useState<AuthStep>('method');
+
     const CTA = mode === 'login' ? 'Log In' : 'Sign Up';
     const alternativeCTA = mode === 'login' ? 'Sign Up' : 'Log In';
     const alternativeHref = mode === 'login' ? '/sign-up' : '/login';
@@ -19,12 +27,14 @@ export function AuthTemplate({
     return (
         <>
             <AuthHeader
+                authStep={ authStep }
+                authStepSetter={ setAuthStep }
                 description="Crypto Tracker"
             />
             <div
                 className="
                     flex flex-col gap-8 items-center
-                    relative -top-10
+                    relative -top-10 w-fit
                 "
             >
                 <span
@@ -34,15 +44,15 @@ export function AuthTemplate({
                 >
                     { CTA }
                 </span>
-                <div
-                    className="
-                        flex flex-col w-80 gap-4
-                    "
-                >
-                    <AuthGoogleButton />
-                    <AuthDivider />
-                    <AuthEmailButton />
-                </div>
+                {
+                    authStep === 'method'
+                        ? (
+                            <AuthMethodSelector
+                                onHandleForm={ setAuthStep }
+                            />
+                        )
+                        : form
+                }
             </div>
             <AuthFooter
                 mode={ mode }
