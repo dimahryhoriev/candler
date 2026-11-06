@@ -5,8 +5,10 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { signUp } from "@/lib/api/supabase/session/sign-up";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import { VerifyOtpForm } from "../../_components/verify-otp-form";
 
 const signUpSchema = z.object({
     email: z
@@ -32,6 +34,8 @@ const signUpSchema = z.object({
 type SignUpSchema = z.infer<typeof signUpSchema>;
 
 export function SignUpForm() {
+    const [otpEmail, setOtpEmail] = useState<string | null>(null);
+
     const form = useForm<SignUpSchema>({
         resolver: zodResolver(signUpSchema),
         defaultValues: {
@@ -43,10 +47,15 @@ export function SignUpForm() {
 
     const onSubmit = form.handleSubmit(
         async (data) => {
-            const res = await signUp(data);
-            if (res?.error) {
-                form.setError('root', { message: res.error });
+            const { email, error } = await signUp(data);
+
+            if (error || !email) {
+                setOtpEmail(null);
+                form.setError('root', { message: error });
+                return;
             };
+
+            setOtpEmail(email);
         },
     );
 
@@ -54,76 +63,85 @@ export function SignUpForm() {
     const isSubmitting = form.formState.isSubmitting;
 
     return (
-        <form
-            className="
-                flex flex-col gap-4
-                w-80
-            "
-            onSubmit={ onSubmit }
-        >
-            <Controller
-                name="email"
-                control={ form.control }
-                render={ ({ field, fieldState }) => (
-                    <Field data-invalid={ fieldState.invalid }>
-                        <FieldLabel htmlFor={ field.name }>Email</FieldLabel>
-                        <Input
-                            { ...field }
-                            id={ field.name }
-                            aria-invalid={ fieldState.invalid }
-                            placeholder="user@gmail.com"
-                            autoComplete="off"
-                        />
-                        { fieldState.invalid && <FieldError errors={ [fieldState.error] } /> }
-                    </Field>
-                ) }
-            />
-            <Controller
-                name="password"
-                control={ form.control }
-                render={ ({ field, fieldState }) => (
-                    <Field data-invalid={ fieldState.invalid }>
-                        <FieldLabel htmlFor={ field.name }>Password</FieldLabel>
-                        <Input
-                            { ...field }
-                            id={ field.name }
-                            aria-invalid={ fieldState.invalid }
-                            placeholder="******"
-                            autoComplete="off"
-                            type="password"
-                        />
-                        { fieldState.invalid && <FieldError errors={ [fieldState.error] } /> }
-                    </Field>
-                ) }
-            />
-            <Controller
-                name="confirmPassword"
-                control={ form.control }
-                render={ ({ field, fieldState }) => (
-                    <Field data-invalid={ fieldState.invalid }>
-                        <FieldLabel htmlFor={ field.name }>Confirm password</FieldLabel>
-                        <Input
-                            { ...field }
-                            id={ field.name }
-                            aria-invalid={ fieldState.invalid }
-                            autoComplete="off"
-                            type="password"
-                        />
-                        { fieldState.invalid && <FieldError errors={ [fieldState.error] } /> }
-                    </Field>
-                ) }
-            />
+        !errorMessage && otpEmail
+            ? (
+                <VerifyOtpForm
+                    email={ otpEmail }
+                    type="email"
+                />
+            )
+            : (
+                <form
+                    className="
+                        flex flex-col gap-4
+                        w-90
+                    "
+                    onSubmit={ onSubmit }
+                >
+                    <Controller
+                        name="email"
+                        control={ form.control }
+                        render={ ({ field, fieldState }) => (
+                            <Field data-invalid={ fieldState.invalid }>
+                                <FieldLabel htmlFor={ field.name }>Email</FieldLabel>
+                                <Input
+                                    { ...field }
+                                    id={ field.name }
+                                    aria-invalid={ fieldState.invalid }
+                                    placeholder="user@gmail.com"
+                                    autoComplete="off"
+                                />
+                                { fieldState.invalid && <FieldError errors={ [fieldState.error] } /> }
+                            </Field>
+                        ) }
+                    />
+                    <Controller
+                        name="password"
+                        control={ form.control }
+                        render={ ({ field, fieldState }) => (
+                            <Field data-invalid={ fieldState.invalid }>
+                                <FieldLabel htmlFor={ field.name }>Password</FieldLabel>
+                                <Input
+                                    { ...field }
+                                    id={ field.name }
+                                    aria-invalid={ fieldState.invalid }
+                                    placeholder="******"
+                                    autoComplete="off"
+                                    type="password"
+                                />
+                                { fieldState.invalid && <FieldError errors={ [fieldState.error] } /> }
+                            </Field>
+                        ) }
+                    />
+                    <Controller
+                        name="confirmPassword"
+                        control={ form.control }
+                        render={ ({ field, fieldState }) => (
+                            <Field data-invalid={ fieldState.invalid }>
+                                <FieldLabel htmlFor={ field.name }>Confirm password</FieldLabel>
+                                <Input
+                                    { ...field }
+                                    id={ field.name }
+                                    aria-invalid={ fieldState.invalid }
+                                    autoComplete="off"
+                                    type="password"
+                                />
+                                { fieldState.invalid && <FieldError errors={ [fieldState.error] } /> }
+                            </Field>
+                        ) }
+                    />
 
-            { errorMessage && <p className="text-destructive text-sm">{ errorMessage }</p> }
+                    { errorMessage && <p className="text-destructive text-sm">{ errorMessage }</p> }
 
-            <Button
-                className="h-9 w-full"
-                variant="blue"
-                disabled={ isSubmitting }
-                type="submit"
-            >
-                { isSubmitting ? 'Signing Up...' : 'Sign Up' }
-            </Button>
-        </form>
+                    <Button
+                        className="h-11 w-full"
+                        variant="blue"
+                        disabled={ isSubmitting }
+                        type="submit"
+                    >
+                        { isSubmitting ? 'Signing Up...' : 'Sign Up' }
+                    </Button>
+                </form>
+            )
     )
 };

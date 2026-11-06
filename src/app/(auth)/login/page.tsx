@@ -1,11 +1,11 @@
 import { AuthTemplate } from "../_components/auth-template";
-import { SignUpForm } from "../sign-up/_components/sign-up-form";
+import { LoginForm } from "./_components/login-form";
 
 export default function LoginPage() {
     return (
         <AuthTemplate
             mode="login"
-            form={ <SignUpForm /> }
+            form={ <LoginForm /> }
         />
     );
 };

@@ -1,20 +1,42 @@
 'use server'
 
-import { SignInWithPasswordCredentials } from "@supabase/supabase-js";
-import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "../clients/server-client";
 
 export async function login(
-    credentials: SignInWithPasswordCredentials,
+    credentials: {
+        email: string;
+        password: string;
+    },
 ) {
     const supabase = await createSupabaseServerClient();
-    const { error } = await supabase.auth.signInWithPassword(credentials);
 
-    if (error) {
+    const { error: passError } =
+        await supabase.auth.signInWithPassword(credentials);
+
+    if (passError) {
         return {
-            error: error.message
+            email: null,
+            error: 'Invalid email or password',
         };
     };
 
-    redirect('/');
+    const { error: otpError } =
+        await supabase.auth.signInWithOtp({
+            email: credentials.email,
+            options: {
+                shouldCreateUser: false,
+            },
+        });
+
+    if (otpError) {
+        return {
+            email: null,
+            error: 'Failed to send verification code. Try again later.'
+        }
+    };
+
+    return {
+        email: credentials.email,
+        error: undefined,
+    };
 };

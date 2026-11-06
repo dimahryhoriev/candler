@@ -6,8 +6,10 @@ import { Input } from "@/components/ui/input";
 import { login } from "@/lib/api/supabase/session/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import { VerifyOtpForm } from "../../_components/verify-otp-form";
 
 const loginSchema = z.object({
     email: z
@@ -24,6 +26,8 @@ const loginSchema = z.object({
 type LoginSchema = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
+    const [otpEmail, setOtpEmail] = useState<string | null>(null);
+
     const form = useForm<LoginSchema>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -34,10 +38,15 @@ export function LoginForm() {
 
     const onSubmit = form.handleSubmit(
         async (data) => {
-            const res = await login(data);
-            if (res?.error) {
-                form.setError('root', { message: res.error });
+            const { email, error } = await login(data);
+
+            if (error || !email) {
+                setOtpEmail(null);
+                form.setError('root', { message: error });
+                return;
             };
+
+            setOtpEmail(email);
         },
     );
 
@@ -45,74 +54,83 @@ export function LoginForm() {
     const isSubmitting = form.formState.isSubmitting;
 
     return (
-        <form
-            className="
-                flex flex-col gap-4
-                w-80
-            "
-            onSubmit={ onSubmit }
-        >
-            <Controller
-                name="email"
-                control={ form.control }
-                render={ ({ field, fieldState }) => (
-                    <Field data-invalid={ fieldState.invalid }>
-                        <FieldLabel htmlFor={ field.name }>Email</FieldLabel>
-                        <Input
-                            { ...field }
-                            id={ field.name }
-                            aria-invalid={ fieldState.invalid }
-                            placeholder="user@gmail.com"
-                            autoComplete="off"
-                        />
-                        { fieldState.invalid && <FieldError errors={ [fieldState.error] } /> }
-                    </Field>
-                ) }
-            />
-            <Controller
-                name="password"
-                control={ form.control }
-                render={ ({ field, fieldState }) => (
-                    <Field data-invalid={ fieldState.invalid }>
-                        <div
-                            className="flex justify-between"
-                        >
-                            <FieldLabel htmlFor={ field.name }>Password</FieldLabel>
-                            <Link
-                                href="/reset-password"
-                                className="
-                                    text-sm text-muted-foreground
-                                    hover:text-primary
-                                "
-                            >
-                                Forgot Password?
-                            </Link>
-                        </div>
-                        <Input
-                            { ...field }
-                            id={ field.name }
-                            aria-invalid={ fieldState.invalid }
-                            placeholder="******"
-                            autoComplete="off"
-                            type="password"
-                        />
-                        { fieldState.invalid && <FieldError errors={ [fieldState.error] } /> }
-                    </Field>
-                ) }
-            />
+        !errorMessage && otpEmail
+            ? (
+                <VerifyOtpForm
+                    email={ otpEmail }
+                    type="email"
+                />
+            )
+            : (
+                <form
+                    className="
+                        flex flex-col gap-4
+                        w-90
+                    "
+                    onSubmit={ onSubmit }
+                >
+                    <Controller
+                        name="email"
+                        control={ form.control }
+                        render={ ({ field, fieldState }) => (
+                            <Field data-invalid={ fieldState.invalid }>
+                                <FieldLabel htmlFor={ field.name }>Email</FieldLabel>
+                                <Input
+                                    { ...field }
+                                    id={ field.name }
+                                    aria-invalid={ fieldState.invalid }
+                                    placeholder="user@gmail.com"
+                                    autoComplete="off"
+                                />
+                                { fieldState.invalid && <FieldError errors={ [fieldState.error] } /> }
+                            </Field>
+                        ) }
+                    />
+                    <Controller
+                        name="password"
+                        control={ form.control }
+                        render={ ({ field, fieldState }) => (
+                            <Field data-invalid={ fieldState.invalid }>
+                                <div
+                                    className="flex justify-between"
+                                >
+                                    <FieldLabel htmlFor={ field.name }>Password</FieldLabel>
+                                    <Link
+                                        href="/reset-password"
+                                        className="
+                                            text-sm text-muted-foreground
+                                            hover:text-primary
+                                        "
+                                    >
+                                        Forgot Password?
+                                    </Link>
+                                </div>
+                                <Input
+                                    { ...field }
+                                    id={ field.name }
+                                    aria-invalid={ fieldState.invalid }
+                                    placeholder="******"
+                                    autoComplete="off"
+                                    type="password"
+                                />
+                                { fieldState.invalid && <FieldError errors={ [fieldState.error] } /> }
+                            </Field>
+                        ) }
+                    />
 
-            { errorMessage && <p className="text-destructive text-sm">{ errorMessage }</p> }
+                    { errorMessage && <p className="text-destructive text-sm">{ errorMessage }</p> }
 
-            <Button
-                className="h-9 w-full"
-                variant="blue"
-                disabled={ isSubmitting }
-                type="submit"
-            >
-                {
-                    isSubmitting ? 'Logging In...' : 'Log In'
-                }
-            </Button>
-        </form>
+                    <Button
+                        className="h-11 w-full"
+                        variant="blue"
+                        disabled={ isSubmitting }
+                        type="submit"
+                    >
+                        {
+                            isSubmitting ? 'Logging In...' : 'Log In'
+                        }
+                    </Button>
+                </form>
+            )
     )
 };

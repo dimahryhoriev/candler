@@ -1,20 +1,25 @@
 'use server'
 
-import { SignUpWithPasswordCredentials } from "@supabase/supabase-js";
-import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "../clients/server-client";
 
 export async function signUp(
-    credentials: SignUpWithPasswordCredentials,
+    credentials: {
+        email: string;
+        password: string;
+    },
 ) {
     const supabase = await createSupabaseServerClient();
     const { error } = await supabase.auth.signUp(credentials);
 
     if (error) {
         return {
-            error: error.message
+            email: null,
+            error: error.message,
         };
     };
 
-    redirect('/');
+    return {
+        email: credentials.email,
+        error: undefined,
+    };
 };
