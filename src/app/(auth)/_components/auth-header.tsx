@@ -2,7 +2,8 @@
 
 import { ArrowLeft, X } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useAuthStep } from "../_hooks/use-auth-step";
 
 export function AuthHeader({
     description,
@@ -10,9 +11,7 @@ export function AuthHeader({
     description: string;
 }) {
     const router = useRouter();
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
-    const authStep = searchParams.get('auth_step') ?? 'method';
+    const { authStep, changeAuthStep } = useAuthStep();
 
     return (
         <div
@@ -32,7 +31,7 @@ export function AuthHeader({
                     onClick={
                         authStep === 'method'
                             ? () => router.replace('/')
-                            : () => router.replace(`${pathname}?auth_step=method`)
+                            : () => changeAuthStep('method')
                     }
                 />
             }

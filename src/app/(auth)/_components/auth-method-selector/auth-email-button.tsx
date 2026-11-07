@@ -2,22 +2,20 @@
 
 import { Button } from "@/components/ui/button";
 import { Mail } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { useAuthStep } from "../../_hooks/use-auth-step";
 
 export function AuthEmailButton({
     text = 'Email',
 }: {
     text?: string;
 }) {
-    const router = useRouter();
-    const path = usePathname();
-    const handleOnClick = () => router.replace(`${path}?auth_step=email`);
+    const { changeAuthStep } = useAuthStep();
 
     return (
         <Button
             variant="outline"
             className="w-full h-12 text-foreground"
-            onClick={ handleOnClick }
+            onClick={ () => changeAuthStep('email') }
         >
             <Mail />
             { text }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useSearchParams } from "next/navigation";
+import { useAuthStep } from "../_hooks/use-auth-step";
 import { AuthHeader } from "./auth-header";
 import { AuthMethodSelector } from "./auth-method-selector";
 
@@ -13,8 +13,7 @@ export function AuthTemplate({
     form: React.ReactNode;
     footer: React.ReactNode;
 }) {
-    const searchParams = useSearchParams();
-    const authStep = searchParams.get('auth_step') ?? 'method';
+    const { authStep } = useAuthStep();
 
     return (
         <>
