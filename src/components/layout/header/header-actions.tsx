@@ -24,7 +24,7 @@ export async function HeaderActions() {
                                 asChild
                             >
                                 <Link
-                                    href="/login"
+                                    href="/login?auth_step=method"
                                 >
                                     Log In
                                 </Link>
@@ -37,7 +37,7 @@ export async function HeaderActions() {
                                 asChild
                             >
                                 <Link
-                                    href="/sign-up"
+                                    href="/sign-up?auth_step=method"
                                 >
                                     Sign Up
                                 </Link>

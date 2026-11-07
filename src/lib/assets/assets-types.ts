@@ -40,5 +40,5 @@ export const stables = new Set([
     'USDE', 'BUSD', 'EUR', 'AEUR',
     'EURI', 'TRY', 'BRL', 'GBP',
     'ARS', 'UAH', 'BIDR', 'ZAR',
-    'USD1', 'RLUSD'
+    'USD1', 'RLUSD', 'U'
 ]);

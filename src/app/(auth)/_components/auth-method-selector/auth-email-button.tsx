@@ -1,22 +1,26 @@
+'use client'
+
 import { Button } from "@/components/ui/button";
 import { Mail } from "lucide-react";
-import { AuthStepSetter } from "../auth-template";
+import { usePathname, useRouter } from "next/navigation";
 
 export function AuthEmailButton({
     text = 'Email',
-    onClick,
 }: {
     text?: string;
-    onClick: AuthStepSetter;
 }) {
+    const router = useRouter();
+    const path = usePathname();
+    const handleOnClick = () => router.replace(`${path}?auth_step=email`);
+
     return (
         <Button
             variant="outline"
             className="w-full h-12 text-foreground"
-            onClick={ () => onClick('form') }
+            onClick={ handleOnClick }
         >
             <Mail />
             { text }
         </Button>
     );
-}
+};

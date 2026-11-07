@@ -1,34 +1,24 @@
 'use client'
 
-import Link from "next/link";
-import { Dispatch, SetStateAction, useState } from "react";
-import { AuthFooter } from "./auth-footer";
+import { useSearchParams } from "next/navigation";
 import { AuthHeader } from "./auth-header";
 import { AuthMethodSelector } from "./auth-method-selector";
 
-export type AuthMode = 'login' | 'sign-up';
-
-export type AuthStep = 'method' | 'form';
-export type AuthStepSetter = Dispatch<SetStateAction<AuthStep>>;
-
 export function AuthTemplate({
-    mode,
+    title,
     form,
+    footer,
 }: {
-    mode: AuthMode;
+    title: string;
     form: React.ReactNode;
+    footer: React.ReactNode;
 }) {
-    const [authStep, setAuthStep] = useState<AuthStep>('method');
-
-    const CTA = mode === 'login' ? 'Log In' : 'Sign Up';
-    const alternativeCTA = mode === 'login' ? 'Sign Up' : 'Log In';
-    const alternativeHref = mode === 'login' ? '/sign-up' : '/login';
+    const searchParams = useSearchParams();
+    const authStep = searchParams.get('auth_step') ?? 'method';
 
     return (
         <>
             <AuthHeader
-                authStep={ authStep }
-                authStepSetter={ setAuthStep }
                 description="Crypto Tracker"
             />
             <div
@@ -42,31 +32,15 @@ export function AuthTemplate({
                         font-semibold text-2xl tracking-tight
                     "
                 >
-                    { CTA }
+                    { title }
                 </span>
                 {
                     authStep === 'method'
-                        ? (
-                            <AuthMethodSelector
-                                onHandleForm={ setAuthStep }
-                            />
-                        )
+                        ? <AuthMethodSelector />
                         : form
                 }
             </div>
-            <AuthFooter
-                mode={ mode }
-                link={
-                    <Link
-                        href={ alternativeHref }
-                        className="
-                            font-semibold tracking-tight
-                        "
-                    >
-                        { alternativeCTA }
-                    </Link>
-                }
-            />
+            { footer }
         </>
     );
 };

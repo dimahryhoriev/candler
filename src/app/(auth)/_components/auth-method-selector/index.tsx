@@ -1,13 +1,10 @@
-import { AuthStepSetter } from "../auth-template";
+'use client'
+
 import { AuthDivider } from "./auth-divider";
 import { AuthEmailButton } from "./auth-email-button";
 import { AuthGoogleButton } from "./auth-google-button";
 
-export function AuthMethodSelector({
-    onHandleForm,
-}: {
-    onHandleForm: AuthStepSetter;
-}) {
+export function AuthMethodSelector() {
     return (
         <div
             className="
@@ -16,9 +13,7 @@ export function AuthMethodSelector({
         >
             <AuthGoogleButton />
             <AuthDivider />
-            <AuthEmailButton
-                onClick={ onHandleForm }
-            />
+            <AuthEmailButton />
         </div>
     );
 };
