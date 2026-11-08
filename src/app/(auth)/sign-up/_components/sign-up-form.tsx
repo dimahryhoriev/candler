@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { signUp } from "@/lib/api/supabase/session/sign-up";
+import { signUp } from "@/lib/api/supabase/session/auth/sign-up";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";

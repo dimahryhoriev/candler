@@ -2,8 +2,10 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export type AuthStep = 'method' | 'email';
-export type AuthPathname = '/login' | '/sign-up';
+export type AuthStep = 'method' | 'email' | 'pass-recovery';
+export type AuthPathname = '/login' | '/sign-up' | '/reset-password';
+
+const validSteps: AuthStep[] = ['method', 'email', 'pass-recovery'];
 
 type UseAuthStepReturn = {
     authStep: AuthStep;
@@ -19,7 +21,14 @@ export function useAuthStep(): UseAuthStepReturn {
     const params = useSearchParams();
 
     const stepParam = params.get('auth_step');
-    const authStep = stepParam === 'email' ? 'email' : 'method';
+    const defaultStep: AuthStep =
+        pathname === '/reset-password'
+            ? 'pass-recovery'
+            : 'method';
+
+    const authStep: AuthStep = isValidStep(stepParam)
+        ? stepParam
+        : defaultStep
 
     const changeAuthStep = (
         stepToChange: AuthStep,
@@ -27,7 +36,11 @@ export function useAuthStep(): UseAuthStepReturn {
     ) => {
         const path = pathnameToChange ?? pathname;
 
-        if (stepToChange === 'method') {
+        if (
+            stepToChange === 'method'
+            ||
+            stepToChange === 'pass-recovery'
+        ) {
             router.replace(path);
             return;
         };
@@ -40,3 +53,9 @@ export function useAuthStep(): UseAuthStepReturn {
         changeAuthStep,
     };
 };
+
+const isValidStep = (
+    step: string | null,
+): step is AuthStep => (
+    Boolean(step && validSteps.includes(step as AuthStep))
+);

@@ -2,7 +2,7 @@
 
 import { ArrowLeft, X } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useAuthGoBack } from "../_hooks/use-auth-go-back";
 import { useAuthStep } from "../_hooks/use-auth-step";
 
 export function AuthHeader({
@@ -10,8 +10,8 @@ export function AuthHeader({
 }: {
     description: string;
 }) {
-    const router = useRouter();
-    const { authStep, changeAuthStep } = useAuthStep();
+    const { authStep } = useAuthStep();
+    const goBack = useAuthGoBack(authStep);
 
     return (
         <div
@@ -28,11 +28,7 @@ export function AuthHeader({
                         hover:bg-black/5 rounded overflow-hidden
                         hover:text-muted-foreground cursor-pointer
                     "
-                    onClick={
-                        authStep === 'method'
-                            ? () => router.replace('/')
-                            : () => changeAuthStep('method')
-                    }
+                    onClick={ goBack }
                 />
             }
             <div

@@ -1,6 +1,6 @@
 'use client'
 
-import { createSupabaseBrowserClient } from "../clients/browser-client";
+import { createSupabaseBrowserClient } from "../../clients/browser-client";
 
 export async function authWithGoogle() {
     const supabase = createSupabaseBrowserClient();

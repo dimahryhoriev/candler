@@ -1,5 +1,6 @@
 'use client'
 
+import { usePathname } from "next/navigation";
 import { useAuthStep } from "../_hooks/use-auth-step";
 import { AuthHeader } from "./auth-header";
 import { AuthMethodSelector } from "./auth-method-selector";
@@ -14,6 +15,7 @@ export function AuthTemplate({
     footer: React.ReactNode;
 }) {
     const { authStep } = useAuthStep();
+    const pathname = usePathname();
 
     return (
         <>
@@ -34,7 +36,15 @@ export function AuthTemplate({
                     { title }
                 </span>
                 {
-                    authStep === 'method'
+                    (
+                        authStep === 'method'
+                        &&
+                        (
+                            pathname === '/login'
+                            ||
+                            pathname === '/sign-up'
+                        )
+                    )
                         ? <AuthMethodSelector />
                         : form
                 }

@@ -3,13 +3,13 @@
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { login } from "@/lib/api/supabase/session/login";
+import { login } from "@/lib/api/supabase/session/auth/login";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { VerifyOtpForm } from "../../_components/verify-otp-form";
+import { useAuthStep } from "../../_hooks/use-auth-step";
 
 const loginSchema = z.object({
     email: z
@@ -27,6 +27,7 @@ type LoginSchema = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
     const [otpEmail, setOtpEmail] = useState<string | null>(null);
+    const { changeAuthStep } = useAuthStep();
 
     const form = useForm<LoginSchema>({
         resolver: zodResolver(loginSchema),
@@ -36,13 +37,15 @@ export function LoginForm() {
         },
     });
 
+    const onResetPassword = () => { changeAuthStep('pass-recovery', '/reset-password') };
+
     const onSubmit = form.handleSubmit(
         async (data) => {
             const { email, error } = await login(data);
 
             if (error || !email) {
                 setOtpEmail(null);
-                form.setError('root', { message: error });
+                form.setError('root', { message: error ?? 'Failed to log in' });
                 return;
             };
 
@@ -95,15 +98,17 @@ export function LoginForm() {
                                     className="flex justify-between"
                                 >
                                     <FieldLabel htmlFor={ field.name }>Password</FieldLabel>
-                                    <Link
-                                        href="/reset-password"
+                                    <button
                                         className="
                                             text-sm text-muted-foreground
-                                            hover:text-primary
+                                            hover:text-primary cursor-pointer
+                                            transition-colors duration-200
                                         "
+                                        type="button"
+                                        onClick={ onResetPassword }
                                     >
                                         Forgot Password?
-                                    </Link>
+                                    </button>
                                 </div>
                                 <Input
                                     { ...field }
