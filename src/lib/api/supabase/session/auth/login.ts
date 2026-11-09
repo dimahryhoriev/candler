@@ -1,6 +1,7 @@
 'use server'
 
-import { createSupabaseServerClient } from "../clients/server-client";
+import { createSupabaseServerClient } from "../../clients/server-client";
+import { clearSessionCookies } from "../sign-out/clear-session-cookies";
 
 export async function login(
     credentials: {
@@ -20,6 +21,9 @@ export async function login(
         };
     };
 
+    await supabase.auth.signOut();
+    await clearSessionCookies();
+
     const { error: otpError } =
         await supabase.auth.signInWithOtp({
             email: credentials.email,
@@ -37,6 +41,6 @@ export async function login(
 
     return {
         email: credentials.email,
-        error: undefined,
+        error: null,
     };
 };

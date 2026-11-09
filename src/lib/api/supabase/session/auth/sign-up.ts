@@ -1,6 +1,6 @@
 'use server'
 
-import { createSupabaseServerClient } from "../clients/server-client";
+import { createSupabaseServerClient } from "../../clients/server-client";
 
 export async function signUp(
     credentials: {

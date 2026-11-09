@@ -2,17 +2,16 @@
 
 import { ArrowLeft, X } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useAuthGoBack } from "../_hooks/use-auth-go-back";
+import { useAuthStep } from "../_hooks/use-auth-step";
 
 export function AuthHeader({
     description,
 }: {
     description: string;
 }) {
-    const router = useRouter();
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
-    const authStep = searchParams.get('auth_step') ?? 'method';
+    const { authStep } = useAuthStep();
+    const goBack = useAuthGoBack(authStep);
 
     return (
         <div
@@ -29,11 +28,7 @@ export function AuthHeader({
                         hover:bg-black/5 rounded overflow-hidden
                         hover:text-muted-foreground cursor-pointer
                     "
-                    onClick={
-                        authStep === 'method'
-                            ? () => router.replace('/')
-                            : () => router.replace(`${pathname}?auth_step=method`)
-                    }
+                    onClick={ goBack }
                 />
             }
             <div

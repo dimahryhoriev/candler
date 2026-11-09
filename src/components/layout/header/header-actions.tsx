@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { getUser } from "@/lib/api/supabase/session/get-user";
-import { signOut } from "@/lib/api/supabase/session/sign-out";
+import { getUser } from "@/lib/api/supabase/session/auth/get-user";
+import { signOut } from "@/lib/api/supabase/session/sign-out/sign-out";
 import Link from "next/link";
 
 export async function HeaderActions() {
@@ -24,7 +24,7 @@ export async function HeaderActions() {
                                 asChild
                             >
                                 <Link
-                                    href="/login?auth_step=method"
+                                    href="/login"
                                 >
                                     Log In
                                 </Link>
@@ -37,7 +37,7 @@ export async function HeaderActions() {
                                 asChild
                             >
                                 <Link
-                                    href="/sign-up?auth_step=method"
+                                    href="/sign-up"
                                 >
                                     Sign Up
                                 </Link>

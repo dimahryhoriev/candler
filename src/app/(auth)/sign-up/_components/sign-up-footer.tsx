@@ -1,10 +1,21 @@
 'use client'
 
-import { useRouter } from "next/navigation";
 import { AuthFooter } from "../../_components/auth-footer";
+import { useAuthStep } from "../../_hooks/use-auth-step";
 
 export function SignUpFooter() {
-    const router = useRouter();
+    const { authStep, changeAuthStep } = useAuthStep();
+    console.log(authStep)
+
+    const goToLogin = () => {
+        switch (authStep) {
+            case 'email': changeAuthStep('email', '/login')
+                break;
+            case 'method': changeAuthStep('method', '/login')
+                break;
+            default: changeAuthStep('method', '/login');
+        };
+    };
 
     return (
         <AuthFooter
@@ -15,7 +26,7 @@ export function SignUpFooter() {
                         font-semibold tracking-tight
                         hover:cursor-pointer
                     "
-                    onClick={ () => router.replace('/login?auth_step=method') }
+                    onClick={ goToLogin }
                     type="button"
                 >
                     Log In
