@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { OtpType, verifyOtp } from "@/lib/api/supabase/session/verify-otp";
+import { OtpType, verifyOtp } from "@/lib/api/supabase/session/auth/verify-otp";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     OTPInput,
@@ -57,16 +57,12 @@ export function VerifyOtpForm({
                 className="flex flex-col gap-5"
             >
                 {
-                    type === 'email'
-                    &&
-                    (
-                        <p className="text-sm text-muted-foreground">
-                            We sent a verification code to:{ " " }
-                            <span className="font-semibold text-foreground">
-                                { email }
-                            </span>
-                        </p>
-                    )
+                    <p className="text-sm text-muted-foreground">
+                        We sent a verification code to:{ " " }
+                        <span className="font-semibold text-foreground">
+                            { email }
+                        </span>
+                    </p>
                 }
                 <Controller
                     name="token"

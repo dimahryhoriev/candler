@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { GoogleIcon } from "@/components/ui/google-icon";
-import { authWithGoogle } from "@/lib/api/supabase/session/auth-with-google";
+import { authWithGoogle } from "@/lib/api/supabase/session/oauth/auth-with-google";
 
 export function AuthGoogleButton({
     text = 'Continue with Google',
