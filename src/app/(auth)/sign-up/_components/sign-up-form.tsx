@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { signUp } from "@/lib/api/supabase/session/auth/sign-up";
+import { formatDefaultName } from "@/lib/format";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -11,6 +12,10 @@ import { z } from "zod";
 import { VerifyOtpForm } from "../../_components/verify-otp-form";
 
 const signUpSchema = z.object({
+    username: z
+        .string()
+        .min(1, 'Username is required')
+        .min(4, 'Username must be at least 4 characters.'),
     email: z
         .string()
         .min(1, 'Email is required')
@@ -39,6 +44,7 @@ export function SignUpForm() {
     const form = useForm<SignUpSchema>({
         resolver: zodResolver(signUpSchema),
         defaultValues: {
+            username: '',
             email: '',
             password: '',
             confirmPassword: '',
@@ -47,15 +53,25 @@ export function SignUpForm() {
 
     const onSubmit = form.handleSubmit(
         async (data) => {
-            const { email, error } = await signUp(data);
+            const name = formatDefaultName(data.email);
+            const res = await signUp({
+                ...data,
+                name,
+            });
 
-            if (error || !email) {
+            if (res.error || !res.email) {
                 setOtpEmail(null);
-                form.setError('root', { message: error });
+
+                if (res.field === 'username') {
+                    form.setError('username', { message: res.error });
+                    return;
+                };
+
+                form.setError('root', { message: res.error });
                 return;
             };
 
-            setOtpEmail(email);
+            setOtpEmail(res.email);
         },
     );
 
@@ -78,6 +94,23 @@ export function SignUpForm() {
                     "
                     onSubmit={ onSubmit }
                 >
+                    <Controller
+                        name="username"
+                        control={ form.control }
+                        render={ ({ field, fieldState }) => (
+                            <Field data-invalid={ fieldState.invalid }>
+                                <FieldLabel htmlFor={ field.name }>Username</FieldLabel>
+                                <Input
+                                    { ...field }
+                                    id={ field.name }
+                                    aria-invalid={ fieldState.invalid }
+                                    placeholder="@username"
+                                    autoComplete="off"
+                                />
+                                { fieldState.invalid && <FieldError errors={ [fieldState.error] } /> }
+                            </Field>
+                        ) }
+                    />
                     <Controller
                         name="email"
                         control={ form.control }

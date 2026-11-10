@@ -5,7 +5,6 @@ import { useAuthStep } from "../../_hooks/use-auth-step";
 
 export function SignUpFooter() {
     const { authStep, changeAuthStep } = useAuthStep();
-    console.log(authStep)
 
     const goToLogin = () => {
         switch (authStep) {

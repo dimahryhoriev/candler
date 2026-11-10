@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { getUser } from "@/lib/api/supabase/session/auth/get-user";
 import { signOut } from "@/lib/api/supabase/session/sign-out/sign-out";
+import { getUser } from "@/lib/api/supabase/session/user/get-user";
 import Link from "next/link";
 
 export async function HeaderActions() {

@@ -17,8 +17,23 @@ export async function verifyOtp(
     credentials: VerifyOtpParams,
 ) {
     const cookieStore = await cookies();
+    const isRecovery = credentials.type === 'recovery';
+
     const supabase = await createSupabaseServerClient({
         getAll: () => cookieStore.getAll(),
+        setAll: (cookiesToSet) => {
+            if (isRecovery) return;
+
+            try {
+                cookiesToSet.forEach(({
+                    name,
+                    value,
+                    options,
+                }) => {
+                    cookieStore.set(name, value, options);
+                });
+            } catch { }
+        },
     });
 
     const { data, error } = await supabase.auth.verifyOtp(credentials);

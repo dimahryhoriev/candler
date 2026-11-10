@@ -106,3 +106,15 @@ export function capitalizeString(
         )
     );
 };
+
+export function formatDefaultName(
+    email: string,
+) {
+    const fallbackName = 'User';
+    if (!email.includes("@")) return fallbackName;
+
+    const defaultName = capitalizeString(email.split("@")[0]);
+    if (!defaultName) return fallbackName;
+
+    return defaultName;
+};
