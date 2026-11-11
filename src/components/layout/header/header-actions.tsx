@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { signOut } from "@/lib/api/supabase/session/sign-out/sign-out";
 import { getUser } from "@/lib/api/supabase/session/user/get-user";
 import Link from "next/link";
+import { ProfileDropdownMenu } from "./profile-dropdown-menu";
 
 export async function HeaderActions() {
     const user = await getUser();
@@ -45,15 +45,9 @@ export async function HeaderActions() {
                         </>
                     )
                     : (
-                        <form action={ signOut }>
-                            <Button
-                                size="lg"
-                                variant="light-blue"
-                                className="flex-1 w-32"
-                            >
-                                Sign Out
-                            </Button>
-                        </form>
+                        <ProfileDropdownMenu
+                            displayName={ user.user_metadata.name }
+                        />
                     )
             }
         </div >

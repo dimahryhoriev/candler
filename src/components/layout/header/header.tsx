@@ -13,7 +13,7 @@ export function Header() {
         >
             <div
                 className="
-                    container mx-auto flex p-4
+                    container mx-auto flex px-4 py-3
                     items-center justify-between
                 "
             >
