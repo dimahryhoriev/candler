@@ -9,9 +9,9 @@ export function ProfileDropdownMenu({
     displayName: string;
 }) {
     return (
-        <DropdownMenu>
+        <DropdownMenu modal={ false }>
             <DropdownMenuTrigger asChild>
-                <Avatar>
+                <Avatar className="cursor-pointer">
                     <AvatarFallback className="text-lg font-medium">
                         { displayName[0] }
                     </AvatarFallback>
@@ -25,7 +25,12 @@ export function ProfileDropdownMenu({
                 align="end"
                 sideOffset={ 10 }
             >
-                <DropdownMenuItem className="flex items-center gap-1 px-3 py-2">
+                <DropdownMenuItem
+                    className="
+                        flex items-center gap-1 px-3 py-2 cursor-pointer
+                        transition-colors duration-200
+                    "
+                >
                     <Avatar className="size-10">
                         <AvatarFallback className="text-lg font-medium !text-muted-foreground">
                             { displayName[0] }
