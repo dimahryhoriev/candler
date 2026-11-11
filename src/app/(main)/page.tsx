@@ -5,9 +5,7 @@ import { HomeListsSection } from "./_components/home-lists-section";
 
 export default function HomePage() {
     return (
-        <div
-            className="flex flex-col gap-14"
-        >
+        <div className="flex flex-col gap-14">
             <AssetsList
                 title="Market Overview"
                 mode="cards"

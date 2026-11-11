@@ -2,6 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
 import { HeaderActions } from "./header-actions";
 import { HeaderHomeLink } from "./header-home-link";
+import { HeaderNavbar } from "./header-navbar";
 
 export function Header() {
     return (
@@ -18,6 +19,7 @@ export function Header() {
                 "
             >
                 <HeaderHomeLink />
+                <HeaderNavbar />
                 <Suspense
                     fallback={
                         <Skeleton

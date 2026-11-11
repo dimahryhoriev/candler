@@ -1,3 +1,5 @@
-export default function MarketsPage() {
+import { redirect } from "next/navigation";
 
-}
+export default function MarketsPage() {
+    redirect('/markets/coins');
+};
