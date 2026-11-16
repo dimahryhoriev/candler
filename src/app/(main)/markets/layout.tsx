@@ -11,7 +11,7 @@ export default function MarketsLayout({
     return (
         <div
             className="
-                flex flex-col w-full gap-6
+                flex flex-col w-full gap-10
             "
         >
             <AppBreadcrumbs />
