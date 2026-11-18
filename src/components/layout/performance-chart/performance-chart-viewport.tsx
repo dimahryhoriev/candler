@@ -10,6 +10,7 @@ import { ChangeStepsList } from "../change-steps-list";
 import { CurveArea } from "../curve-area/curve-area";
 import { TimeframeTicks } from "../timeframe-ticks";
 import { useChartCrosshair } from "./hooks/use-chart-crosshair";
+import { performanceChartTimeframesCanvasMap } from "./performance-chart";
 import { PerformanceChartGuideline, PerformanceChartTooltip } from "./performance-chart-crosshair";
 import { PerformanceChartStartline } from "./performance-chart-startline";
 
@@ -119,6 +120,7 @@ export function PerformanceChartViewport({
                 timeframeKey={ timeframeKey }
                 canvasRect={ canvasRect }
                 isLoading={ !hasData }
+                TimeframesCanvasMap={ performanceChartTimeframesCanvasMap }
             />
             {
                 snappedCrosshair && crosshairPoint

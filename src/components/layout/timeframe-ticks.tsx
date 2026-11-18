@@ -1,20 +1,24 @@
 import { CanvasRect } from "@/hooks/use-canvas-rect";
 import { AssetPoints } from "@/lib/assets/assets-calculations";
 import { getOldestAsset } from "@/lib/assets/assets-filters";
-import { getTimeframeTicks, TimeframeKey } from "@/lib/charts/timeframes";
+import { getTimeframeTicks, TimeframeKey, TimeframesCanvasMap } from "@/lib/charts/timeframes";
 import { useLayoutEffect, useMemo, useRef } from "react";
+
+type TimeframeTicksParams = {
+    assetsPoints: AssetPoints[];
+    timeframeKey: TimeframeKey;
+    canvasRect?: CanvasRect;
+    isLoading: boolean;
+    TimeframesCanvasMap: TimeframesCanvasMap;
+};
 
 export function TimeframeTicks({
     assetsPoints,
     timeframeKey,
     canvasRect,
     isLoading,
-}: {
-    assetsPoints: AssetPoints[];
-    timeframeKey: TimeframeKey;
-    canvasRect?: CanvasRect;
-    isLoading: boolean;
-}) {
+    TimeframesCanvasMap,
+}: TimeframeTicksParams) {
     const timeframeTicksRef = useRef<(HTMLSpanElement | null)[]>([]);
     const oldestAsset = getOldestAsset(assetsPoints);
 
@@ -37,6 +41,7 @@ export function TimeframeTicks({
                 closeTime: timeframeCloseTime,
             },
             canvasRect,
+            TimeframesCanvasMap,
         })
     }, [
         canvasRect,
@@ -45,6 +50,7 @@ export function TimeframeTicks({
         timeframeOpenTime,
         timeframeKey,
         oldestAsset,
+        TimeframesCanvasMap,
     ]);
 
     useLayoutEffect(() => {
@@ -113,5 +119,5 @@ export function TimeframeTicks({
                     )
             }
         </div>
-    )
-}
+    );
+};
