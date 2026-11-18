@@ -1,3 +1,5 @@
+'use client'
+
 import { PerformanceChart } from "@/components/layout/performance-chart/performance-chart";
 
 export function HomeChartsSection() {

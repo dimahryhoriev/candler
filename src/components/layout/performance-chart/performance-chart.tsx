@@ -2,11 +2,23 @@
 
 import { useAssets } from "@/hooks/use-assets";
 import { fetchKlines } from "@/lib/api/fetch-klines";
+import { getAssetsSymbols } from "@/lib/assets/assets-unpackers";
 import { ColorsMap, createColorsMap } from "@/lib/charts/colors";
-import { TimeframeKey, timeframesMap } from "@/lib/charts/timeframes";
+import { TimeframeKey, TimeframesCanvasMap } from "@/lib/charts/timeframes";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { PerformanceChartLayout } from "./performance-chart-layout";
+
+export const performanceChartTimeframesCanvasMap: TimeframesCanvasMap = {
+    '1D': { interval: '5m', limit: 288, tickFormat: 'H', tickStep: 6 },
+    '1W': { interval: '30m', limit: 336, tickFormat: 'D', tickStep: 2 },
+    '1M': { interval: '2h', limit: 360, tickFormat: 'W', tickStep: 1 },
+    '3M': { interval: '8h', limit: 270, tickFormat: 'W', tickStep: 3 },
+    '6M': { interval: '12h', limit: 360, tickFormat: 'M', tickStep: 2 },
+    '1Y': { interval: '1d', limit: 365, tickFormat: 'M', tickStep: 3 },
+    '5Y': { interval: '1w', limit: 260, tickFormat: 'Y', tickStep: 1 },
+    'ALL': { interval: '1M', limit: 1000, tickFormat: 'Y', tickStep: 2 },
+};
 
 export function PerformanceChart({
     assetsType,
@@ -18,7 +30,7 @@ export function PerformanceChart({
     const {
         interval,
         limit: timeframesLimit,
-    } = timeframesMap[timeframeKey];
+    } = performanceChartTimeframesCanvasMap[timeframeKey];
 
     const assetsLimit = assetsType === 'majors' ? 2 : 6;
 
@@ -31,17 +43,7 @@ export function PerformanceChart({
         },
     });
 
-    const symbols = useMemo(() => {
-        return (
-            assets
-                ?.map((a) => a?.s)
-                .filter(
-                    (s): s is string => Boolean(s)
-                )
-            ??
-            []
-        );
-    }, [assets]);
+    const symbols = useMemo(() => getAssetsSymbols(assets), [assets]);
 
     const colorsMap: ColorsMap = useMemo(() => {
         return createColorsMap(

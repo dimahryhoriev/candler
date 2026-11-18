@@ -1,8 +1,10 @@
 import { CanvasRect } from "@/hooks/use-canvas-rect";
-import { IntervalKey } from "../api/fetch-klines";
+import { fetchKlines, IntervalKey } from "../api/fetch-klines";
 import { AssetPoints } from "../assets/assets-calculations";
 import { formatDate } from "../format";
+import { calculateChangePercent } from "../math/change";
 import { findClosestPoint } from "../math/point";
+import { AssetsTimeframesChanges } from "@/store/use-timeframes-changes-store";
 
 type TimeRange = {
     openTime: number;
@@ -21,24 +23,36 @@ export type TimeframeKey =
     | '3M' | '6M' | '1Y'
     | '5Y' | 'ALL';
 
-type TimeframeValues = {
+interface TimeframeConfigValues {
     interval: IntervalKey;
     limit: number;
+};
+
+interface TimeframeCanvasValues extends TimeframeConfigValues {
     tickFormat: TimeframeTickFormat;
     tickStep: number;
 };
 
-export type TimeframesMap = Record<TimeframeKey, TimeframeValues>;
+export type TimeframesCanvasMap = Record<TimeframeKey, TimeframeCanvasValues>;
+export type TimeframesConfigMap = Record<TimeframeKey, TimeframeConfigValues>;
 
-export const timeframesMap: TimeframesMap = {
-    '1D': { interval: '5m', limit: 288, tickFormat: 'H', tickStep: 6 },
-    '1W': { interval: '30m', limit: 336, tickFormat: 'D', tickStep: 2 },
-    '1M': { interval: '2h', limit: 360, tickFormat: 'W', tickStep: 1 },
-    '3M': { interval: '8h', limit: 270, tickFormat: 'W', tickStep: 3 },
-    '6M': { interval: '12h', limit: 360, tickFormat: 'M', tickStep: 2 },
-    '1Y': { interval: '1d', limit: 365, tickFormat: 'M', tickStep: 3 },
-    '5Y': { interval: '1w', limit: 260, tickFormat: 'Y', tickStep: 1 },
-    'ALL': { interval: '1M', limit: 1000, tickFormat: 'Y', tickStep: 2 },
+const timeframesConfigMap: TimeframesConfigMap = {
+    '1D': { interval: '1d', limit: 1 },
+    '1W': { interval: '1w', limit: 1 },
+    '1M': { interval: '1M', limit: 1 },
+    '3M': { interval: '1M', limit: 3 },
+    '6M': { interval: '1M', limit: 6 },
+    '1Y': { interval: '1M', limit: 12 },
+    '5Y': { interval: '1M', limit: 60 },
+    'ALL': { interval: '1M', limit: 1000 },
+};
+
+type GetTimeframeTicksParams = {
+    oldestAsset: AssetPoints;
+    timeframeKey: TimeframeKey;
+    timeRange: TimeRange;
+    canvasRect: CanvasRect;
+    TimeframesCanvasMap: TimeframesCanvasMap;
 };
 
 export function getTimeframeTicks({
@@ -46,13 +60,9 @@ export function getTimeframeTicks({
     timeframeKey,
     timeRange,
     canvasRect,
-}: {
-    oldestAsset: AssetPoints;
-    timeframeKey: TimeframeKey;
-    timeRange: TimeRange;
-    canvasRect: CanvasRect;
-}): TimeframeTick[] {
-    const { tickFormat, tickStep } = timeframesMap[timeframeKey];
+    TimeframesCanvasMap,
+}: GetTimeframeTicksParams): TimeframeTick[] {
+    const { tickFormat, tickStep } = TimeframesCanvasMap[timeframeKey];
     const { openTime, closeTime } = timeRange;
     const width = canvasRect.width;
 
@@ -156,4 +166,39 @@ function addCalendarStep(
             date.setUTCFullYear(date.getUTCFullYear() + tickStep);
             break;
     };
+};
+
+export async function fetchTimeframesChanges(
+    symbols: string[],
+): Promise<AssetsTimeframesChanges> {
+    const keys = Object.keys(timeframesConfigMap) as TimeframeKey[];
+
+    const result: AssetsTimeframesChanges = {};
+    for (const s of symbols) {
+        result[s] = {} as Record<TimeframeKey, number>;
+    };
+
+    await Promise.allSettled(
+        keys.map(
+            async (key) => {
+                const { interval, limit } = timeframesConfigMap[key];
+                const assetsKlines = await fetchKlines({ symbols, interval, limit });
+
+                for (const item of assetsKlines) {
+                    const klines = item.klines;
+                    if (!klines.length) continue;
+
+                    const openValue = klines[0].openPrice;
+                    const closeValue = klines[klines.length - 1].closePrice;
+                    const changePercent = calculateChangePercent({ openValue, closeValue });
+
+                    if (result[item.symbol]) {
+                        result[item.symbol][key] = changePercent;
+                    };
+                };
+            },
+        ),
+    );
+
+    return result;
 };

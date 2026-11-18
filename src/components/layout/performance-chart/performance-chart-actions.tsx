@@ -1,7 +1,6 @@
-'use client'
-
-import { TimeframeKey, timeframesMap } from "@/lib/charts/timeframes";
+import { TimeframeKey } from "@/lib/charts/timeframes";
 import { ToggleGroup, ToggleGroupItem } from "../../ui/toggle-group";
+import { performanceChartTimeframesCanvasMap } from "./performance-chart";
 
 export function PerformanceChartActions({
     timeframeKey,
@@ -23,7 +22,7 @@ export function PerformanceChartActions({
         >
             {
                 Object
-                    .keys(timeframesMap)
+                    .keys(performanceChartTimeframesCanvasMap)
                     .map(
                         (timeframe) => (
                             <ToggleGroupItem

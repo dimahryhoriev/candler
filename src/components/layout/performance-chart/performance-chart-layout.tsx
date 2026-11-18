@@ -1,11 +1,19 @@
-'use client'
-
 import { AssetKlines } from "@/lib/api/fetch-klines";
 import { ColorsMap } from "@/lib/charts/colors";
 import { TimeframeKey } from "@/lib/charts/timeframes";
 import { formatSymbol } from "@/lib/format";
 import { PerformanceChartActions } from "./performance-chart-actions";
 import { PerformanceChartViewport } from "./performance-chart-viewport";
+
+type PerformanceChartLayoutParams = {
+    title: string;
+    assetsKlines: AssetKlines[];
+    limit: number;
+    timeframeKey: TimeframeKey;
+    onTimeframeChange: (value: TimeframeKey) => void;
+    colorsMap: ColorsMap;
+    isLoading: boolean;
+};
 
 export function PerformanceChartLayout({
     title,
@@ -15,15 +23,7 @@ export function PerformanceChartLayout({
     onTimeframeChange,
     colorsMap,
     isLoading = false,
-}: {
-    title: string;
-    assetsKlines: AssetKlines[];
-    limit: number;
-    timeframeKey: TimeframeKey;
-    onTimeframeChange: (value: TimeframeKey) => void;
-    colorsMap: ColorsMap;
-    isLoading: boolean;
-}) {
+}: PerformanceChartLayoutParams) {
     return (
         <div
             className="
