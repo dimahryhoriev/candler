@@ -15,7 +15,7 @@ export function CoinsTablePriceCell({
 
     return (
         <TableCell>
-            { formatNumber(price) }
+            ${ formatNumber(price) }
         </TableCell>
     );
 };

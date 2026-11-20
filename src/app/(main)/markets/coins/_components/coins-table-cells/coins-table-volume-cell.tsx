@@ -15,7 +15,7 @@ export function CoinsTableVolumeCell({
 
     return (
         <TableCell>
-            { formatNumber(volume) }
+            { formatNumber(volume, 'compact') }
         </TableCell>
     );
 };

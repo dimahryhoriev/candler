@@ -1,10 +1,8 @@
 import { CanvasRect } from "@/hooks/use-canvas-rect";
-import { fetchKlines, IntervalKey } from "../api/fetch-klines";
+import { IntervalKey } from "../api/fetch-klines";
 import { AssetPoints } from "../assets/assets-calculations";
 import { formatDate } from "../format";
-import { calculateChangePercent } from "../math/change";
 import { findClosestPoint } from "../math/point";
-import { AssetsTimeframesChanges } from "@/store/use-timeframes-changes-store";
 
 type TimeRange = {
     openTime: number;
@@ -36,7 +34,7 @@ interface TimeframeCanvasValues extends TimeframeConfigValues {
 export type TimeframesCanvasMap = Record<TimeframeKey, TimeframeCanvasValues>;
 export type TimeframesConfigMap = Record<TimeframeKey, TimeframeConfigValues>;
 
-const timeframesConfigMap: TimeframesConfigMap = {
+export const timeframesConfigMap: TimeframesConfigMap = {
     '1D': { interval: '1d', limit: 1 },
     '1W': { interval: '1w', limit: 1 },
     '1M': { interval: '1M', limit: 1 },
@@ -166,39 +164,4 @@ function addCalendarStep(
             date.setUTCFullYear(date.getUTCFullYear() + tickStep);
             break;
     };
-};
-
-export async function fetchTimeframesChanges(
-    symbols: string[],
-): Promise<AssetsTimeframesChanges> {
-    const keys = Object.keys(timeframesConfigMap) as TimeframeKey[];
-
-    const result: AssetsTimeframesChanges = {};
-    for (const s of symbols) {
-        result[s] = {} as Record<TimeframeKey, number>;
-    };
-
-    await Promise.allSettled(
-        keys.map(
-            async (key) => {
-                const { interval, limit } = timeframesConfigMap[key];
-                const assetsKlines = await fetchKlines({ symbols, interval, limit });
-
-                for (const item of assetsKlines) {
-                    const klines = item.klines;
-                    if (!klines.length) continue;
-
-                    const openValue = klines[0].openPrice;
-                    const closeValue = klines[klines.length - 1].closePrice;
-                    const changePercent = calculateChangePercent({ openValue, closeValue });
-
-                    if (result[item.symbol]) {
-                        result[item.symbol][key] = changePercent;
-                    };
-                };
-            },
-        ),
-    );
-
-    return result;
 };
