@@ -22,7 +22,7 @@ export function CoinsTableHeader({
                                 )
                             }
                         >
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-1 justify-end">
                                 { tc.icon }
                                 { tc.label }
                             </div>

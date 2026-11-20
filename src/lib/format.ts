@@ -30,11 +30,19 @@ function findNonZeroValue(
 
 export function formatNumber(
     number: string | undefined,
+    notation: 'standard' | 'compact' = 'standard',
 ) {
     if (!number) {
         return (
             '-- --'
         );
+    };
+
+    if (notation === 'compact') {
+        return Number(number).toLocaleString('en-US', {
+            notation: 'compact',
+            maximumFractionDigits: 2,
+        }).replace(/([KMBTQ])$/, ' $1');
     };
 
     const [int, fract = '00'] = number.split('.');

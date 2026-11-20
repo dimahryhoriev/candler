@@ -6,37 +6,43 @@ import { CoinsTableRankCell } from "./coins-table-cells/coins-table-rank-cell";
 import { CoinsTableVolumeCell } from "./coins-table-cells/coins-table-volume-cell";
 import { CoinsTablePriceCell } from "./coins-table-cells/coints-table-price-cell";
 
+type ColumnKey =
+    'asset' | 'rank' | 'price' | 'change-1d' |
+    'change-1w' | 'change-1m' | 'change-3m' | 'change-6m' |
+    'change-1y' | 'change-5y' | 'change-all' | 'volume-24h';
+
 export interface Column {
-    key: string;
+    key: ColumnKey;
     label: string;
     icon?: React.ReactNode;
-    render: (
+    render: (params: {
         symbol: string | undefined,
         index: number,
-    ) => React.ReactNode;
+        key: ColumnKey,
+    }) => React.ReactNode;
 };
 
 export const baseColumns: Column[] = [
     {
         key: "asset",
         label: "Asset",
-        render: (symbol) => <CoinsTableAssetCell symbol={ symbol } />
+        render: ({ symbol, key }) => <CoinsTableAssetCell key={ key } symbol={ symbol } />
     },
     {
         key: "rank",
         label: "Rank",
         icon: <ArrowUp size={ 16 } />,
-        render: (_, index) => <CoinsTableRankCell index={ index } />
+        render: ({ index, key }) => <CoinsTableRankCell key={ key } index={ index } />
     },
     {
         key: "price",
         label: "Price",
-        render: (symbol) => <CoinsTablePriceCell symbol={ symbol } />,
+        render: ({ symbol, key }) => <CoinsTablePriceCell key={ key } symbol={ symbol } />,
     },
     {
         key: "change-1d",
         label: "Change % 24h",
-        render: (symbol) => <CoinsTableChangeCell symbol={ symbol } timeframeKey="1D" />,
+        render: ({ symbol, key }) => <CoinsTableChangeCell key={ key } symbol={ symbol } timeframeKey="1D" />,
     },
 ];
 
@@ -46,7 +52,7 @@ export const tabColumns: Record<Tab, Column[]> = {
         {
             key: "volume-24h",
             label: "Volume (24h)",
-            render: (symbol) => <CoinsTableVolumeCell symbol={ symbol } />,
+            render: ({ symbol, key }) => <CoinsTableVolumeCell key={ key } symbol={ symbol } />,
         }
     ],
     futures: [
@@ -54,7 +60,7 @@ export const tabColumns: Record<Tab, Column[]> = {
         {
             key: "volume-24h",
             label: "Volume (24h)",
-            render: (symbol) => <CoinsTableVolumeCell symbol={ symbol } />,
+            render: ({ symbol, key }) => <CoinsTableVolumeCell key={ key } symbol={ symbol } />,
         }
     ],
     performance: [
@@ -62,37 +68,37 @@ export const tabColumns: Record<Tab, Column[]> = {
         {
             key: "change-1w",
             label: "Change % 1W",
-            render: (symbol) => <CoinsTableChangeCell symbol={ symbol } timeframeKey="1W" />,
+            render: ({ symbol, key }) => <CoinsTableChangeCell key={ key } symbol={ symbol } timeframeKey="1W" />,
         },
         {
             key: "change-1m",
             label: "Change % 1M",
-            render: (symbol) => <CoinsTableChangeCell symbol={ symbol } timeframeKey="1M" />,
+            render: ({ symbol, key }) => <CoinsTableChangeCell key={ key } symbol={ symbol } timeframeKey="1M" />,
         },
         {
             key: "change-3m",
             label: "Change % 3M",
-            render: (symbol) => <CoinsTableChangeCell symbol={ symbol } timeframeKey="3M" />,
+            render: ({ symbol, key }) => <CoinsTableChangeCell key={ key } symbol={ symbol } timeframeKey="3M" />,
         },
         {
             key: "change-6m",
             label: "Change % 6M",
-            render: (symbol) => <CoinsTableChangeCell symbol={ symbol } timeframeKey="6M" />,
+            render: ({ symbol, key }) => <CoinsTableChangeCell key={ key } symbol={ symbol } timeframeKey="6M" />,
         },
         {
             key: "change-1y",
             label: "Change % 1Y",
-            render: (symbol) => <CoinsTableChangeCell symbol={ symbol } timeframeKey="1Y" />,
+            render: ({ symbol, key }) => <CoinsTableChangeCell key={ key } symbol={ symbol } timeframeKey="1Y" />,
         },
         {
             key: "change-5y",
             label: "Change % 5Y",
-            render: (symbol) => <CoinsTableChangeCell symbol={ symbol } timeframeKey="5Y" />,
+            render: ({ symbol, key }) => <CoinsTableChangeCell key={ key } symbol={ symbol } timeframeKey="5Y" />,
         },
         {
             key: "change-all",
             label: "Change % All Time",
-            render: (symbol) => <CoinsTableChangeCell symbol={ symbol } timeframeKey="ALL" />,
+            render: ({ symbol, key }) => <CoinsTableChangeCell key={ key } symbol={ symbol } timeframeKey="ALL" />,
         },
     ],
 };;

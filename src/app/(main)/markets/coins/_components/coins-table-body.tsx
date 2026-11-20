@@ -1,5 +1,7 @@
 import { TableBody, TableRow } from "@/components/ui/table";
 import { Asset } from "@/hooks/use-assets";
+import { useTimeframesChangesStore } from "@/store/use-timeframes-changes-store";
+import { useEffect } from "react";
 import { Tab } from "./coins-table";
 import { tabColumns } from "./coins-table.config";
 
@@ -11,16 +13,30 @@ type CoinsTableBodyParams = {
 
 export function CoinsTableBody({
     assets,
+    symbols,
     tab,
 }: CoinsTableBodyParams) {
+    const loadChanges = useTimeframesChangesStore(s => s.loadChanges);
+
+    useEffect(() => {
+        loadChanges(symbols);
+    }, [loadChanges, symbols])
+
     return (
         <TableBody>
             {
                 assets.map((a, i) => (
-                    <TableRow key={ i }>
+                    <TableRow
+                        key={ a?.s ?? i }
+                        className="text-right"
+                    >
                         {
                             tabColumns[tab].map((tc) => (
-                                tc.render(a?.s, i)
+                                tc.render({
+                                    symbol: a?.s,
+                                    index: i,
+                                    key: tc.key
+                                })
                             ))
                         }
                     </TableRow>
