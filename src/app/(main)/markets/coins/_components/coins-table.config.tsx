@@ -1,13 +1,14 @@
 import { ArrowUp } from "lucide-react";
 import { Tab } from "./coins-table";
 import { CoinsTableAssetCell } from "./coins-table-cells/coins-table-asset-cell";
+import { CoinsTableCategoryCell } from "./coins-table-cells/coins-table-category-cell";
 import { CoinsTableChangeCell } from "./coins-table-cells/coins-table-change-sell";
 import { CoinsTableRankCell } from "./coins-table-cells/coins-table-rank-cell";
 import { CoinsTableVolumeCell } from "./coins-table-cells/coins-table-volume-cell";
 import { CoinsTablePriceCell } from "./coins-table-cells/coints-table-price-cell";
 
 type ColumnKey =
-    'asset' | 'rank' | 'price' | 'change-1d' |
+    'asset' | 'rank' | 'price' | 'category' | 'change-1d' |
     'change-1w' | 'change-1m' | 'change-3m' | 'change-6m' |
     'change-1y' | 'change-5y' | 'change-all' | 'volume-24h';
 
@@ -53,6 +54,11 @@ export const tabColumns: Record<Tab, Column[]> = {
             key: "volume-24h",
             label: "Volume (24h)",
             render: ({ symbol, key }) => <CoinsTableVolumeCell key={ key } symbol={ symbol } />,
+        },
+        {
+            key: "category",
+            label: "Category",
+            render: ({ symbol, key }) => <CoinsTableCategoryCell key={ key } symbol={ symbol } />,
         }
     ],
     futures: [
@@ -101,4 +107,4 @@ export const tabColumns: Record<Tab, Column[]> = {
             render: ({ symbol, key }) => <CoinsTableChangeCell key={ key } symbol={ symbol } timeframeKey="ALL" />,
         },
     ],
-};;
+};

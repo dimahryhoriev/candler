@@ -28,7 +28,11 @@ export function CoinsTableBody({
                 assets.map((a, i) => (
                     <TableRow
                         key={ a?.s ?? i }
-                        className="text-right"
+                        className="
+                            group/row text-right [&>td]:bg-background
+                            hover:[&>td]:bg-muted [&>td]:py-3
+                            [&>td]:transition-colors [&>td]:duration-200
+                        "
                     >
                         {
                             tabColumns[tab].map((tc) => (

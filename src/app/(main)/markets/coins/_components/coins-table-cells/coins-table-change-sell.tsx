@@ -36,7 +36,9 @@ export function CoinsTableChangeCell({
 
     if (change === undefined) {
         return (
-            <TableCell className="text-muted-foreground">
+            <TableCell
+                className="text-muted-foreground"
+            >
                 0.00%
             </TableCell>
         );

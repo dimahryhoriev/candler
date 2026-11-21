@@ -12,20 +12,43 @@ export type Tab = 'overview' | 'performance' | 'futures';
 
 export function CoinsTable() {
     const [tab, setTab] = useState<Tab>('overview');
-    const { assets } = useAssets({ limit: 12 });
+    const [isScrolled, setIsScrolled] = useState<boolean>(false);
+
+    const { assets } = useAssets({
+        limit: 12,
+        typeOptions: {
+            stables: true,
+            majors: true,
+            altcoins: true,
+        },
+    });
+
     const symbols = useMemo(() => getAssetsSymbols(assets), [assets]);
 
     return (
-        <div className="flex flex-col gap-3 w-full overflow-x-auto">
+        <div className="flex flex-col gap-3 w-full">
             <CoinsTableTabs onTabChange={ setTab } />
-            <Table className="min-w-full">
-                <CoinsTableHeader tab={ tab } />
-                <CoinsTableBody
-                    assets={ assets }
-                    symbols={ symbols }
-                    tab={ tab }
-                />
-            </Table>
-        </div>
+            <div
+                className="overflow-x-auto w-full"
+                onScroll={ e => setIsScrolled(e.currentTarget.scrollLeft > 0) }
+            >
+                <Table
+                    className="
+                        min-w-full border-separate border-spacing-0
+                        [&_td]:border-b [&_th]:border-b group/table
+                    "
+                    data-scrolled={ isScrolled }
+                >
+                    <CoinsTableHeader
+                        tab={ tab }
+                    />
+                    <CoinsTableBody
+                        assets={ assets }
+                        symbols={ symbols }
+                        tab={ tab }
+                    />
+                </Table>
+            </div>
+        </div >
     );
 };
