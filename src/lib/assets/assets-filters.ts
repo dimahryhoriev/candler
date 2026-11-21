@@ -29,7 +29,7 @@ export function filterAssetsByType(
 
     return (
         assets.filter((a) => {
-            const assetType = getAssetType(a);
+            const assetType = getAssetType(a.s);
 
             if (
                 type.stables === false

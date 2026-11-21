@@ -6,7 +6,7 @@ export function CoinsTableRankCell({
     index: number;
 }) {
     return (
-        <TableCell>
+        <TableCell className="text-center w-20">
             {
                 String(index + 1)
             }

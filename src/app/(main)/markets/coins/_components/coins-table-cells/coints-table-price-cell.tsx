@@ -14,7 +14,7 @@ export function CoinsTablePriceCell({
     ));
 
     return (
-        <TableCell>
+        <TableCell className="font-mono">
             ${ formatNumber(price) }
         </TableCell>
     );

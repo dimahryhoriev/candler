@@ -1,4 +1,3 @@
-import { Asset } from "@/hooks/use-assets";
 import { formatSymbol } from "../format";
 
 export type AssetType = 'stable' | 'major' | 'altcoin';
@@ -10,23 +9,23 @@ export type AssetsTypeOptions = {
 };
 
 export function getAssetType(
-    asset: Asset,
+    symbol: string,
 ) {
-    const symbol = formatSymbol(
-        asset.s,
+    const formattedSymbol = formatSymbol(
+        symbol,
         'upper',
     );
 
     const isStable = (
-        /^USD|USD$/i.test(symbol)
+        /^USD|USD$/i.test(formattedSymbol)
         ||
-        stables.has(symbol)
+        stables.has(formattedSymbol)
         ||
-        /^(EUR|GBP|TRY|BRL)|(EUR|GBP|TRY|BRL)$/i.test(symbol)
+        /^(EUR|GBP|TRY|BRL)|(EUR|GBP|TRY|BRL)$/i.test(formattedSymbol)
     );
 
     if (isStable) return 'stable';
-    if (majors.has(symbol)) return 'major';
+    if (majors.has(formattedSymbol)) return 'major';
     return 'altcoin';
 };
 

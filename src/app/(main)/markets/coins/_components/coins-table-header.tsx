@@ -17,12 +17,25 @@ export function CoinsTableHeader({
                             key={ tc.key }
                             className={
                                 cn(
-                                    'hover:bg-muted font-normal text-zinc-500',
-                                    tc.key === 'asset' && 'sticky left-0 z-20'
+                                    'hover:bg-muted font-normal bg-background',
+                                    'transition-all duration-200',
+                                    'text-[13px] text-zinc-500 px-4',
+                                    tc.key === 'asset' && [
+                                        'group-data-[scrolled=true]/table:shadow-sm',
+                                        'sticky left-0',
+                                    ],
                                 )
                             }
                         >
-                            <div className="flex items-center gap-1 justify-end">
+                            <div
+                                className={
+                                    cn(
+                                        'flex items-center gap-1 justify-end',
+                                        tc.key === 'asset' && 'justify-start',
+                                        tc.key === 'rank' && 'justify-center w-20',
+                                    )
+                                }
+                            >
                                 { tc.icon }
                                 { tc.label }
                             </div>
