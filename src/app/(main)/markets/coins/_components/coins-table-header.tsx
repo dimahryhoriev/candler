@@ -18,10 +18,10 @@ export function CoinsTableHeader({
                             className={
                                 cn(
                                     'hover:bg-muted font-normal bg-background',
-                                    'transition-all duration-200',
+                                    'transition-all duration-200 border-t border-border',
                                     'text-[13px] text-zinc-500 px-4',
                                     tc.key === 'asset' && [
-                                        'group-data-[scrolled=true]/table:shadow-sm',
+                                        'group-data-[scrolled-x=true]/table:shadow-md',
                                         'sticky left-0',
                                     ],
                                 )
