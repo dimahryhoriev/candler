@@ -13,7 +13,7 @@ export function CoinsTableAssetCell({
                 sticky left-0 text-left
                 w-60 min-w-60 max-w-60
                 transition-shadow duration-200
-                group-data-[scrolled=true]/table:shadow-sm
+                group-data-[scrolled-x=true]/table:shadow-md
             "
         >
             <div className="flex items-center gap-3">
@@ -27,7 +27,7 @@ export function CoinsTableAssetCell({
                         px-4 py-1 bg-muted rounded-md font-medium
                         text-xs font-mono group-hover/row:bg-blue-500
                         group-hover/row:text-white group-hover/row:font-bold
-                        transition-all duration-200
+                        transition-all duration-200 cursor-pointer
                     "
                 >
                     {
