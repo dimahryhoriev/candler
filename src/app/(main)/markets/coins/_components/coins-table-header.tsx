@@ -1,5 +1,6 @@
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { useTickersStore } from "@/store/use-tickers-store";
 import { Tab } from "./coins-table";
 import { tabColumns } from "./coins-table.config";
 
@@ -8,6 +9,8 @@ export function CoinsTableHeader({
 }: {
     tab: Tab;
 }) {
+    const assetsCount = useTickersStore(s => s.totalCount);
+
     return (
         <TableHeader>
             <TableRow>
@@ -38,6 +41,13 @@ export function CoinsTableHeader({
                             >
                                 { tc.icon }
                                 { tc.label }
+                                {
+                                    tc.key === 'asset' && (
+                                        <span className="text-foreground">
+                                            { ` (${assetsCount})` }
+                                        </span>
+                                    )
+                                }
                             </div>
                         </TableHead>
                     ))
