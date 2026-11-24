@@ -7,6 +7,7 @@ type TickersRecord = Record<string, Asset>;
 
 type TickersStore = {
     tickers: Record<string, Asset>;
+    totalCount: number;
     isInitialized: boolean;
     isLoading: boolean;
     isConnected: boolean;
@@ -46,6 +47,7 @@ export const useTickersStore = (
     create<TickersStore>(
         (set, get) => ({
             tickers: {},
+            totalCount: 0,
             isInitialized: false,
             isLoading: false,
             isConnected: false,
@@ -65,6 +67,7 @@ export const useTickersStore = (
                     const tickersRecord = toTickersRecord(rawTickers);
                     set({
                         tickers: tickersRecord,
+                        totalCount: rawTickers.length,
                         isInitialized: rawTickers.length > 0,
                         isLoading: false,
                     })
