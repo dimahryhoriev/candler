@@ -1,4 +1,4 @@
-import { Asset } from "@/hooks/use-assets";
+import { SpotAsset } from "@/store/use-spot-tickers-store";
 import { calculateChangePercent } from "../math/change";
 import { filterAssetsByPair, filterAssetsByType } from "./assets-filters";
 import { AssetsTypeOptions } from "./assets-types";
@@ -7,7 +7,7 @@ export type AssetSortOptions = 'volume' | 'price' | 'change';
 export type SortOrder = 'asc' | 'desc';
 
 type SortAssetsParams = {
-    assets: Asset[];
+    assets: SpotAsset[];
     sortOption?: AssetSortOptions;
     sortOrder?: SortOrder;
     typeOptions?: AssetsTypeOptions;
@@ -57,7 +57,7 @@ function getAssetValue({
     asset,
     sortOption,
 }: {
-    asset: Asset;
+    asset: SpotAsset;
     sortOption: AssetSortOptions;
 }) {
     switch (sortOption) {

@@ -1,15 +1,15 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Tab } from "./coins-table";
+import { CoinsTableTab } from "./coins-table";
 
 export function CoinsTableTabs({
     onTabChange,
 }: {
-    onTabChange: (val: Tab) => void;
+    onTabChange: (val: CoinsTableTab) => void;
 }) {
     return (
         <Tabs
             defaultValue="overview"
-            onValueChange={ (val) => onTabChange(val as Tab) }
+            onValueChange={ (val) => onTabChange(val as CoinsTableTab) }
         >
             <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>

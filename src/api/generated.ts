@@ -7,8 +7,8 @@ export type paths = Record<string, never>;
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** @description Binance WebSocket 24-hour asset payload ticker */
-        WebsocketTickerResponse: {
+        /** @description Binance Spot WebSocket 24-hour asset payload ticker */
+        WebsocketSpotTickerResponse: {
             /** @description Event type */
             e?: string;
             /**
@@ -67,8 +67,8 @@ export interface components {
             /** @description Total number of trades */
             n?: number;
         };
-        /** @description Binance REST 24-hour asset ticker statistics */
-        RestTickerResponse: {
+        /** @description Binance Spot REST 24-hour asset ticker statistics */
+        RestSpotTickerResponse: {
             /** @description Trading pair symbol */
             symbol: string;
             priceChange?: string;
@@ -98,6 +98,84 @@ export interface components {
             /** Format: int64 */
             lastId?: number;
             count?: number;
+        };
+        /** @description Binance Futures WebSocket 24-hour ticker payload with mark price and funding rate */
+        WebsocketFuturesTickerResponse: {
+            /** @description Event type */
+            e?: string;
+            /**
+             * Format: int64
+             * @description Event time in milliseconds
+             */
+            E?: number;
+            /** @description Symbol (trading pair) */
+            s: string;
+            /** @description Mark price */
+            p?: string;
+            /** @description Index price */
+            i?: string;
+            /** @description Funding rate */
+            r?: string;
+            /**
+             * Format: int64
+             * @description Next funding time in milliseconds
+             */
+            T?: number;
+            /** @description Last price */
+            c: string;
+            /** @description Open price 24h ago */
+            o: string;
+            /** @description High price in 24h */
+            h?: string;
+            /** @description Low price in 24h */
+            l?: string;
+            /** @description Total traded base asset volume */
+            v?: string;
+            /** @description Total traded quote asset volume */
+            q: string;
+            /**
+             * Format: int64
+             * @description Statistics close time in milliseconds
+             */
+            C?: number;
+        };
+        /** @description Binance Futures (USDⓈ-M) REST 24-hour ticker statistics and mark price */
+        RestFuturesTickerResponse: {
+            /** @description Trading pair symbol */
+            symbol: string;
+            priceChange?: string;
+            priceChangePercent?: string;
+            weightedAvgPrice?: string;
+            /** @description Last trade price */
+            lastPrice: string;
+            lastQty?: string;
+            /** @description Open price 24h ago */
+            openPrice: string;
+            highPrice?: string;
+            lowPrice?: string;
+            volume?: string;
+            /** @description Total traded quote volume */
+            quoteVolume: string;
+            /** Format: int64 */
+            openTime?: number;
+            /** Format: int64 */
+            closeTime?: number;
+            /** Format: int64 */
+            firstId?: number;
+            /** Format: int64 */
+            lastId?: number;
+            count?: number;
+            /** @description Latest funding rate */
+            lastFundingRate?: string;
+            /**
+             * Format: int64
+             * @description Timestamp in ms for next funding round
+             */
+            nextFundingTime?: number;
+            /** @description Latest mark price */
+            markPrice?: string;
+            /** @description Latest index price */
+            indexPrice?: string;
         };
         RestFngResponse: {
             name: string;

@@ -1,13 +1,13 @@
 import { TableCell } from "@/components/ui/table";
 import { formatNumber } from "@/lib/format";
-import { useTickersStore } from "@/store/use-tickers-store";
+import { useSpotTickersStore } from "@/store/use-spot-tickers-store";
 
 export function CoinsTableVolumeCell({
     symbol,
 }: {
     symbol?: string;
 }) {
-    const volume = useTickersStore((state) => (
+    const volume = useSpotTickersStore((state) => (
         symbol
             ? state.tickers[symbol]?.q
             : undefined

@@ -1,27 +1,19 @@
 import { TableBody, TableRow } from "@/components/ui/table";
-import { Asset } from "@/hooks/use-assets";
-import { useTimeframesChangesStore } from "@/store/use-timeframes-changes-store";
-import { useEffect } from "react";
-import { Tab } from "./coins-table";
+import { FuturesAsset } from "@/store/use-futures-tickers-store";
+import { SpotAsset } from "@/store/use-spot-tickers-store";
+import { CoinsTableTab } from "./coins-table";
 import { tabColumns } from "./coins-table.config";
 
 type CoinsTableBodyParams = {
-    assets: (Asset | undefined)[];
+    assets: (SpotAsset | FuturesAsset | undefined)[];
     symbols: string[];
-    tab: Tab;
+    tab: CoinsTableTab;
 }
 
 export function CoinsTableBody({
     assets,
-    symbols,
     tab,
 }: CoinsTableBodyParams) {
-    const loadChanges = useTimeframesChangesStore(s => s.loadChanges);
-
-    useEffect(() => {
-        loadChanges(symbols);
-    }, [loadChanges, symbols])
-
     return (
         <TableBody>
             {

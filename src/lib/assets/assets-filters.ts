@@ -1,9 +1,9 @@
-import { Asset } from "@/hooks/use-assets";
+import { SpotAsset } from "@/hooks/assets/use-spot-assets";
 import { AssetPoints } from "./assets-calculations";
 import { AssetsTypeOptions, getAssetType } from "./assets-types";
 
 export function filterAssetsByPair(
-    assets: Asset[],
+    assets: SpotAsset[],
     quoteAsset: string = 'USDT',
 ) {
     if (!Array.isArray(assets)) return [];
@@ -22,7 +22,7 @@ export function filterAssetsByPair(
 };
 
 export function filterAssetsByType(
-    assets: Asset[],
+    assets: SpotAsset[],
     type: AssetsTypeOptions,
 ) {
     if (!Array.isArray(assets)) return [];

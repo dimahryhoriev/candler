@@ -1,5 +1,5 @@
 const REST_BASE_URL =
-    process.env.NEXT_PUBLIC_BINANCE_REST_URL
+    process.env.NEXT_PUBLIC_BINANCE_SPOT_REST_URL
     ??
     'https://api.binance.com/api/v3'
 

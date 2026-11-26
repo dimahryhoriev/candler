@@ -1,7 +1,7 @@
-import { Asset } from "@/hooks/use-assets";
+import { SpotAsset } from "@/hooks/assets/use-spot-assets";
 
 export function getAssetsSymbols(
-    assets: (Asset | undefined)[],
+    assets: (SpotAsset | undefined)[],
 ) {
     return (
         assets

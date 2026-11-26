@@ -1,0 +1,117 @@
+WebsocketFuturesTickerResponse:
+  type: object
+  description: Binance Futures WebSocket 24-hour ticker payload with mark price and funding rate
+  required:
+    - s
+    - c
+    - o
+    - q
+  properties:
+    e:
+      type: string
+      description: Event type
+    E:
+      type: integer
+      format: int64
+      description: Event time in milliseconds
+    s:
+      type: string
+      description: Symbol (trading pair)
+    p:
+      type: string
+      description: Mark price
+    i:
+      type: string
+      description: Index price
+    r:
+      type: string
+      description: Funding rate
+    T:
+      type: integer
+      format: int64
+      description: Next funding time in milliseconds
+    c:
+      type: string
+      description: Last price
+    o:
+      type: string
+      description: Open price 24h ago
+    h:
+      type: string
+      description: High price in 24h
+    l:
+      type: string
+      description: Low price in 24h
+    v:
+      type: string
+      description: Total traded base asset volume
+    q:
+      type: string
+      description: Total traded quote asset volume
+    C:
+      type: integer
+      format: int64
+      description: Statistics close time in milliseconds
+
+RestFuturesTickerResponse:
+  type: object
+  description: Binance Futures (USDⓈ-M) REST 24-hour ticker statistics and mark price
+  required:
+    - symbol
+    - lastPrice
+    - openPrice
+    - quoteVolume
+  properties:
+    symbol:
+      type: string
+      description: Trading pair symbol
+    priceChange:
+      type: string
+    priceChangePercent:
+      type: string
+    weightedAvgPrice:
+      type: string
+    lastPrice:
+      type: string
+      description: Last trade price
+    lastQty:
+      type: string
+    openPrice:
+      type: string
+      description: Open price 24h ago
+    highPrice:
+      type: string
+    lowPrice:
+      type: string
+    volume:
+      type: string
+    quoteVolume:
+      type: string
+      description: Total traded quote volume
+    openTime:
+      type: integer
+      format: int64
+    closeTime:
+      type: integer
+      format: int64
+    firstId:
+      type: integer
+      format: int64
+    lastId:
+      type: integer
+      format: int64
+    count:
+      type: integer
+    lastFundingRate:
+      type: string
+      description: Latest funding rate
+    nextFundingTime:
+      type: integer
+      format: int64
+      description: Timestamp in ms for next funding round
+    markPrice:
+      type: string
+      description: Latest mark price
+    indexPrice:
+      type: string
+      description: Latest index price

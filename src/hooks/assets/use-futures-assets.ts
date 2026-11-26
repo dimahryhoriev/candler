@@ -1,21 +1,9 @@
-'use client'
-
-import { ApiSchemas } from "@/api";
-import { AssetSortOptions, sortAssets, SortOrder } from "@/lib/assets/assets-sorting";
-import { AssetsTypeOptions } from "@/lib/assets/assets-types";
-import { useTickersStore } from "@/store/use-tickers-store";
+import { sortAssets } from "@/lib/assets/assets-sorting";
+import { useFuturesTickersStore } from "@/store/use-futures-tickers-store";
 import { useEffect, useMemo } from "react";
+import { UseAssetsParams } from "./use-assets.types";
 
-export type Asset = ApiSchemas['WebsocketTickerResponse'];
-
-type UseAssetsParams = {
-    limit?: number;
-    sortOption?: AssetSortOptions;
-    sortOrder?: SortOrder;
-    typeOptions?: AssetsTypeOptions;
-};
-
-export function useAssets({
+export function useFuturesAssets({
     limit = 5,
     sortOption = 'volume',
     sortOrder = 'desc',
@@ -24,12 +12,12 @@ export function useAssets({
         majors: true,
         altcoins: true,
     },
-}: UseAssetsParams = {}) {
-    const isInitialized = useTickersStore(s => s.isInitialized);
-    const initTickers = useTickersStore(s => s.init);
-    const isConnected = useTickersStore(s => s.isConnected);
-    const disconnect = useTickersStore(s => s.disconnect);
-    const tickers = useTickersStore(s => s.tickers);
+}: UseAssetsParams) {
+    const isInitialized = useFuturesTickersStore(s => s.isInitialized);
+    const initTickers = useFuturesTickersStore(s => s.init);
+    const isConnected = useFuturesTickersStore(s => s.isConnected);
+    const disconnect = useFuturesTickersStore(s => s.disconnect);
+    const tickers = useFuturesTickersStore(s => s.tickers);
 
     useEffect(() => {
         if (!isInitialized) initTickers();

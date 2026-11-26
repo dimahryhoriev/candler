@@ -1,6 +1,6 @@
 'use client'
 
-import { useAssets } from "@/hooks/use-assets";
+import { useSpotAssets } from "@/hooks/assets/use-spot-assets";
 import { fetchKlines } from "@/lib/api/fetch-klines";
 import { getAssetsSymbols } from "@/lib/assets/assets-unpackers";
 import { ColorsMap, createColorsMap } from "@/lib/charts/colors";
@@ -34,7 +34,7 @@ export function PerformanceChart({
 
     const assetsLimit = assetsType === 'majors' ? 2 : 6;
 
-    const { assets } = useAssets({
+    const { assets } = useSpotAssets({
         limit: assetsLimit,
         typeOptions: {
             stables: false,

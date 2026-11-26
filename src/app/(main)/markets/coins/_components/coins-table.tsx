@@ -3,36 +3,25 @@
 import { Button } from "@/components/ui/button";
 import { EdgeFade } from "@/components/ui/edge-fade";
 import { Table } from "@/components/ui/table";
-import { useAssets } from "@/hooks/use-assets";
 import { useScroll } from "@/hooks/use-scroll";
-import { getAssetsSymbols } from "@/lib/assets/assets-unpackers";
-import { useMemo, useRef, useState } from "react";
-import { CoinsTableBody } from "./coins-table-body";
+import { useRef, useState } from "react";
+import { CoinsTableContentFutures } from "./coins-table-content-futures";
+import { CoinsTableContentSpot } from "./coins-table-content-spot";
 import { CoinsTableHeader } from "./coins-table-header";
 import { CoinsTableTabs } from "./coins-table-tabs";
 
-export type Tab = 'overview' | 'performance' | 'futures';
+export type CoinsTableTab = 'overview' | 'performance' | 'futures';
 
 export function CoinsTable() {
-    const [tab, setTab] = useState<Tab>('overview');
+    const [tab, setTab] = useState<CoinsTableTab>('overview');
     const [limit, setLimit] = useState<number>(12);
 
     const containerRef = useRef<HTMLDivElement>(null);
-    const { assets } = useAssets({
-        limit,
-        typeOptions: {
-            stables: true,
-            majors: true,
-            altcoins: true,
-        },
-    });
 
     const { scrollState, updateScrollState } = useScroll<HTMLDivElement>(
         containerRef,
-        `${tab}-${assets.length}`,
+        `${tab}-${limit}`,
     );
-
-    const symbols = useMemo(() => getAssetsSymbols(assets), [assets]);
 
     return (
         <div className="flex flex-col gap-10 w-full">
@@ -56,11 +45,21 @@ export function CoinsTable() {
                         <CoinsTableHeader
                             tab={ tab }
                         />
-                        <CoinsTableBody
-                            assets={ assets }
-                            symbols={ symbols }
-                            tab={ tab }
-                        />
+                        {
+                            tab === 'futures'
+                                ? (
+                                    <CoinsTableContentFutures
+                                        limit={ limit }
+                                        tab={ tab }
+                                    />
+                                )
+                                : (
+                                    <CoinsTableContentSpot
+                                        limit={ limit }
+                                        tab={ tab }
+                                    />
+                                )
+                        }
                     </Table>
                 </div>
                 <EdgeFade side="right" isVisible={ scrollState.canScroll.x } />
