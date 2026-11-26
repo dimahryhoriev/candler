@@ -1,15 +1,21 @@
 openapi: 3.0.0
 info:
   title: Candler API
-  description: API schema and WebSocket payload contracts for Candler
+  description: API schema and REST / WebSocket payload contracts for Candler
   version: 1.0.0
 
 components:
   schemas:
-    WebsocketTickerResponse:
-      $ref: "./models/ticker.yaml#/WebsocketTickerResponse"
-    RestTickerResponse:
-      $ref: "./models/ticker.yaml#/RestTickerResponse"
+    WebsocketSpotTickerResponse:
+      $ref: "./models/spot-ticker.yaml#/WebsocketSpotTickerResponse"
+    RestSpotTickerResponse:
+      $ref: "./models/spot-ticker.yaml#/RestSpotTickerResponse"
+
+    WebsocketFuturesTickerResponse:
+      $ref: "./models/futures-ticker.yaml#/WebsocketFuturesTickerResponse"
+    RestFuturesTickerResponse:
+      $ref: "./models/futures-ticker.yaml#/RestFuturesTickerResponse"
+
     RestFngResponse:
       $ref: "./models/fng.yaml#/RestFngResponse"
 

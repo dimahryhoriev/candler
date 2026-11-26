@@ -1,6 +1,6 @@
-WebsocketTickerResponse:
+WebsocketSpotTickerResponse:
   type: object
-  description: Binance WebSocket 24-hour asset payload ticker
+  description: Binance Spot WebSocket 24-hour asset payload ticker
   required:
     - s
     - c
@@ -76,9 +76,9 @@ WebsocketTickerResponse:
       type: integer
       description: Total number of trades
 
-RestTickerResponse:
+RestSpotTickerResponse:
   type: object
-  description: Binance REST 24-hour asset ticker statistics
+  description: Binance Spot REST 24-hour asset ticker statistics
   required:
     - symbol
     - lastPrice

@@ -1,6 +1,6 @@
 'use client'
 
-import { useAssets } from "@/hooks/use-assets";
+import { useSpotAssets } from "@/hooks/assets/use-spot-assets";
 import { AssetSortOptions, SortOrder } from "@/lib/assets/assets-sorting";
 import { formatChange, formatNumber } from "@/lib/format";
 import { calculateChangePercent } from "@/lib/math/change";
@@ -31,7 +31,7 @@ export function AssetsList({
     sortOrder,
     limit,
 }: AssetsListParams) {
-    const { assets } = useAssets({
+    const { assets } = useSpotAssets({
         limit,
         sortOption,
         sortOrder,

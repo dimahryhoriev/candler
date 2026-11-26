@@ -3,7 +3,7 @@ import { TimeframeKey } from "@/lib/charts/timeframes";
 import { formatChange } from "@/lib/format";
 import { calculateChangePercent } from "@/lib/math/change";
 import { cn } from "@/lib/utils";
-import { useTickersStore } from "@/store/use-tickers-store";
+import { useSpotTickersStore } from "@/store/use-spot-tickers-store";
 import { useTimeframesChangesStore } from "@/store/use-timeframes-changes-store";
 
 export function CoinsTableChangeCell({
@@ -13,9 +13,9 @@ export function CoinsTableChangeCell({
     symbol: string | undefined;
     timeframeKey: TimeframeKey;
 }) {
-    const ticker = useTickersStore(s => (
-        symbol ? s.tickers[symbol] : undefined
-    ));
+    const ticker = useSpotTickersStore(
+        s => symbol ? s.tickers[symbol] : undefined
+    );
 
     const dynamicChange = (ticker?.c && ticker?.o)
         ? calculateChangePercent({

@@ -1,50 +1,51 @@
 import { ApiSchemas } from "@/api";
-import { Asset } from "@/hooks/use-assets";
 import { createStream } from "@/lib/api/create-stream";
 import { create } from "zustand";
 
-type TickersRecord = Record<string, Asset>;
+export type FuturesAsset = ApiSchemas['WebsocketFuturesTickerResponse'];
 
-type TickersStore = {
-    tickers: Record<string, Asset>;
+type FuturesTickersRecord = Record<string, FuturesAsset>;
+
+type FuturesTickersStore = {
+    tickers: Record<string, FuturesAsset>;
     totalCount: number;
     isInitialized: boolean;
     isLoading: boolean;
     isConnected: boolean;
     init: () => void;
-    update: (data: TickersRecord) => void;
+    update: (data: FuturesTickersRecord) => void;
     disconnect: () => void;
 };
 
-const REST_BASE_URL =
-    process.env.NEXT_PUBLIC_BINANCE_REST_URL
+const REST_FUTURES_BASE_URL =
+    process.env.NEXT_PUBLIC_BINANCE_FUTURES_REST_URL
     ??
-    'https://api.binance.com/api/v3'
+    'https://fapi.binance.com/fapi/v1'
 
-const WS_BASE_URL =
-    process.env.NEXT_PUBLIC_BINANCE_WS_URL
+const WS_FUTURES_BASE_URL =
+    process.env.NEXT_PUBLIC_BINANCE_FUTURES_WS_URL
     ??
-    'wss://stream.binance.com:9443/ws'
+    'wss://fstream.binance.com/market/ws'
 
-const TICKERS_REST_URL = `${REST_BASE_URL}/ticker/24hr`;
-const TICKERS_WS_URL = `${WS_BASE_URL}/!miniTicker@arr`;
+const FUTURES_TICKERS_REST_URL = `${REST_FUTURES_BASE_URL}/ticker/24hr`;
+const FUTURES_TICKERS_WS_URL = `${WS_FUTURES_BASE_URL}/!miniTicker@arr`;
 
-const tickersStream = createStream<Asset[]>({
-    url: TICKERS_WS_URL,
+const futuresTickersStream = createStream<FuturesAsset[]>({
+    url: FUTURES_TICKERS_WS_URL,
     onData: (data) => {
-        useTickersStore.getState().update(
-            toTickersRecord(data),
+        useFuturesTickersStore.getState().update(
+            toFuturesTickersRecord(data),
         );
     },
     onStatusChange: (isConnected) => {
-        useTickersStore.setState({
+        useFuturesTickersStore.setState({
             isConnected,
         });
     },
 });
 
-export const useTickersStore = (
-    create<TickersStore>(
+export const useFuturesTickersStore = (
+    create<FuturesTickersStore>(
         (set, get) => ({
             tickers: {},
             totalCount: 0,
@@ -63,15 +64,15 @@ export const useTickersStore = (
                 set({ isLoading: true });
 
                 try {
-                    const rawTickers = await fetchTickers();
-                    const tickersRecord = toTickersRecord(rawTickers);
+                    const rawTickers = await fetchFuturesTickers();
+                    const tickersRecord = toFuturesTickersRecord(rawTickers);
                     set({
                         tickers: tickersRecord,
                         totalCount: rawTickers.length,
                         isInitialized: rawTickers.length > 0,
                         isLoading: false,
                     })
-                    tickersStream.connect();
+                    futuresTickersStream.connect();
                 } catch (error) {
                     console.error('Failed to load initial tickers: ', error);
                     set({ isLoading: false });
@@ -86,19 +87,20 @@ export const useTickersStore = (
                 }));
             },
             disconnect: () => {
-                tickersStream.disconnect();
+                futuresTickersStream.disconnect();
             },
         }),
     )
 );
 
-async function fetchTickers() {
-    const res = await fetch(TICKERS_REST_URL);
+async function fetchFuturesTickers() {
+    const res = await fetch(FUTURES_TICKERS_REST_URL);
+    console.log(res);
     if (!res.ok) {
-        throw new Error(`Failed to fetch tickers: ${res.statusText}`);
+        throw new Error(`Failed to fetch futures tickers: ${res.statusText}`);
     };
 
-    const data: ApiSchemas['RestTickerResponse'][]
+    const data: ApiSchemas['RestFuturesTickerResponse'][]
         = await res.json();
     const now = Date.now();
     const maxInactivityTime = 10 * 60 * 1000;
@@ -121,13 +123,13 @@ async function fetchTickers() {
                 o: item.openPrice,
                 q: item.quoteVolume,
                 C: item.closeTime,
-            } as Asset)
+            } as FuturesAsset)
         );
 };
 
-const toTickersRecord = (
-    assets: Asset[]
-): TickersRecord => {
+const toFuturesTickersRecord = (
+    assets: FuturesAsset[]
+): FuturesTickersRecord => {
     return (
         Object.fromEntries(
             assets.map((a) => [a.s, a])

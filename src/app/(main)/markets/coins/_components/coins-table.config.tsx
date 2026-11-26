@@ -1,5 +1,5 @@
 import { ArrowUp } from "lucide-react";
-import { Tab } from "./coins-table";
+import { CoinsTableTab } from "./coins-table";
 import { CoinsTableAssetCell } from "./coins-table-cells/coins-table-asset-cell";
 import { CoinsTableCategoryCell } from "./coins-table-cells/coins-table-category-cell";
 import { CoinsTableChangeCell } from "./coins-table-cells/coins-table-change-sell";
@@ -47,7 +47,7 @@ export const baseColumns: Column[] = [
     },
 ];
 
-export const tabColumns: Record<Tab, Column[]> = {
+export const tabColumns: Record<CoinsTableTab, Column[]> = {
     overview: [
         ...baseColumns,
         {

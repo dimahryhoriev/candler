@@ -1,16 +1,14 @@
 import { TableCell } from "@/components/ui/table";
 import { formatNumber } from "@/lib/format";
-import { useTickersStore } from "@/store/use-tickers-store";
+import { useSpotTickersStore } from "@/store/use-spot-tickers-store";
 
 export function CoinsTablePriceCell({
     symbol,
 }: {
     symbol?: string;
 }) {
-    const price = useTickersStore((state) => (
-        symbol
-            ? state.tickers[symbol]?.c
-            : undefined
+    const price = useSpotTickersStore((s) => (
+        symbol ? s.tickers[symbol]?.c : undefined
     ));
 
     return (
