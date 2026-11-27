@@ -28,10 +28,17 @@ function findNonZeroValue(
     };
 };
 
-export function formatNumber(
-    number: string | undefined,
-    notation: 'standard' | 'compact' = 'standard',
-) {
+interface FormatNumberParams {
+    number: string | undefined;
+    notation?: 'standard' | 'compact';
+    decimals?: boolean;
+};
+
+export function formatNumber({
+    number,
+    notation = 'standard',
+    decimals = true,
+}: FormatNumberParams) {
     if (!number) {
         return (
             '-- --'
@@ -55,6 +62,8 @@ export function formatNumber(
             ? Number(int.slice(intNonZeroValue.index))
                 .toLocaleString('en-US')
             : '0'
+
+    if (!decimals) return formattedInt;
 
     const formattedFract =
         fractNonZeroValue.index !== null

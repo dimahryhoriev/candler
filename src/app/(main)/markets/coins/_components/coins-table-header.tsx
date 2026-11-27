@@ -1,15 +1,16 @@
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { useSpotTickersStore } from "@/store/use-spot-tickers-store";
-import { CoinsTableTab } from "./coins-table";
-import { tabColumns } from "./coins-table.config";
+import { CoinsTableMarket, CoinsTableTab } from "./coins-table";
+import { markets, tabColumns } from "./coins-table.config";
 
 export function CoinsTableHeader({
     tab,
+    market,
 }: {
     tab: CoinsTableTab;
+    market: CoinsTableMarket;
 }) {
-    const assetsCount = useSpotTickersStore(s => s.totalCount);
+    const assetsCount = markets[market].useTotalCount();
 
     return (
         <TableHeader>

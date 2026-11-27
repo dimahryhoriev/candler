@@ -1,6 +1,6 @@
 WebsocketSpotTickerResponse:
   type: object
-  description: Binance Spot WebSocket 24-hour asset payload ticker
+  description: Binance Spot WebSocket 24-hour mini-ticker payload
   required:
     - s
     - c
@@ -10,75 +10,44 @@ WebsocketSpotTickerResponse:
     e:
       type: string
       description: Event type
+      example: 24hrMiniTicker
     E:
       type: integer
       format: int64
       description: Event time in milliseconds
+      example: 1672515782136
     s:
       type: string
       description: Symbol (trading pair)
-    w:
-      type: string
-      description: Weighted average price
-    x:
-      type: string
-      description: First trade price before the 24h rolling window
+      example: BNBBTC
     c:
       type: string
-      description: Last price
-    Q:
-      type: string
-      description: Last trade quantity
-    b:
-      type: string
-      description: Best bid price
-    B:
-      type: string
-      description: Best bid quantity
-    a:
-      type: string
-      description: Best ask price
-    A:
-      type: string
-      description: Best ask quantity
+      description: Close / Last price
+      example: "0.0025"
     o:
       type: string
       description: Open price 24h ago
+      example: "0.0010"
     h:
       type: string
       description: High price in 24h
+      example: "0.0025"
     l:
       type: string
       description: Low price in 24h
+      example: "0.0010"
     v:
       type: string
       description: Total traded base asset volume
+      example: "10000"
     q:
       type: string
       description: Total traded quote asset volume
-    O:
-      type: integer
-      format: int64
-      description: Statistics open time in milliseconds
-    C:
-      type: integer
-      format: int64
-      description: Statistics close time in milliseconds
-    F:
-      type: integer
-      format: int64
-      description: First trade ID
-    L:
-      type: integer
-      format: int64
-      description: Last trade ID
-    n:
-      type: integer
-      description: Total number of trades
+      example: "18"
 
 RestSpotTickerResponse:
   type: object
-  description: Binance Spot REST 24-hour asset ticker statistics
+  description: Binance Spot REST 24-hour ticker statistics
   required:
     - symbol
     - lastPrice
@@ -87,51 +56,90 @@ RestSpotTickerResponse:
   properties:
     symbol:
       type: string
-      description: Trading pair symbol
+      description: Symbol Name
+      example: BNBBTC
     priceChange:
       type: string
+      description: Price change
+      example: "-94.99999800"
     priceChangePercent:
       type: string
+      description: Price change percent
+      example: "-95.960"
     weightedAvgPrice:
       type: string
+      description: Weighted average price
+      example: "0.29628482"
     prevClosePrice:
       type: string
+      description: Previous close price
+      example: "0.10002000"
     lastPrice:
       type: string
-      description: Last trade price
+      description: Closing price of the interval
+      example: "4.00000200"
     lastQty:
       type: string
+      description: Last quantity
+      example: "200.00000000"
     bidPrice:
       type: string
+      description: Best bid price
+      example: "4.00000000"
     bidQty:
       type: string
+      description: Best bid quantity
+      example: "100.00000000"
     askPrice:
       type: string
+      description: Best ask price
+      example: "4.00000200"
     askQty:
       type: string
+      description: Best ask quantity
+      example: "100.00000000"
     openPrice:
       type: string
-      description: Open price 24h ago
+      description: Opening price of the interval
+      example: "99.00000000"
     highPrice:
       type: string
+      description: Highest price in the interval
+      example: "100.00000000"
     lowPrice:
       type: string
+      description: Lowest price in the interval
+      example: "0.10000000"
     volume:
       type: string
+      description: Total trade volume (in base asset)
+      example: "8913.30000000"
     quoteVolume:
       type: string
-      description: Total traded quote volume
+      description: Total trade volume (in quote asset)
+      example: "15.30000000"
     openTime:
       type: integer
       format: int64
+      description: Start of the ticker interval in milliseconds
+      example: 1499783499040
     closeTime:
       type: integer
       format: int64
+      description: End of the ticker interval in milliseconds
+      example: 1499869899040
     firstId:
       type: integer
       format: int64
+      description: First trade ID
+      example: 28385
     lastId:
       type: integer
       format: int64
+      description: Last trade ID
+      example: 28460
     count:
       type: integer
+      format: int64
+      description: Trade count
+      example: 76

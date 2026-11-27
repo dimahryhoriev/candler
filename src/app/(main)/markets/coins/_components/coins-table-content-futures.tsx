@@ -25,8 +25,8 @@ export function CoinsTableContentFutures({
     return (
         <CoinsTableBody
             assets={ assets }
-            symbols={ symbols }
             tab={ tab }
+            market="futures"
         />
     );
 }

@@ -6,7 +6,7 @@ export type SpotAsset = ApiSchemas['WebsocketSpotTickerResponse'];
 
 type SpotTickersRecord = Record<string, SpotAsset>;
 
-type SpotTickersStore = {
+export type SpotTickersStore = {
     tickers: Record<string, SpotAsset>;
     totalCount: number;
     isInitialized: boolean;

@@ -7,175 +7,364 @@ export type paths = Record<string, never>;
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** @description Binance Spot WebSocket 24-hour asset payload ticker */
+        /** @description Binance Spot WebSocket 24-hour mini-ticker payload */
         WebsocketSpotTickerResponse: {
-            /** @description Event type */
+            /**
+             * @description Event type
+             * @example 24hrMiniTicker
+             */
             e?: string;
             /**
              * Format: int64
              * @description Event time in milliseconds
+             * @example 1672515782136
              */
             E?: number;
-            /** @description Symbol (trading pair) */
+            /**
+             * @description Symbol (trading pair)
+             * @example BNBBTC
+             */
             s: string;
-            /** @description Weighted average price */
-            w?: string;
-            /** @description First trade price before the 24h rolling window */
-            x?: string;
-            /** @description Last price */
+            /**
+             * @description Close / Last price
+             * @example 0.0025
+             */
             c: string;
-            /** @description Last trade quantity */
-            Q?: string;
-            /** @description Best bid price */
-            b?: string;
-            /** @description Best bid quantity */
-            B?: string;
-            /** @description Best ask price */
-            a?: string;
-            /** @description Best ask quantity */
-            A?: string;
-            /** @description Open price 24h ago */
+            /**
+             * @description Open price 24h ago
+             * @example 0.0010
+             */
             o: string;
-            /** @description High price in 24h */
+            /**
+             * @description High price in 24h
+             * @example 0.0025
+             */
             h?: string;
-            /** @description Low price in 24h */
+            /**
+             * @description Low price in 24h
+             * @example 0.0010
+             */
             l?: string;
-            /** @description Total traded base asset volume */
+            /**
+             * @description Total traded base asset volume
+             * @example 10000
+             */
             v?: string;
-            /** @description Total traded quote asset volume */
+            /**
+             * @description Total traded quote asset volume
+             * @example 18
+             */
+            q: string;
+        };
+        /** @description Binance Spot REST 24-hour ticker statistics */
+        RestSpotTickerResponse: {
+            /**
+             * @description Symbol Name
+             * @example BNBBTC
+             */
+            symbol: string;
+            /**
+             * @description Price change
+             * @example -94.99999800
+             */
+            priceChange?: string;
+            /**
+             * @description Price change percent
+             * @example -95.960
+             */
+            priceChangePercent?: string;
+            /**
+             * @description Weighted average price
+             * @example 0.29628482
+             */
+            weightedAvgPrice?: string;
+            /**
+             * @description Previous close price
+             * @example 0.10002000
+             */
+            prevClosePrice?: string;
+            /**
+             * @description Closing price of the interval
+             * @example 4.00000200
+             */
+            lastPrice: string;
+            /**
+             * @description Last quantity
+             * @example 200.00000000
+             */
+            lastQty?: string;
+            /**
+             * @description Best bid price
+             * @example 4.00000000
+             */
+            bidPrice?: string;
+            /**
+             * @description Best bid quantity
+             * @example 100.00000000
+             */
+            bidQty?: string;
+            /**
+             * @description Best ask price
+             * @example 4.00000200
+             */
+            askPrice?: string;
+            /**
+             * @description Best ask quantity
+             * @example 100.00000000
+             */
+            askQty?: string;
+            /**
+             * @description Opening price of the interval
+             * @example 99.00000000
+             */
+            openPrice: string;
+            /**
+             * @description Highest price in the interval
+             * @example 100.00000000
+             */
+            highPrice?: string;
+            /**
+             * @description Lowest price in the interval
+             * @example 0.10000000
+             */
+            lowPrice?: string;
+            /**
+             * @description Total trade volume (in base asset)
+             * @example 8913.30000000
+             */
+            volume?: string;
+            /**
+             * @description Total trade volume (in quote asset)
+             * @example 15.30000000
+             */
+            quoteVolume: string;
+            /**
+             * Format: int64
+             * @description Start of the ticker interval in milliseconds
+             * @example 1499783499040
+             */
+            openTime?: number;
+            /**
+             * Format: int64
+             * @description End of the ticker interval in milliseconds
+             * @example 1499869899040
+             */
+            closeTime?: number;
+            /**
+             * Format: int64
+             * @description First trade ID
+             * @example 28385
+             */
+            firstId?: number;
+            /**
+             * Format: int64
+             * @description Last trade ID
+             * @example 28460
+             */
+            lastId?: number;
+            /**
+             * Format: int64
+             * @description Trade count
+             * @example 76
+             */
+            count?: number;
+        };
+        /** @description Binance Futures WebSocket 24-hour full ticker payload */
+        WebsocketFuturesTickerResponse: {
+            /**
+             * @description Event type
+             * @example 24hrTicker
+             */
+            e?: string;
+            /**
+             * Format: int64
+             * @description Event time in milliseconds
+             * @example 123456789
+             */
+            E?: number;
+            /**
+             * @description Symbol
+             * @example BNBUSDT
+             */
+            s: string;
+            /**
+             * @description Price change
+             * @example 0.0015
+             */
+            p?: string;
+            /**
+             * @description Price change percent
+             * @example 250.00
+             */
+            P?: string;
+            /**
+             * @description Weighted average price
+             * @example 0.0018
+             */
+            w?: string;
+            /**
+             * @description Last price
+             * @example 0.0025
+             */
+            c: string;
+            /**
+             * @description Last quantity
+             * @example 10
+             */
+            Q?: string;
+            /**
+             * @description Open price
+             * @example 0.0010
+             */
+            o: string;
+            /**
+             * @description High price
+             * @example 0.0025
+             */
+            h?: string;
+            /**
+             * @description Low price
+             * @example 0.0010
+             */
+            l?: string;
+            /**
+             * @description Total traded base asset volume
+             * @example 10000
+             */
+            v?: string;
+            /**
+             * @description Total traded quote asset volume
+             * @example 18
+             */
             q: string;
             /**
              * Format: int64
-             * @description Statistics open time in milliseconds
+             * @description Statistics open time
+             * @example 0
              */
             O?: number;
             /**
              * Format: int64
-             * @description Statistics close time in milliseconds
+             * @description Statistics close time
+             * @example 86400000
              */
             C?: number;
             /**
              * Format: int64
              * @description First trade ID
+             * @example 0
              */
             F?: number;
             /**
              * Format: int64
-             * @description Last trade ID
+             * @description Last trade Id
+             * @example 18150
              */
             L?: number;
-            /** @description Total number of trades */
-            n?: number;
-        };
-        /** @description Binance Spot REST 24-hour asset ticker statistics */
-        RestSpotTickerResponse: {
-            /** @description Trading pair symbol */
-            symbol: string;
-            priceChange?: string;
-            priceChangePercent?: string;
-            weightedAvgPrice?: string;
-            prevClosePrice?: string;
-            /** @description Last trade price */
-            lastPrice: string;
-            lastQty?: string;
-            bidPrice?: string;
-            bidQty?: string;
-            askPrice?: string;
-            askQty?: string;
-            /** @description Open price 24h ago */
-            openPrice: string;
-            highPrice?: string;
-            lowPrice?: string;
-            volume?: string;
-            /** @description Total traded quote volume */
-            quoteVolume: string;
-            /** Format: int64 */
-            openTime?: number;
-            /** Format: int64 */
-            closeTime?: number;
-            /** Format: int64 */
-            firstId?: number;
-            /** Format: int64 */
-            lastId?: number;
-            count?: number;
-        };
-        /** @description Binance Futures WebSocket 24-hour ticker payload with mark price and funding rate */
-        WebsocketFuturesTickerResponse: {
-            /** @description Event type */
-            e?: string;
             /**
              * Format: int64
-             * @description Event time in milliseconds
+             * @description Total number of trades
+             * @example 18151
              */
-            E?: number;
-            /** @description Symbol (trading pair) */
-            s: string;
-            /** @description Mark price */
-            p?: string;
-            /** @description Index price */
-            i?: string;
-            /** @description Funding rate */
-            r?: string;
+            n: number;
             /**
-             * Format: int64
-             * @description Next funding time in milliseconds
+             * @description (After CM migration) Pair symbol
+             * @example BTCUSDT
              */
-            T?: number;
-            /** @description Last price */
-            c: string;
-            /** @description Open price 24h ago */
-            o: string;
-            /** @description High price in 24h */
-            h?: string;
-            /** @description Low price in 24h */
-            l?: string;
-            /** @description Total traded base asset volume */
-            v?: string;
-            /** @description Total traded quote asset volume */
-            q: string;
+            ps?: string;
             /**
-             * Format: int64
-             * @description Statistics close time in milliseconds
+             * @description (After CM migration) Symbol type: 1 = UM, 2 = CM
+             * @example 1
              */
-            C?: number;
+            st?: number;
         };
-        /** @description Binance Futures (USDⓈ-M) REST 24-hour ticker statistics and mark price */
+        /** @description Binance Futures (USDⓈ-M) REST 24-hour ticker statistics */
         RestFuturesTickerResponse: {
-            /** @description Trading pair symbol */
+            /**
+             * @description Trading pair symbol
+             * @example BTCUSDT
+             */
             symbol: string;
+            /**
+             * @description Price Change
+             * @example -94.99999800
+             */
             priceChange?: string;
+            /**
+             * @description Price Change Percent
+             * @example -95.960
+             */
             priceChangePercent?: string;
+            /**
+             * @description Weighted Avg Price
+             * @example 0.29628482
+             */
             weightedAvgPrice?: string;
-            /** @description Last trade price */
+            /**
+             * @description Last Price
+             * @example 4.00000200
+             */
             lastPrice: string;
+            /**
+             * @description Last Qty
+             * @example 200.00000000
+             */
             lastQty?: string;
-            /** @description Open price 24h ago */
+            /**
+             * @description Open Price
+             * @example 99.00000000
+             */
             openPrice: string;
+            /**
+             * @description High Price
+             * @example 100.00000000
+             */
             highPrice?: string;
+            /**
+             * @description Low Price
+             * @example 0.10000000
+             */
             lowPrice?: string;
+            /**
+             * @description Total traded base asset volume
+             * @example 8913.30000000
+             */
             volume?: string;
-            /** @description Total traded quote volume */
+            /**
+             * @description Total traded quote asset volume
+             * @example 15.30000000
+             */
             quoteVolume: string;
-            /** Format: int64 */
-            openTime?: number;
-            /** Format: int64 */
-            closeTime?: number;
-            /** Format: int64 */
-            firstId?: number;
-            /** Format: int64 */
-            lastId?: number;
-            count?: number;
-            /** @description Latest funding rate */
-            lastFundingRate?: string;
             /**
              * Format: int64
-             * @description Timestamp in ms for next funding round
+             * @description Open Time in milliseconds
+             * @example 1499783499040
              */
-            nextFundingTime?: number;
-            /** @description Latest mark price */
-            markPrice?: string;
-            /** @description Latest index price */
-            indexPrice?: string;
+            openTime?: number;
+            /**
+             * Format: int64
+             * @description Close Time in milliseconds
+             * @example 1499869899040
+             */
+            closeTime?: number;
+            /**
+             * Format: int64
+             * @description First trade ID
+             * @example 28385
+             */
+            firstId?: number;
+            /**
+             * Format: int64
+             * @description Last trade ID
+             * @example 28460
+             */
+            lastId?: number;
+            /**
+             * Format: int64
+             * @description Trade count (number of trades)
+             * @example 76
+             */
+            count: number;
         };
         RestFngResponse: {
             name: string;

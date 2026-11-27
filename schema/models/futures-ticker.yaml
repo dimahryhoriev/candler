@@ -1,117 +1,176 @@
 WebsocketFuturesTickerResponse:
   type: object
-  description: Binance Futures WebSocket 24-hour ticker payload with mark price and funding rate
+  description: Binance Futures WebSocket 24-hour full ticker payload
   required:
     - s
     - c
     - o
     - q
+    - n
   properties:
     e:
       type: string
       description: Event type
+      example: 24hrTicker
     E:
       type: integer
       format: int64
       description: Event time in milliseconds
+      example: 123456789
     s:
       type: string
-      description: Symbol (trading pair)
+      description: Symbol
+      example: BNBUSDT
     p:
       type: string
-      description: Mark price
-    i:
+      description: Price change
+      example: "0.0015"
+    P:
       type: string
-      description: Index price
-    r:
+      description: Price change percent
+      example: "250.00"
+    w:
       type: string
-      description: Funding rate
-    T:
-      type: integer
-      format: int64
-      description: Next funding time in milliseconds
+      description: Weighted average price
+      example: "0.0018"
     c:
       type: string
       description: Last price
+      example: "0.0025"
+    Q:
+      type: string
+      description: Last quantity
+      example: "10"
     o:
       type: string
-      description: Open price 24h ago
+      description: Open price
+      example: "0.0010"
     h:
       type: string
-      description: High price in 24h
+      description: High price
+      example: "0.0025"
     l:
       type: string
-      description: Low price in 24h
+      description: Low price
+      example: "0.0010"
     v:
       type: string
       description: Total traded base asset volume
+      example: "10000"
     q:
       type: string
       description: Total traded quote asset volume
+      example: "18"
+    O:
+      type: integer
+      format: int64
+      description: Statistics open time
+      example: 0
     C:
       type: integer
       format: int64
-      description: Statistics close time in milliseconds
+      description: Statistics close time
+      example: 86400000
+    F:
+      type: integer
+      format: int64
+      description: First trade ID
+      example: 0
+    L:
+      type: integer
+      format: int64
+      description: Last trade Id
+      example: 18150
+    n:
+      type: integer
+      format: int64
+      description: Total number of trades
+      example: 18151
+    ps:
+      type: string
+      description: "(After CM migration) Pair symbol"
+      example: BTCUSDT
+    st:
+      type: integer
+      description: "(After CM migration) Symbol type: 1 = UM, 2 = CM"
+      example: 1
 
 RestFuturesTickerResponse:
   type: object
-  description: Binance Futures (USDⓈ-M) REST 24-hour ticker statistics and mark price
+  description: Binance Futures (USDⓈ-M) REST 24-hour ticker statistics
   required:
     - symbol
     - lastPrice
     - openPrice
     - quoteVolume
+    - count
   properties:
     symbol:
       type: string
       description: Trading pair symbol
+      example: BTCUSDT
     priceChange:
       type: string
+      description: Price Change
+      example: "-94.99999800"
     priceChangePercent:
       type: string
+      description: Price Change Percent
+      example: "-95.960"
     weightedAvgPrice:
       type: string
+      description: Weighted Avg Price
+      example: "0.29628482"
     lastPrice:
       type: string
-      description: Last trade price
+      description: Last Price
+      example: "4.00000200"
     lastQty:
       type: string
+      description: Last Qty
+      example: "200.00000000"
     openPrice:
       type: string
-      description: Open price 24h ago
+      description: Open Price
+      example: "99.00000000"
     highPrice:
       type: string
+      description: High Price
+      example: "100.00000000"
     lowPrice:
       type: string
+      description: Low Price
+      example: "0.10000000"
     volume:
       type: string
+      description: Total traded base asset volume
+      example: "8913.30000000"
     quoteVolume:
       type: string
-      description: Total traded quote volume
+      description: Total traded quote asset volume
+      example: "15.30000000"
     openTime:
       type: integer
       format: int64
+      description: Open Time in milliseconds
+      example: 1499783499040
     closeTime:
       type: integer
       format: int64
+      description: Close Time in milliseconds
+      example: 1499869899040
     firstId:
       type: integer
       format: int64
+      description: First trade ID
+      example: 28385
     lastId:
       type: integer
       format: int64
+      description: Last trade ID
+      example: 28460
     count:
       type: integer
-    lastFundingRate:
-      type: string
-      description: Latest funding rate
-    nextFundingTime:
-      type: integer
       format: int64
-      description: Timestamp in ms for next funding round
-    markPrice:
-      type: string
-      description: Latest mark price
-    indexPrice:
-      type: string
-      description: Latest index price
+      description: Trade count (number of trades)
+      example: 76

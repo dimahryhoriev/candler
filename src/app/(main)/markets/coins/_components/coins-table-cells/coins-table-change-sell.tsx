@@ -1,27 +1,22 @@
 import { TableCell } from "@/components/ui/table";
 import { TimeframeKey } from "@/lib/charts/timeframes";
 import { formatChange } from "@/lib/format";
-import { calculateChangePercent } from "@/lib/math/change";
 import { cn } from "@/lib/utils";
-import { useSpotTickersStore } from "@/store/use-spot-tickers-store";
 import { useTimeframesChangesStore } from "@/store/use-timeframes-changes-store";
+import { CoinsTableMarket } from "../coins-table";
+import { markets } from "../coins-table.config";
 
 export function CoinsTableChangeCell({
     symbol,
     timeframeKey,
+    market,
 }: {
     symbol: string | undefined;
     timeframeKey: TimeframeKey;
+    market?: CoinsTableMarket;
 }) {
-    const ticker = useSpotTickersStore(
-        s => symbol ? s.tickers[symbol] : undefined
-    );
-
-    const dynamicChange = (ticker?.c && ticker?.o)
-        ? calculateChangePercent({
-            openValue: Number(ticker?.o),
-            closeValue: Number(ticker?.c),
-        })
+    const dynamicChange = (symbol && market)
+        ? markets[market].useChange(symbol)
         : undefined;
 
     const staticChange = useTimeframesChangesStore(s => (
