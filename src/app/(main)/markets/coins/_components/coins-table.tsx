@@ -11,6 +11,7 @@ import { CoinsTableHeader } from "./coins-table-header";
 import { CoinsTableTabs } from "./coins-table-tabs";
 
 export type CoinsTableTab = 'overview' | 'performance' | 'futures';
+export type CoinsTableMarket = 'futures' | 'spot';
 
 export function CoinsTable() {
     const [tab, setTab] = useState<CoinsTableTab>('overview');
@@ -18,17 +19,21 @@ export function CoinsTable() {
 
     const containerRef = useRef<HTMLDivElement>(null);
 
+    const market: CoinsTableMarket = tab === 'futures'
+        ? 'futures'
+        : 'spot';
+
     const { scrollState, updateScrollState } = useScroll<HTMLDivElement>(
         containerRef,
         `${tab}-${limit}`,
     );
 
     return (
-        <div className="flex flex-col gap-10 w-full">
+        <div className="flex flex-col gap-3 w-full">
+            <CoinsTableTabs onTabChange={ setTab } />
             <div
-                className="flex flex-col relative w-full gap-3"
+                className="flex flex-col w-full gap-3 relative"
             >
-                <CoinsTableTabs onTabChange={ setTab } />
                 <div
                     className="overflow-x-auto w-full"
                     onScroll={ updateScrollState }
@@ -44,6 +49,7 @@ export function CoinsTable() {
                     >
                         <CoinsTableHeader
                             tab={ tab }
+                            market={ market }
                         />
                         {
                             tab === 'futures'
@@ -61,11 +67,12 @@ export function CoinsTable() {
                                 )
                         }
                     </Table>
+                    <EdgeFade side="right" isVisible={ scrollState.canScroll.x } />
+                    <EdgeFade side="bottom" isVisible={ scrollState.canScroll.y } />
                 </div>
-                <EdgeFade side="right" isVisible={ scrollState.canScroll.x } />
-                <EdgeFade side="bottom" isVisible={ scrollState.canScroll.y } />
             </div>
             <Button
+                className="mt-7"
                 variant="outline"
                 size="2xl"
                 onClick={ () => setLimit(limit => limit + 12) }

@@ -1,19 +1,22 @@
 import { TableCell } from "@/components/ui/table";
 import { formatNumber } from "@/lib/format";
-import { useSpotTickersStore } from "@/store/use-spot-tickers-store";
+import { CoinsTableMarket } from "../coins-table";
+import { markets } from "../coins-table.config";
 
 export function CoinsTablePriceCell({
     symbol,
+    market,
 }: {
     symbol?: string;
+    market: CoinsTableMarket;
 }) {
-    const price = useSpotTickersStore((s) => (
-        symbol ? s.tickers[symbol]?.c : undefined
-    ));
+    const price = symbol
+        ? markets[market].useTickerPrice(symbol)
+        : undefined;
 
     return (
         <TableCell className="font-mono">
-            ${ formatNumber(price) }
+            ${ formatNumber({ number: price }) }
         </TableCell>
     );
 };

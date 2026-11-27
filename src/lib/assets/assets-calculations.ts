@@ -58,6 +58,32 @@ export function calculateAssetsChanges(
     );
 };
 
+interface CalculateAverageTradeSize {
+    quoteVolume: number;
+    tradesCount: number;
+}
+
+export function calculateAverageTradeSize({
+    quoteVolume,
+    tradesCount,
+}: CalculateAverageTradeSize) {
+    if (
+        tradesCount <= 0
+        ||
+        quoteVolume <= 0
+        ||
+        isNaN(tradesCount)
+        ||
+        isNaN(quoteVolume)
+    ) {
+        return 0;
+    };
+
+    return (
+        quoteVolume / tradesCount
+    );
+}
+
 export function scaleAssetsChangesToPoints(
     assetsChanges: AssetChanges[],
     changeBounds: ChangeBounds,

@@ -6,7 +6,7 @@ export type FuturesAsset = ApiSchemas['WebsocketFuturesTickerResponse'];
 
 type FuturesTickersRecord = Record<string, FuturesAsset>;
 
-type FuturesTickersStore = {
+export type FuturesTickersStore = {
     tickers: Record<string, FuturesAsset>;
     totalCount: number;
     isInitialized: boolean;
@@ -28,7 +28,7 @@ const WS_FUTURES_BASE_URL =
     'wss://fstream.binance.com/market/ws'
 
 const FUTURES_TICKERS_REST_URL = `${REST_FUTURES_BASE_URL}/ticker/24hr`;
-const FUTURES_TICKERS_WS_URL = `${WS_FUTURES_BASE_URL}/!miniTicker@arr`;
+const FUTURES_TICKERS_WS_URL = `${WS_FUTURES_BASE_URL}/!ticker@arr`;
 
 const futuresTickersStream = createStream<FuturesAsset[]>({
     url: FUTURES_TICKERS_WS_URL,
@@ -122,6 +122,7 @@ async function fetchFuturesTickers() {
                 c: item.lastPrice,
                 o: item.openPrice,
                 q: item.quoteVolume,
+                n: item.count,
                 C: item.closeTime,
             } as FuturesAsset)
         );

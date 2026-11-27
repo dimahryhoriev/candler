@@ -1,21 +1,22 @@
 import { TableCell } from "@/components/ui/table";
 import { formatNumber } from "@/lib/format";
-import { useSpotTickersStore } from "@/store/use-spot-tickers-store";
+import { CoinsTableMarket } from "../coins-table";
+import { markets } from "../coins-table.config";
 
 export function CoinsTableVolumeCell({
     symbol,
+    market,
 }: {
     symbol?: string;
+    market: CoinsTableMarket;
 }) {
-    const volume = useSpotTickersStore((state) => (
-        symbol
-            ? state.tickers[symbol]?.q
-            : undefined
-    ));
+    const volume = symbol
+        ? markets[market].useVolume(symbol)
+        : undefined;
 
     return (
         <TableCell>
-            { formatNumber(volume, 'compact') }
+            { formatNumber({ number: volume, notation: 'compact' }) }
         </TableCell>
     );
 };

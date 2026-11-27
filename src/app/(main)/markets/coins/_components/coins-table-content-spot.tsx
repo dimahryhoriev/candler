@@ -31,8 +31,8 @@ export function CoinsTableContentSpot({
     return (
         <CoinsTableBody
             assets={ assets }
-            symbols={ symbols }
             tab={ tab }
+            market="spot"
         />
     );
 }

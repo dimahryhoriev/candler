@@ -1,18 +1,19 @@
 import { TableBody, TableRow } from "@/components/ui/table";
 import { FuturesAsset } from "@/store/use-futures-tickers-store";
 import { SpotAsset } from "@/store/use-spot-tickers-store";
-import { CoinsTableTab } from "./coins-table";
+import { CoinsTableMarket, CoinsTableTab } from "./coins-table";
 import { tabColumns } from "./coins-table.config";
 
 type CoinsTableBodyParams = {
     assets: (SpotAsset | FuturesAsset | undefined)[];
-    symbols: string[];
     tab: CoinsTableTab;
-}
+    market: CoinsTableMarket;
+};
 
 export function CoinsTableBody({
     assets,
     tab,
+    market,
 }: CoinsTableBodyParams) {
     return (
         <TableBody>
@@ -31,7 +32,8 @@ export function CoinsTableBody({
                                 tc.render({
                                     symbol: a?.s,
                                     index: i,
-                                    key: tc.key
+                                    key: tc.key,
+                                    market,
                                 })
                             ))
                         }
